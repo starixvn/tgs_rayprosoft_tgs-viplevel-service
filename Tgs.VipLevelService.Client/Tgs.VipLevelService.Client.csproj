@@ -8,6 +8,10 @@
     <PackageId>Tgs.VipLevelService.Client</PackageId>
     <Version>0.0.1</Version>
     <Authors>Raypro</Authors>
+    <Product>Tgs.VipLevelService.Client</Product>
+    <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service.git</RepositoryUrl>
+    <PackageTags>Tgs VipLevel</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
