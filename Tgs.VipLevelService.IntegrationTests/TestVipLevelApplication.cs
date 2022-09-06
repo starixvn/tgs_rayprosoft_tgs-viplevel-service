@@ -16,7 +16,6 @@ internal static class TestVipLevelApplication
 
 	public static WebApplicationFactory<Program> Factory => _Application
 		.WithWebHostBuilder(builder => builder
-			.ConfigureAppConfiguration(c => c.Sources.Clear())
 			.ConfigureServices(services => services
 				.AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
 					sp => new ConfigureNamedOptions<OtlpExporterOptions>(
