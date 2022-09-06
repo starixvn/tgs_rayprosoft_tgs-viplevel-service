@@ -76,12 +76,12 @@ push-k8s-template:
   script:
     - export Tag="$(date -d $CI_PIPELINE_CREATED_AT +%Y%m%d%H%M).$CI_PIPELINE_IID"
     - mkdir -p artifacts/k8s
-    - cp -R deployment/k8s/viplevel-api artifacts/k8s/
+    - cp -R deployment/k8s/viplevel artifacts/k8s/
     - |
       yq -i e '
         .image.repository = strenv(ImageName) |
         .image.tag = strenv(Tag)
-      ' artifacts/k8s/viplevel-api/values.yaml
+      ' artifacts/k8s/viplevel/values.yaml
   artifacts:
     name: HelmTemplate
     untracked: false
@@ -108,7 +108,7 @@ deploy-dev:
     - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated})
     - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector})
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - 
       {
@@ -118,7 +118,7 @@ deploy-dev:
       }
       EOF
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - \
         | kubectl -n $namespace apply -f -
@@ -148,7 +148,7 @@ deploy-staging:
     - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated})
     - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector})
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - 
       {
@@ -158,7 +158,7 @@ deploy-staging:
       }
       EOF
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - \
         | kubectl -n $namespace apply -f -
@@ -188,7 +188,7 @@ deploy-prod:
     - export dedicated=$(kubectl get cm tgs-settings -o jsonpath={.data.dedicated})
     - export node_selector=$(kubectl get cm tgs-settings -o jsonpath={.data.node-selector})
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - 
       {
@@ -198,7 +198,7 @@ deploy-prod:
       }
       EOF
     - |
-      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel-api \
+      cat << EOF | yq e -P | helm template artifacts/k8s/viplevel \
         -n $namespace \
         -f - \
         | kubectl -n $namespace apply -f -
