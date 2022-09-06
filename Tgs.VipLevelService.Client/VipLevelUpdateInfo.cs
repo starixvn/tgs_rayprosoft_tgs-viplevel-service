@@ -1,0 +1,36 @@
+﻿namespace Tgs.VipLevelService.Clients;
+
+public record VipLevelUpdateInfo(
+	int? Level,
+	decimal? LevelUpAccumulateBetAmount,
+	decimal? LevelUpAccumulateDeposit,
+	decimal? LevelKeepAccumulateBetAmount,
+	decimal? LevelKeepAccumulateDeposit,
+	bool? LevelKeepCondition,
+	decimal? BirthBenefit,
+	decimal? PromotionBenefit,
+	decimal? QuarterlyBenefit,
+	decimal? LiveDealerRebate,
+	decimal? SlotRebate,
+	decimal? LotteryRebate,
+	decimal? CardGameRebate,
+	decimal? SportsRebate,
+	decimal? VirtualSportsRebate)
+{
+	public static readonly VipLevelUpdateInfo Default = new(
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		null);
+}

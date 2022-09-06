@@ -1,0 +1,20 @@
+﻿using Tgs.VipLevelService;
+namespace Tgs.VipLevelService.Clients;
+public record VipLevelInfo(
+	Guid Id,
+	int Level,
+	Guid BrandId,
+	decimal LevelUpAccumulateBetAmount,
+	decimal LevelUpAccumulateDeposit,
+	decimal LevelKeepAccumulateBetAmount,
+	decimal LevelKeepAccumulateDeposit,
+	bool LevelKeepCondition,
+	decimal BirthBenefit,
+	decimal PromotionBenefit,
+	decimal QuarterlyBenefit,
+	decimal LiveDealerRebate,
+	decimal SlotRebate,
+	decimal LotteryRebate,
+	decimal CardGameRebate,
+	decimal SportsRebate,
+	decimal VirtualSportsRebate);
