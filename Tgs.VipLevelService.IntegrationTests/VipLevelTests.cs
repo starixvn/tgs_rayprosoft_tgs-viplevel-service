@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ExpectedObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tgs.VipLevelService.Clients;
 using Tgs.VipLevelService.Entities;
 
@@ -49,6 +51,70 @@ public class VipLevelTests
 		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
 
 		Assert.AreEqual(2, actual.Length);
+	}
+
+	[TestMethod]
+	public async Task GetVipLevels_Data_Should_Match()
+	{
+		await using var web = TestVipLevelApplication.Factory;
+
+		var httpClient = web.CreateClient();
+
+		var sut = new VipLevelServiceClient(httpClient);
+
+		var brandId = Guid.NewGuid();
+
+		var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+		await dbContext.VipLevels.AddRangeAsync(
+			new VipLevel
+			{
+				Id = Guid.NewGuid(),
+				BrandId = brandId,
+				CreatedByUsername = "system",
+				UpdatedByUsername = "system",
+				Level = 10,
+				LevelUpAccumulateBetAmount = 1M,
+				LevelKeepAccumulateDeposit = 2M,
+				LevelKeepAccumulateBetAmount = 3M,
+				LevelUpAccumulateDeposit = 4M,
+				LevelKeepCondition = true,
+				BirthReward = 6M,
+				PromotionReward = 7M,
+				QuarterlyReward = 8M,
+				CardGameRebatePercentage = 9M,
+				LiveDealerRebatePercentage = 10M,
+				LotteryRebatePercentage = 11M,
+				SlotRebatePercentage = 12M,
+				SportsRebatePercentage = 13M,
+				VirtualSportsRebatePercentage = 14M
+			});
+
+		_ = await dbContext.SaveChangesAsync();
+
+		var expected = new
+		{
+			Level = 10,
+			LevelUpAccumulateBetAmount = 1M,
+			LevelKeepAccumulateDeposit = 2M,
+			LevelKeepAccumulateBetAmount = 3M,
+			LevelUpAccumulateDeposit = 4M,
+			LevelKeepCondition = true,
+			BirthBenefit = 6M,
+			PromotionBenefit = 7M,
+			QuarterlyBenefit = 8M,
+			CardGameRebate = 9M,
+			LiveDealerRebate = 10M,
+			LotteryRebate = 11M,
+			SlotRebate = 12M,
+			SportsRebate = 13M,
+			VirtualSportsRebate = 14M
+		}.ToExpectedObject();
+
+		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
+		var actualItem = actual.First();
+
+		expected.ShouldMatch(actualItem);
 	}
 
 	[TestMethod]
@@ -117,7 +183,21 @@ public class VipLevelTests
 
 		var updateInfo = VipLevelUpdateInfo.Default with
 		{
-			Level = 100
+			Level = 100,
+			LevelKeepAccumulateBetAmount = 10M,
+			LevelKeepAccumulateDeposit = 10M,
+			LevelKeepCondition = true,
+			LevelUpAccumulateBetAmount = 10M,
+			LevelUpAccumulateDeposit = 10M,
+			BirthBenefit = 10M,
+			PromotionBenefit = 10M,
+			QuarterlyBenefit = 10M,
+			LiveDealerRebate = 10M,
+			SlotRebate = 10M,
+			LotteryRebate = 10M,
+			CardGameRebate = 10M,
+			SportsRebate = 10M,
+			VirtualSportsRebate = 10M
 		};
 
 		await sut.UpdateVipLevelAsync(vipId, updateInfo, modifier);

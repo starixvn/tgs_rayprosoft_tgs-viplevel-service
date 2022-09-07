@@ -30,7 +30,7 @@ internal class TgsRepository : ITgsRepository
 				vl.SlotRebatePercentage,
 				vl.LotteryRebatePercentage,
 				vl.CardGameRebatePercentage,
-				vl.SlotRebatePercentage,
+				vl.SportsRebatePercentage,
 				vl.VirtualSportsRebatePercentage))
 			.ToAsyncEnumerable();
 

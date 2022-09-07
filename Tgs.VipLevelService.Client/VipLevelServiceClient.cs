@@ -30,7 +30,11 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 				.ReadFromJsonAsync<IEnumerable<VipLevelInfo>>(_SerializerOptions, cancellationToken)
 				.ToAsyncEnumerable()
 				.Where(collection => collection is not null)
-				.SelectMany(collection => collection!.ToAsyncEnumerable()));
+				.SelectMany(collection => collection!.ToAsyncEnumerable()))
+			.ToArrayAsync(cancellationToken)
+			.AsTask()
+			.ToAsyncEnumerable()
+			.SelectMany(arr => arr.ToAsyncEnumerable());
 
 	public async ValueTask<Guid> CreateVipLevelAsync(
 		Guid brandId,
