@@ -1,5 +1,4 @@
-﻿using Tgs.VipLevelService;
-namespace Tgs.VipLevelService.Clients;
+﻿namespace Tgs.VipLevelService.Clients;
 public record VipLevelInfo(
 	Guid Id,
 	int Level,

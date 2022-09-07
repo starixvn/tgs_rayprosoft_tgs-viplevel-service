@@ -1,5 +1,4 @@
 ﻿using Tgs.ServiceUtility;
-using Tgs.VipLevelService.ApplicationServices;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 

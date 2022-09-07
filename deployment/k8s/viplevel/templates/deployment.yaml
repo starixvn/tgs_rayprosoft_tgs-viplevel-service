@@ -53,14 +53,22 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
+          volumeMounts:
+            - mountPath: /diag
+              name: diagvol
+            - mountPath: /dumps
+              name: dumpsvol
+          startupProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
+            periodSeconds: 2
+            failureThreshold: 30
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
+            periodSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: monitor

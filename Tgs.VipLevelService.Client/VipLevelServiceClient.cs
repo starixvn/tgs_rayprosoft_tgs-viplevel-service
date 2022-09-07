@@ -5,7 +5,7 @@ using Json.Patch;
 
 namespace Tgs.VipLevelService.Clients;
 
-internal class VipLevelServiceClient
+internal class VipLevelServiceClient : IVipLevelServiceClient
 {
 	private static readonly JsonSerializerOptions _SerializerOptions = new()
 	{
@@ -51,7 +51,7 @@ internal class VipLevelServiceClient
 		return await response.Content.ReadFromJsonAsync<Guid>(_SerializerOptions, cancellationToken);
 	}
 
-	public async Task UpdateVipLevelAsync(
+	public async ValueTask UpdateVipLevelAsync(
 		Guid vipId,
 		VipLevelUpdateInfo updateInfo,
 		string modifier,

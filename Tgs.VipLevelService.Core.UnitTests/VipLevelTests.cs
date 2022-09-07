@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService;
 
 namespace Tgs.VipLevelService.Core.UnitTests;
 
