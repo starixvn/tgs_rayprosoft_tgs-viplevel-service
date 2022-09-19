@@ -80,7 +80,7 @@ internal class TgsRepository : ITgsRepository
 		viplevel.PromotionReward = modifyModel.PromotionBenefit;
 		viplevel.QuarterlyReward = modifyModel.QuarterlyBenefit;
 		viplevel.LiveDealerRebatePercentage = modifyModel.LiveDealerRebate;
-		viplevel.SlotRebatePercentage = modifyModel.SportsRebate;
+		viplevel.SlotRebatePercentage = modifyModel.SlotRebate;
 		viplevel.LotteryRebatePercentage = modifyModel.LotteryRebate;
 		viplevel.CardGameRebatePercentage = modifyModel.CardGameRebate;
 		viplevel.SportsRebatePercentage = modifyModel.SportsRebate;
@@ -109,7 +109,7 @@ internal class TgsRepository : ITgsRepository
 			PromotionReward = createModel.PromotionBenefit,
 			QuarterlyReward = createModel.QuarterlyBenefit,
 			LiveDealerRebatePercentage = createModel.LiveDealerRebate,
-			SlotRebatePercentage = createModel.SportsRebate,
+			SlotRebatePercentage = createModel.SlotRebate,
 			LotteryRebatePercentage = createModel.LotteryRebate,
 			CardGameRebatePercentage = createModel.CardGameRebate,
 			SportsRebatePercentage = createModel.SportsRebate,
