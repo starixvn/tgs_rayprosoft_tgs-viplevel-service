@@ -6,11 +6,6 @@
 public class VipLevelCreateViewModel
 {
 	/// <summary>
-	/// Gets or sets the level.
-	/// </summary>
-	public int Level { get; set; }
-
-	/// <summary>
 	/// Gets the level up accumulate bet amount.
 	/// </summary>
 	public decimal LevelUpAccumulateBetAmount { get; init; }

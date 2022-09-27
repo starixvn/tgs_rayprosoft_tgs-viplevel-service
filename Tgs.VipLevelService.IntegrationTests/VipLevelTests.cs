@@ -132,7 +132,6 @@ public class VipLevelTests
 		var dbContext = web.Services.GetRequiredService<TgsContext>();
 
 		var createInfo = new VipLevelCreateInfo(
-			2,
 			10M,
 			20M,
 			30M,

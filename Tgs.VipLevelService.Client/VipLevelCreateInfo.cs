@@ -1,6 +1,5 @@
 ﻿namespace Tgs.VipLevelService.Clients;
 public record VipLevelCreateInfo(
-	int Level,
 	decimal LevelUpAccumulateBetAmount,
 	decimal LevelUpAccumulateDeposit,
 	decimal LevelKeepAccumulateBetAmount,

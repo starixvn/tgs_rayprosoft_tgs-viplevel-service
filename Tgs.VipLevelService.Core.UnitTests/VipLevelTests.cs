@@ -81,8 +81,7 @@ public class VipLevelTests
 
 		var command = new CreateVipLevelCommand(
 			Guid.NewGuid(),
-			new VipLevelModifyModel(
-				1,
+			new VipLevelCreateModel(
 				10M,
 				20M,
 				30M,

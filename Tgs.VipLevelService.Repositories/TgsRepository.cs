@@ -1,4 +1,5 @@
-﻿using Tgs.VipLevelService.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
 
@@ -91,15 +92,20 @@ internal class TgsRepository : ITgsRepository
 		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 	}
 
-	public async ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelModifyModel createModel, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelCreateModel createModel, string modifier, CancellationToken cancellationToken = default)
 	{
 		var currentDate = DateTime.UtcNow;
+
+		var maxVipLevel = await _tgsContext.VipLevels
+			.Where(vip => vip.BrandId == brandId)
+			.MaxAsync(vip => (int?)vip.Level, cancellationToken)
+			.ConfigureAwait(false) ?? 0;
 
 		var newVipLevel = new VipLevel
 		{
 			Id = id,
 			BrandId = brandId,
-			Level = createModel.Level,
+			Level = maxVipLevel + 1,
 			LevelUpAccumulateBetAmount = createModel.LevelUpAccumulateBetAmount,
 			LevelUpAccumulateDeposit = createModel.LevelUpAccumulateDeposit,
 			LevelKeepAccumulateBetAmount = createModel.LevelKeepAccumulateBetAmount,

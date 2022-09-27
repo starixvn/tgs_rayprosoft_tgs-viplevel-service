@@ -8,5 +8,5 @@ public interface ITgsRepository
 
 	ValueTask ModifyVipLevelAsync(Guid id, VipLevelModifyModel modifyModel, string modifier, CancellationToken cancellationToken = default);
 
-	ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelModifyModel createModel, string modifier, CancellationToken cancellationToken = default);
+	ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelCreateModel createModel, string modifier, CancellationToken cancellationToken = default);
 }
