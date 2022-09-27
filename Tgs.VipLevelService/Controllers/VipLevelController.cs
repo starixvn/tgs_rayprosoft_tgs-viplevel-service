@@ -101,8 +101,7 @@ public class VipLevelController : ControllerBase
 	{
 		var command = new CreateVipLevelCommand(
 			brandId,
-			new VipLevelModifyModel(
-				createModel.Level,
+			new VipLevelCreateModel(
 				createModel.LevelUpAccumulateBetAmount,
 				createModel.LevelUpAccumulateDeposit,
 				createModel.LevelKeepAccumulateBetAmount,
