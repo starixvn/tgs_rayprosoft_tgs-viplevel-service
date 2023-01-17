@@ -1,6 +1,7 @@
 ﻿using Json.Patch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Tgs.Paging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.ViewModels;
@@ -119,5 +120,51 @@ public class VipLevelController : ControllerBase
 			modifier);
 
 		return createService.GetAsync(command, HttpContext.RequestAborted);
+	}
+
+	[HttpGet("playerAdjustInfo", Name = "QueryPlayerVipAdjustInfos")]
+	public async Task<PagingResponseViewModel<PlayerVipAdjustViewModel>> QueryPlayerVipAdjustInfosAsync(
+		[FromServices] IGetService<PlayerVipAdjustQuery, int> countService,
+		[FromServices] IQueryService<PlayerVipAdjustQuery, PlayerVipAdjustInfo> queryService,
+		[FromQuery] PlayerVipAdjustQueryViewModel source,
+		[FromQuery] PagingViewModel paging)
+	{
+		var sourcePaging = new Paging<PlayerVipAdjustInfo>
+		{
+			Page = paging.Page ?? 1,
+			RowCount = paging.Rows ?? 10
+		};
+
+		if (paging.ShowAll == true)
+		{
+			sourcePaging.Page = -1;
+			sourcePaging.RowCount = -1;
+		}
+
+		if (!string.IsNullOrWhiteSpace(paging.SortBy))
+			sourcePaging.SortByPropertyName(paging.SortBy, paging.IsDesc ?? false);
+
+		var query = new PlayerVipAdjustQuery(
+			source.BrandId,
+			source.PlayerCode,
+			sourcePaging);
+
+		var totalCount = await countService.GetAsync(query).ConfigureAwait(false);
+
+		var items = queryService.QueryAsync(query)
+			.Select(row => new PlayerVipAdjustViewModel
+			{
+				OldLevel = row.OldLevel,
+				NewLevel = row.NewLevel,
+				CreatedOn = row.CreatedOn,
+			});
+
+		return new PagingResponseViewModel<PlayerVipAdjustViewModel>()
+		{
+			TotalCount = totalCount,
+			Page = 1,
+			Rows = -1,
+			Items = items.ToEnumerable(),
+		};
 	}
 }

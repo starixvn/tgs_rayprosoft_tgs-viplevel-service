@@ -15,4 +15,9 @@ public interface IVipLevelServiceClient
 		VipLevelUpdateInfo updateInfo,
 		string modifier,
 		CancellationToken cancellationToken = default);
+
+	ValueTask<PagingResponse<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		Paging paging,
+		CancellationToken cancellationToken = default);
 }

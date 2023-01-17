@@ -107,4 +107,19 @@ public class VipLevelTests
 				Arg.Is(command.CreateModel),
 				Arg.Is(command.Modifier));
 	}
+
+	[TestMethod]
+	public async Task Query_Player_Vip_Adjust_Infos()
+	{
+		var fakeTgsRepository = Substitute.For<ITgsRepository>();
+
+		var sut = new PlayerVipAdjustQueryService(fakeTgsRepository);
+
+		var query = new PlayerVipAdjustQuery(Guid.NewGuid(), "playerCode",new Paging.Paging<PlayerVipAdjustInfo>());
+
+		_ = await sut.QueryAsync(query).ToArrayAsync();
+
+		_ = fakeTgsRepository.Received(1)
+			.QueryPlayerVipAdjustInfosAsync(Arg.Any<PlayerVipAdjustQueryConditions>(),Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Tgs.Paging;
 using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
@@ -131,5 +132,58 @@ internal class TgsRepository : ITgsRepository
 			.ConfigureAwait(false);
 
 		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+	}
+
+	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging<PlayerVipAdjustInfo> paging, CancellationToken cancellationToken = default)
+	{
+		var dataQuery = MakePlayerVipAdjustQuery(conditions.BrandId, conditions.PlayerCode)
+			.Select(row => new PlayerVipAdjustInfo(row.CreatedOn, row.OldLevel, row.NewLevel))
+			.ToAsyncEnumerable();
+
+		dataQuery = dataQuery.ApplyOrderBy(paging);
+
+		if (paging.RowCount > 0)
+			dataQuery = dataQuery.ApplyPaging(paging);
+
+		return dataQuery;
+	}
+
+	public async ValueTask<int> CountPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, CancellationToken cancellationToken = default)
+	{
+		var dataQuery = MakePlayerVipAdjustQuery(conditions.BrandId, conditions.PlayerCode);
+
+		return await dataQuery
+			.CountAsync(cancellationToken)
+			.ConfigureAwait(false);
+	}
+
+	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(Guid brandId, string playerCode)
+	{
+		var vipLevels = _tgsContext.VipLevels.AsQueryable()
+			.Where(vl => vl.BrandId == brandId);
+
+		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
+			.Where(pvlar => pvlar.PlayerCode == playerCode)
+			.Join(vipLevels,
+				playerAdjustRecord => playerAdjustRecord.OldVipId,
+				vipLevel => vipLevel.Id,
+				(playerAdjustRecord, vipLevel) => new
+				{
+					OldLevel = vipLevel.Level,
+					playerAdjustRecord.CreatedOn,
+					playerAdjustRecord.NewVipId
+				})
+			.Join(vipLevels,
+					playerAdjustRecord => playerAdjustRecord.NewVipId,
+				vipLevel => vipLevel.Id,
+				(playerAdjustRecord, vipLevel) => new
+				{
+					playerAdjustRecord.OldLevel,
+					NewLevel = vipLevel.Level,
+					playerAdjustRecord.CreatedOn
+				})
+			.Select(row => new PlayerVipAdjustInfo(row.CreatedOn, row.OldLevel, row.NewLevel));
+
+		return dataQuery;
 	}
 }

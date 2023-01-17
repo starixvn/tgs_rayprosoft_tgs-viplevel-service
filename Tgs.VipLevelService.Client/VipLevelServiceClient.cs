@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Web;
 using Json.Patch;
 
 namespace Tgs.VipLevelService.Clients;
@@ -71,5 +72,28 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ConfigureAwait(false);
 
 		_ = response.EnsureSuccessStatusCode();
+	}
+
+	public async ValueTask<PagingResponse<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		Paging paging,
+		CancellationToken cancellationToken = default)
+	{
+		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
+
+		queryStrings.Add("brand_id", conditions.BrandId.ToString());
+		queryStrings.Add("player_code", conditions.PlayerCode);
+
+		var response = await _httpClient
+			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
+			.ConfigureAwait(false);
+
+		_ = response.EnsureSuccessStatusCode();
+
+		var contentJson = await response.Content
+			.ReadAsStringAsync(cancellationToken)
+			.ConfigureAwait(false);
+
+		return JsonSerializer.Deserialize<PagingResponse<PlayerVipAdjustInfo>>(contentJson, _SerializerOptions)!;
 	}
 }
