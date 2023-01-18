@@ -164,19 +164,46 @@ internal class TgsRepository : ITgsRepository
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
 	{
-		var dataQuery =
-			from pr in _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
-			join vl in _tgsContext.VipLevels.AsQueryable() on pr.OldVipId equals vl.Id into vlj
-			from v1 in vlj.DefaultIfEmpty()
-			join vl2 in _tgsContext.VipLevels.AsQueryable() on pr.NewVipId equals vl2.Id into vlj2
-			from v2 in vlj2.DefaultIfEmpty()
-			where pr.PlayerCode == conditions.PlayerCode
-				&& v1.BrandId == conditions.BrandId
-				&& v2.BrandId == conditions.BrandId
-			select new { pr.CreatedOn, OldLevel = v1.Level, NewLevel = v2.Level };
+		var vipLevels = _tgsContext.VipLevels.AsQueryable()
+			.Where(vl => vl.BrandId == conditions.BrandId);
+
+		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
+			.Where(pr => pr.PlayerCode == conditions.PlayerCode)
+			.GroupJoin(vipLevels,
+				pr => pr.OldVipId,
+				vl => vl.Id,
+				(pr, vipLevel) => new
+				{
+					pr.NewVipId,
+					pr.CreatedOn,
+					vipLevel
+				})
+			.SelectMany(x => x.vipLevel.DefaultIfEmpty(),
+				(x, vl) => new
+				{
+					OldLevel = vl == null ? 0 : vl.Level,
+					x.NewVipId,
+					x.CreatedOn
+				})
+			.GroupJoin(vipLevels,
+				pr => pr.NewVipId,
+				vl => vl.Id,
+				(x, vipLevel) => new
+				{
+					x.CreatedOn,
+					x.OldLevel,
+					vipLevel
+				})
+			.SelectMany(x => x.vipLevel.DefaultIfEmpty(),
+				(x, vipLevel) => new
+				{
+					x.OldLevel,
+					NewLevel = vipLevel == null ? 0 : vipLevel.Level,
+					x.CreatedOn,
+				});
 
 		if (conditions.CreateOnRange != null)
-			dataQuery = dataQuery.Where(pr 
+			dataQuery = dataQuery.Where(pr
 				=> pr.CreatedOn >= conditions.CreateOnRange.Value.Begin
 				&& pr.CreatedOn < conditions.CreateOnRange.Value.End);
 
