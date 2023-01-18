@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Web;
 using Json.Patch;
 
 namespace Tgs.VipLevelService.Clients;
@@ -71,5 +72,53 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ConfigureAwait(false);
 
 		_ = response.EnsureSuccessStatusCode();
+	}
+
+	public async ValueTask<PagingResponse<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		Paging paging,
+		CancellationToken cancellationToken = default)
+	{
+		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
+
+		queryStrings.Add("brand_id", conditions.BrandId.ToString());
+		queryStrings.Add("player_code", conditions.PlayerCode);
+
+		if (conditions.CreateOnRange != null)
+		{
+			queryStrings.Add("bc", conditions.CreateOnRange.Value.Begin.ToString("o"));
+			queryStrings.Add("ec", conditions.CreateOnRange.Value.End.ToString("o"));
+		}		
+
+		if (paging.ShowAll == true)
+			queryStrings.Add("all", "true");
+		else
+		{
+			if (paging.Page != null)
+				queryStrings.Add("page", paging.Page.ToString());
+
+			if (paging.Rows != null)
+				queryStrings.Add("rows", paging.Rows.ToString());
+		}
+
+		if (!string.IsNullOrWhiteSpace(paging.SortBy))
+		{
+			queryStrings.Add("sort", paging.SortBy);
+
+			if (paging.IsDesc == true)
+				queryStrings.Add("desc", "true");
+		}
+
+		var response = await _httpClient
+			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
+			.ConfigureAwait(false);
+
+		_ = response.EnsureSuccessStatusCode();
+
+		var contentJson = await response.Content
+			.ReadAsStringAsync(cancellationToken)
+			.ConfigureAwait(false);
+
+		return JsonSerializer.Deserialize<PagingResponse<PlayerVipAdjustInfo>>(contentJson, _SerializerOptions)!;
 	}
 }

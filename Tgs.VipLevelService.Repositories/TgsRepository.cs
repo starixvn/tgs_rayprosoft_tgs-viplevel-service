@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Tgs.Paging;
 using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
@@ -131,5 +132,52 @@ internal class TgsRepository : ITgsRepository
 			.ConfigureAwait(false);
 
 		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+	}
+
+	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		Paging<PlayerVipAdjustInfo> paging,
+		CancellationToken cancellationToken = default)
+	{
+		var dataQuery = MakePlayerVipAdjustQuery(conditions)
+			.Select(row => new PlayerVipAdjustInfo(row.CreatedOn, row.OldVipId, row.NewVipId))
+			.ToAsyncEnumerable();
+
+		dataQuery = dataQuery.ApplyOrderBy(paging);
+
+		if (paging.RowCount > 0)
+			dataQuery = dataQuery.ApplyPaging(paging);
+
+		return dataQuery;
+	}
+
+	public async ValueTask<int> CountPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		CancellationToken cancellationToken = default)
+	{
+		var dataQuery = MakePlayerVipAdjustQuery(conditions);
+
+		return await dataQuery
+			.CountAsync(cancellationToken)
+			.ConfigureAwait(false);
+	}
+
+	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
+	{		
+		var limitDate = DateTimeOffset.UtcNow.AddDays(-90);
+
+		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
+			.Where(pr => pr.PlayerCode == conditions.PlayerCode
+				&& pr.CreatedOn >= limitDate);
+
+		if (conditions.CreateOnRange != null)
+			dataQuery = dataQuery.Where(x => x.CreatedOn >= conditions.CreateOnRange.Value.Begin
+				&& x.CreatedOn < conditions.CreateOnRange.Value.End);
+
+		return dataQuery.Select(row
+			=> new PlayerVipAdjustInfo(
+				row.CreatedOn,
+				row.OldVipId,
+				row.NewVipId));
 	}
 }

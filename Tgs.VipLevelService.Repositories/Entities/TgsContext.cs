@@ -10,11 +10,16 @@ namespace Tgs.VipLevelService.Entities
 {
     public partial class TgsContext : DbContext
     {
+        public TgsContext()
+        {
+        }
+
         public TgsContext(DbContextOptions<TgsContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<PlayerVipLevelAdjustRecord> PlayerVipLevelAdjustRecords { get; set; } = null!;
         public virtual DbSet<VipLevel> VipLevels { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,6 +27,7 @@ namespace Tgs.VipLevelService.Entities
             modelBuilder.HasPostgresExtension("ltree")
                 .HasPostgresExtension("pg_trgm");
 
+            modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
             modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
             OnModelCreatingPartial(modelBuilder);
         }
