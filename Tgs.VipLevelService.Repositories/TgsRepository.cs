@@ -163,18 +163,15 @@ internal class TgsRepository : ITgsRepository
 	}
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
-	{
-		var currentDate = DateTimeOffset.UtcNow;
-		var limitDate = currentDate.AddDays(-90);
+	{		
+		var limitDate = DateTimeOffset.UtcNow.AddDays(-90);
 
 		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
 			.Where(pr => pr.PlayerCode == conditions.PlayerCode
-				&& pr.CreatedOn >= limitDate
-				&& pr.CreatedOn < currentDate);
+				&& pr.CreatedOn >= limitDate);
 
 		if (conditions.CreateOnRange != null)
-			dataQuery = dataQuery.Where(x
-				=> x.CreatedOn >= conditions.CreateOnRange.Value.Begin
+			dataQuery = dataQuery.Where(x => x.CreatedOn >= conditions.CreateOnRange.Value.Begin
 				&& x.CreatedOn < conditions.CreateOnRange.Value.End);
 
 		return dataQuery.Select(row
