@@ -164,6 +164,9 @@ internal class TgsRepository : ITgsRepository
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
 	{
+		var currentDate = DateTimeOffset.UtcNow;
+		var limitDate = currentDate.AddDays(-90);
+
 		var dataQuery =
 			from pr in _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
 			join vl in _tgsContext.VipLevels.AsQueryable() on pr.OldVipId equals vl.Id into vlj
@@ -171,6 +174,8 @@ internal class TgsRepository : ITgsRepository
 			join vl2 in _tgsContext.VipLevels.AsQueryable() on pr.NewVipId equals vl2.Id into vlj2
 			from v2 in vlj2.DefaultIfEmpty()
 			where pr.PlayerCode == conditions.PlayerCode
+				&& pr.CreatedOn >= limitDate
+				&& pr.CreatedOn < currentDate
 				&& v1.BrandId == conditions.BrandId
 				&& v2.BrandId == conditions.BrandId
 			select new { pr.CreatedOn, OldLevel = v1.Level, NewLevel = v2.Level };
