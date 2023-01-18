@@ -159,31 +159,19 @@ internal class TgsRepository : ITgsRepository
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(Guid brandId, string playerCode)
 	{
-		var vipLevels = _tgsContext.VipLevels.AsQueryable()
-			.Where(vl => vl.BrandId == brandId);
+		var dataQuery =
+			from pr in _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
+			join vl in _tgsContext.VipLevels.AsQueryable() on pr.OldVipId equals vl.Id into vlj
+			from v1 in vlj.DefaultIfEmpty()
+			join vl2 in _tgsContext.VipLevels.AsQueryable() on pr.NewVipId equals vl2.Id into vlj2
+			from v2 in vlj2.DefaultIfEmpty()
+			where pr.PlayerCode == playerCode && v1.BrandId == brandId && v2.BrandId == brandId
+			select new { pr.CreatedOn, OldLevel = v1.Level, NewLevel = v2.Level };
 
-		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
-			.Where(pvlar => pvlar.PlayerCode == playerCode)
-			.Join(vipLevels,
-				playerAdjustRecord => playerAdjustRecord.OldVipId,
-				vipLevel => vipLevel.Id,
-				(playerAdjustRecord, vipLevel) => new
-				{
-					OldLevel = vipLevel.Level,
-					playerAdjustRecord.CreatedOn,
-					playerAdjustRecord.NewVipId
-				})
-			.Join(vipLevels,
-					playerAdjustRecord => playerAdjustRecord.NewVipId,
-				vipLevel => vipLevel.Id,
-				(playerAdjustRecord, vipLevel) => new
-				{
-					playerAdjustRecord.OldLevel,
-					NewLevel = vipLevel.Level,
-					playerAdjustRecord.CreatedOn
-				})
-			.Select(row => new PlayerVipAdjustInfo(row.CreatedOn, row.OldLevel, row.NewLevel));
-
-		return dataQuery;
+		return dataQuery.Select(row
+			=> new PlayerVipAdjustInfo(
+				row.CreatedOn,
+				row.OldLevel,
+				row.NewLevel));
 	}
 }
