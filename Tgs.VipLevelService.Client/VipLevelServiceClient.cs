@@ -84,6 +84,31 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		queryStrings.Add("brand_id", conditions.BrandId.ToString());
 		queryStrings.Add("player_code", conditions.PlayerCode);
 
+		if (conditions.CreateOnRange != null)
+		{
+			queryStrings.Add("bc", conditions.CreateOnRange.Value.Begin.ToString("o"));
+			queryStrings.Add("ec", conditions.CreateOnRange.Value.End.ToString("o"));
+		}		
+
+		if (paging.ShowAll == true)
+			queryStrings.Add("all", "true");
+		else
+		{
+			if (paging.Page != null)
+				queryStrings.Add("page", paging.Page.ToString());
+
+			if (paging.Rows != null)
+				queryStrings.Add("rows", paging.Rows.ToString());
+		}
+
+		if (!string.IsNullOrWhiteSpace(paging.SortBy))
+		{
+			queryStrings.Add("sort", paging.SortBy);
+
+			if (paging.IsDesc == true)
+				queryStrings.Add("desc", "true");
+		}
+
 		var response = await _httpClient
 			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
 			.ConfigureAwait(false);

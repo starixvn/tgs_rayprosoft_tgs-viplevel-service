@@ -114,14 +114,17 @@ public class VipLevelTests
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
 
 		var sut = new PlayerVipAdjustQueryService(fakeTgsRepository);
-		
 
-		var query = new PlayerVipAdjustQuery(Guid.NewGuid(), "playerCode",new Paging.Paging<PlayerVipAdjustInfo>());
+		var query = new PlayerVipAdjustQuery(
+			BrandId: Guid.NewGuid(),
+			PlayerCode: "playerCode",
+			CreateOnRange: (DateTimeOffset.Now.AddDays(-30), DateTimeOffset.Now),
+			   new Paging.Paging<PlayerVipAdjustInfo>());
 
 		_ = await sut.QueryAsync(query).ToArrayAsync();
 
 		_ = fakeTgsRepository.Received(1)
-			.QueryPlayerVipAdjustInfosAsync(Arg.Any<PlayerVipAdjustQueryConditions>(),Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());		
+			.QueryPlayerVipAdjustInfosAsync(Arg.Any<PlayerVipAdjustQueryConditions>(), Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());
 	}
 
 	[TestMethod]
@@ -131,8 +134,11 @@ public class VipLevelTests
 
 		var sut = new PlayerVipAdjustQueryService(fakeTgsRepository);
 
-
-		var query = new PlayerVipAdjustQuery(Guid.NewGuid(), "playerCode", new Paging.Paging<PlayerVipAdjustInfo>());
+		var query = new PlayerVipAdjustQuery(
+			BrandId: Guid.NewGuid(),
+			PlayerCode: "playerCode",
+			CreateOnRange: (DateTimeOffset.Now.AddDays(-30), DateTimeOffset.Now),
+			   new Paging.Paging<PlayerVipAdjustInfo>());
 
 		_ = await sut.GetAsync(query);
 

@@ -204,7 +204,7 @@ public class VipLevelTests
 	}
 
 	[TestMethod]
-	public async Task QueryPlayerVipAdjustInfos()
+	public async Task Query_Player_Vip_Adjust_Infos()
 	{
 		await using var web = TestVipLevelApplication.Factory;
 

@@ -5,4 +5,6 @@ public class PlayerVipAdjustQueryConditions
 	public Guid BrandId { get; init; }
 
 	public string PlayerCode { get; init; } = default!;
+
+	public (DateTimeOffset Begin, DateTimeOffset End)? CreateOnRange { get; init; }
 }

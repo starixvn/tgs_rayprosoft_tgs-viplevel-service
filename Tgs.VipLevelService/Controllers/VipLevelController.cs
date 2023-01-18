@@ -129,6 +129,11 @@ public class VipLevelController : ControllerBase
 		[FromQuery] PlayerVipAdjustQueryViewModel source,
 		[FromQuery] PagingViewModel paging)
 	{
+		var createOnRange = ((DateTimeOffset Begin, DateTimeOffset End)?)null;
+
+		if (source.BeginCreatedOn != null && source.EndCreatedOn != null)
+			createOnRange = (source.BeginCreatedOn.Value, source.EndCreatedOn.Value);
+
 		var sourcePaging = new Paging<PlayerVipAdjustInfo>
 		{
 			Page = paging.Page ?? 1,
@@ -147,6 +152,7 @@ public class VipLevelController : ControllerBase
 		var query = new PlayerVipAdjustQuery(
 			source.BrandId,
 			source.PlayerCode,
+			createOnRange,
 			sourcePaging);
 
 		var totalCount = await countService.GetAsync(query).ConfigureAwait(false);

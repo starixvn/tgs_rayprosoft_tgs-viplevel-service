@@ -134,9 +134,12 @@ internal class TgsRepository : ITgsRepository
 		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 	}
 
-	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging<PlayerVipAdjustInfo> paging, CancellationToken cancellationToken = default)
+	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		Paging<PlayerVipAdjustInfo> paging,
+		CancellationToken cancellationToken = default)
 	{
-		var dataQuery = MakePlayerVipAdjustQuery(conditions.BrandId, conditions.PlayerCode)
+		var dataQuery = MakePlayerVipAdjustQuery(conditions)
 			.Select(row => new PlayerVipAdjustInfo(row.CreatedOn, row.OldLevel, row.NewLevel))
 			.ToAsyncEnumerable();
 
@@ -148,16 +151,18 @@ internal class TgsRepository : ITgsRepository
 		return dataQuery;
 	}
 
-	public async ValueTask<int> CountPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, CancellationToken cancellationToken = default)
+	public async ValueTask<int> CountPlayerVipAdjustInfosAsync(
+		PlayerVipAdjustQueryConditions conditions,
+		CancellationToken cancellationToken = default)
 	{
-		var dataQuery = MakePlayerVipAdjustQuery(conditions.BrandId, conditions.PlayerCode);
+		var dataQuery = MakePlayerVipAdjustQuery(conditions);
 
 		return await dataQuery
 			.CountAsync(cancellationToken)
 			.ConfigureAwait(false);
 	}
 
-	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(Guid brandId, string playerCode)
+	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
 	{
 		var dataQuery =
 			from pr in _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
@@ -165,8 +170,15 @@ internal class TgsRepository : ITgsRepository
 			from v1 in vlj.DefaultIfEmpty()
 			join vl2 in _tgsContext.VipLevels.AsQueryable() on pr.NewVipId equals vl2.Id into vlj2
 			from v2 in vlj2.DefaultIfEmpty()
-			where pr.PlayerCode == playerCode && v1.BrandId == brandId && v2.BrandId == brandId
+			where pr.PlayerCode == conditions.PlayerCode
+				&& v1.BrandId == conditions.BrandId
+				&& v2.BrandId == conditions.BrandId
 			select new { pr.CreatedOn, OldLevel = v1.Level, NewLevel = v2.Level };
+
+		if (conditions.CreateOnRange != null)
+			dataQuery = dataQuery.Where(pr 
+				=> pr.CreatedOn >= conditions.CreateOnRange.Value.Begin
+				&& pr.CreatedOn < conditions.CreateOnRange.Value.End);
 
 		return dataQuery.Select(row
 			=> new PlayerVipAdjustInfo(

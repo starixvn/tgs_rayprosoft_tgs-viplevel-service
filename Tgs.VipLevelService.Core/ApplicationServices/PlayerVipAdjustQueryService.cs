@@ -16,14 +16,16 @@ internal class PlayerVipAdjustQueryService
 		=> _tgsRepository.CountPlayerVipAdjustInfosAsync(
 			  new PlayerVipAdjustQueryConditions(
 				query.BrandId,
-				query.PlayerCode),
+				query.PlayerCode,
+				query.CreateOnRange),
 			  cancellationToken);
 
 	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryAsync(PlayerVipAdjustQuery query, CancellationToken cancellationToken = default)
 		=> _tgsRepository.QueryPlayerVipAdjustInfosAsync(
 			  new PlayerVipAdjustQueryConditions(
 				query.BrandId,
-				query.PlayerCode),
+				query.PlayerCode,
+				query.CreateOnRange),
 			query.Paging,
 			cancellationToken);
 }

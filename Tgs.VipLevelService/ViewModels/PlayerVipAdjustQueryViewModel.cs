@@ -9,4 +9,10 @@ public class PlayerVipAdjustQueryViewModel
 
 	[FromQuery(Name = "player_code")]
 	public string PlayerCode { get; set; } = default!;
+
+	[FromQuery(Name = "bc")]
+	public DateTimeOffset? BeginCreatedOn { get; set; }
+
+	[FromQuery(Name = "ec")]
+	public DateTimeOffset? EndCreatedOn { get; set; }
 }
