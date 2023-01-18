@@ -244,21 +244,21 @@ public class VipLevelTests
 				PlayerCode = playerCode,
 				OldVipId = vip1LevelId,
 				NewVipId = vip2LevelId,
-				CreatedOn = new DateTime(2022, 11, 01, 0, 11, 35),
+				CreatedOn = DateTime.Now.AddDays(-20),
 				Remark = "系統晉升/降級",
 				Id = Guid.Parse("7f4b749c-41d3-4bd6-bdf8-2d4206786b2d"),
 				OperatorId = Guid.Parse("00000000-0000-0000-0000-000000000000")
 			},
-				new PlayerVipLevelAdjustRecord
-				{
-					PlayerCode = playerCode,
-					OldVipId = vip2LevelId,
-					NewVipId = vip1LevelId,
-					CreatedOn = new DateTime(2022, 10, 01, 0, 11, 43),
-					Remark = "系統晉升/降級",
-					Id = Guid.Parse("1c3cb9a1-8de2-40a4-85e3-7e202cf721fa"),
-					OperatorId = Guid.Parse("00000000-0000-0000-0000-000000000000")
-				}
+			new PlayerVipLevelAdjustRecord
+			{
+				PlayerCode = playerCode,
+				OldVipId = vip2LevelId,
+				NewVipId = vip1LevelId,
+				CreatedOn = DateTime.Now.AddDays(-10),
+				Remark = "系統晉升/降級",
+				Id = Guid.Parse("1c3cb9a1-8de2-40a4-85e3-7e202cf721fa"),
+				OperatorId = Guid.Parse("00000000-0000-0000-0000-000000000000")
+			}			
 			);
 
 		_ = await dbContext.SaveChangesAsync();

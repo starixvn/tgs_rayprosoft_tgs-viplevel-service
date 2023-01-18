@@ -116,7 +116,6 @@ public class VipLevelTests
 		var sut = new PlayerVipAdjustQueryService(fakeTgsRepository);
 
 		var query = new PlayerVipAdjustQuery(
-			BrandId: Guid.NewGuid(),
 			PlayerCode: "playerCode",
 			CreateOnRange: (DateTimeOffset.Now.AddDays(-30), DateTimeOffset.Now),
 			   new Paging.Paging<PlayerVipAdjustInfo>());
@@ -135,7 +134,6 @@ public class VipLevelTests
 		var sut = new PlayerVipAdjustQueryService(fakeTgsRepository);
 
 		var query = new PlayerVipAdjustQuery(
-			BrandId: Guid.NewGuid(),
 			PlayerCode: "playerCode",
 			CreateOnRange: (DateTimeOffset.Now.AddDays(-30), DateTimeOffset.Now),
 			   new Paging.Paging<PlayerVipAdjustInfo>());

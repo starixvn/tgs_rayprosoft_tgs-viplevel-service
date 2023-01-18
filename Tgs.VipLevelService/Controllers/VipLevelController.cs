@@ -126,6 +126,7 @@ public class VipLevelController : ControllerBase
 	public async Task<PagingResponseViewModel<PlayerVipAdjustViewModel>> QueryPlayerVipAdjustInfosAsync(
 		[FromServices] IGetService<PlayerVipAdjustQuery, int> countService,
 		[FromServices] IQueryService<PlayerVipAdjustQuery, PlayerVipAdjustInfo> queryService,
+		[FromServices] IQueryService<AllVipLevelsQuery, VipLevelInfo> vipQueryService,
 		[FromQuery] PlayerVipAdjustQueryViewModel source,
 		[FromQuery] PagingViewModel paging)
 	{
@@ -149,19 +150,34 @@ public class VipLevelController : ControllerBase
 		if (!string.IsNullOrWhiteSpace(paging.SortBy))
 			sourcePaging.SortByPropertyName(paging.SortBy, paging.IsDesc ?? false);
 
-		var query = new PlayerVipAdjustQuery(
-			source.BrandId,
+		var query = new PlayerVipAdjustQuery(			
 			source.PlayerCode,
 			createOnRange,
 			sourcePaging);
 
-		var totalCount = await countService.GetAsync(query).ConfigureAwait(false);
+		var allVips = await vipQueryService
+			.QueryAsync(new AllVipLevelsQuery(source.BrandId))
+			.ToArrayAsync(HttpContext.RequestAborted)
+			.ConfigureAwait(false);
 
-		var items = queryService.QueryAsync(query)
+		var totalCount = await countService
+			.GetAsync(query, HttpContext.RequestAborted)
+			.ConfigureAwait(false);
+
+		var items = await queryService
+			.QueryAsync(query)
+			.ToArrayAsync(HttpContext.RequestAborted)
+			.ConfigureAwait(false);
+
+		var result = items
 			.Select(row => new PlayerVipAdjustViewModel
 			{
-				OldLevel = row.OldLevel,
-				NewLevel = row.NewLevel,
+				OldLevel = allVips.FirstOrDefault(x => x.Id == row.OldVipId) == null
+					? 0
+					: allVips.FirstOrDefault(x => x.Id == row.OldVipId)!.Level,
+				NewLevel = allVips.FirstOrDefault(x => x.Id == row.NewVipId) == null
+					? 0
+					: allVips.FirstOrDefault(x => x.Id == row.NewVipId)!.Level,
 				CreatedOn = row.CreatedOn,
 			});
 
@@ -170,7 +186,7 @@ public class VipLevelController : ControllerBase
 			TotalCount = totalCount,
 			Page = 1,
 			Rows = -1,
-			Items = items.ToEnumerable(),
+			Items = result,
 		};
 	}
 }
