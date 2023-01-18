@@ -150,14 +150,14 @@ public class VipLevelController : ControllerBase
 		if (!string.IsNullOrWhiteSpace(paging.SortBy))
 			sourcePaging.SortByPropertyName(paging.SortBy, paging.IsDesc ?? false);
 
-		var query = new PlayerVipAdjustQuery(			
+		var query = new PlayerVipAdjustQuery(
 			source.PlayerCode,
 			createOnRange,
 			sourcePaging);
 
 		var allVips = await vipQueryService
 			.QueryAsync(new AllVipLevelsQuery(source.BrandId))
-			.ToArrayAsync(HttpContext.RequestAborted)
+			.ToDictionaryAsync(x => x.Id, x => x.Level, HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 
 		var totalCount = await countService
@@ -172,12 +172,8 @@ public class VipLevelController : ControllerBase
 		var result = items
 			.Select(row => new PlayerVipAdjustViewModel
 			{
-				OldLevel = allVips.FirstOrDefault(x => x.Id == row.OldVipId) == null
-					? 0
-					: allVips.FirstOrDefault(x => x.Id == row.OldVipId)!.Level,
-				NewLevel = allVips.FirstOrDefault(x => x.Id == row.NewVipId) == null
-					? 0
-					: allVips.FirstOrDefault(x => x.Id == row.NewVipId)!.Level,
+				OldLevel = allVips[row.OldVipId],
+				NewLevel = allVips[row.NewVipId],
 				CreatedOn = row.CreatedOn,
 			});
 
