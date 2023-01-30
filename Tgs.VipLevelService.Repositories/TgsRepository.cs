@@ -168,11 +168,11 @@ internal class TgsRepository : ITgsRepository
 
 		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
 			.Where(pr => pr.PlayerCode == conditions.PlayerCode
-				&& pr.CreatedOn >= limitDate);
+				&& pr.CreatedOn >= limitDate.UtcDateTime);
 
 		if (conditions.CreateOnRange != null)
-			dataQuery = dataQuery.Where(x => x.CreatedOn >= conditions.CreateOnRange.Value.Begin
-				&& x.CreatedOn < conditions.CreateOnRange.Value.End);
+			dataQuery = dataQuery.Where(x => x.CreatedOn >= conditions.CreateOnRange.Value.Begin.UtcDateTime
+				&& x.CreatedOn < conditions.CreateOnRange.Value.End.UtcDateTime);
 
 		return dataQuery.Select(row
 			=> new PlayerVipAdjustInfo(
