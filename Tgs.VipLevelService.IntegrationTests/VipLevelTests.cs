@@ -349,12 +349,34 @@ public class VipLevelTests
 			LotteryRebate = 10M,
 			CardGameRebate = 10M,
 			SportsRebate = 10M,
-			VirtualSportsRebate = 10M
+			VirtualSportsRebate = 10M,
+			WithdrawTransactionsPerDay = 3,
+			WithdrawTotalAmountPerDay = 3000M
+		};
+
+		var expected = new
+		{
+			LevelUpAccumulateBetAmount = updateInfo.LevelUpAccumulateBetAmount.Value,
+			LevelUpAccumulateDeposit = updateInfo.LevelUpAccumulateDeposit.Value,
+			LevelKeepAccumulateBetAmount = updateInfo.LevelKeepAccumulateBetAmount.Value,
+			LevelKeepAccumulateDeposit = updateInfo.LevelKeepAccumulateDeposit.Value,
+			LevelKeepCondition = updateInfo.LevelKeepCondition.Value,
+			BirthReward = updateInfo.BirthBenefit.Value,
+			PromotionReward = updateInfo.PromotionBenefit.Value,
+			QuarterlyReward = updateInfo.QuarterlyBenefit.Value,
+			LiveDealerRebatePercentage = updateInfo.LiveDealerRebate.Value,
+			SlotRebatePercentage = updateInfo.SlotRebate.Value,
+			LotteryRebatePercentage = updateInfo.LotteryRebate.Value,
+			CardGameRebatePercentage = updateInfo.CardGameRebate.Value,
+			SportsRebatePercentage = updateInfo.SportsRebate.Value,
+			VirtualSportsRebatePercentage = updateInfo.VirtualSportsRebate.Value,
+			WithdrawTotalAmountPerDay = updateInfo.WithdrawTotalAmountPerDay.Value,
+			WithdrawTransactionsPerDay = updateInfo.WithdrawTransactionsPerDay.Value
 		};
 
 		await sut.UpdateVipLevelAsync(vipId, updateInfo, modifier);
 
-		Assert.AreEqual(updateInfo.Level, dbRow.Entity.Level);
+		expected.ToExpectedObject().ShouldMatch(dbRow.Entity);
 	}
 
 	[TestMethod]

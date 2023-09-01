@@ -15,9 +15,13 @@ public record VipLevelUpdateInfo(
 	decimal? LotteryRebate,
 	decimal? CardGameRebate,
 	decimal? SportsRebate,
-	decimal? VirtualSportsRebate)
+	decimal? VirtualSportsRebate,
+	int? WithdrawTransactionsPerDay,
+	decimal? WithdrawTotalAmountPerDay)
 {
 	public static readonly VipLevelUpdateInfo Default = new(
+		null,
+		null,
 		null,
 		null,
 		null,

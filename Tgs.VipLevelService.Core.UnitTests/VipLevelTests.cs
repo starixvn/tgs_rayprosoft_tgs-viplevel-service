@@ -60,7 +60,9 @@ public class VipLevelTests
 				7M,
 				8M,
 				9M,
-				10M),
+				10M,
+				11,
+				12M),
 			"tester");
 
 		await sut.ExecuteAsync(command);
