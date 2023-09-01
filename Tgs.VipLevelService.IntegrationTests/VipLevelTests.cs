@@ -1,6 +1,7 @@
 ﻿using ExpectedObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tgs.VipLevelService.Clients;
 using Tgs.VipLevelService.Entities;
 
@@ -50,6 +51,70 @@ public class VipLevelTests
 		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
 
 		Assert.AreEqual(2, actual.Length);
+	}
+
+	[TestMethod]
+	public async Task 取得Brand_VipLevels_比對Withdraw設定值()
+	{
+		await using var web = TestVipLevelApplication.Factory;
+
+		var httpClient = web.CreateClient();
+
+		var sut = new VipLevelServiceClient(httpClient);
+
+		var brandId = Guid.NewGuid();
+
+		var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+		await dbContext.VipLevels.AddRangeAsync(
+			new VipLevel
+			{
+				Id = Guid.NewGuid(),
+				BrandId = brandId,
+				CreatedByUsername = "system",
+				UpdatedByUsername = "system",
+				WithdrawTransactionsPerDay = 3,
+				WithdrawTotalAmountPerDay = 10000M
+			},
+			new VipLevel
+			{
+				Id = Guid.NewGuid(),
+				BrandId = brandId,
+				CreatedByUsername = "system",
+				UpdatedByUsername = "system",
+				WithdrawTransactionsPerDay = 5,
+				WithdrawTotalAmountPerDay = 20000M
+			},
+			new VipLevel
+			{
+				Id = Guid.NewGuid(),
+				BrandId = Guid.NewGuid(),
+				CreatedByUsername = "system",
+				UpdatedByUsername = "system",
+				WithdrawTransactionsPerDay = 7,
+				WithdrawTotalAmountPerDay = 30000M
+			});
+
+		_ = await dbContext.SaveChangesAsync();
+
+		var expected = new[]
+		{
+			new
+			{
+				WithdrawTransactionsPerDay = 3,
+				WithdrawTotalAmountPerDay =  10000M
+			},
+			new
+			{
+				WithdrawTransactionsPerDay = 5,
+				WithdrawTotalAmountPerDay =  20000M
+			}
+		};
+
+		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
+
+		Assert.AreEqual(2, actual.Length);
+		expected.ToExpectedObject().ShouldMatch(actual);
 	}
 
 	[TestMethod]
@@ -258,7 +323,7 @@ public class VipLevelTests
 				Remark = "系統晉升/降級",
 				Id = Guid.Parse("1c3cb9a1-8de2-40a4-85e3-7e202cf721fa"),
 				OperatorId = Guid.Parse("00000000-0000-0000-0000-000000000000")
-			}			
+			}
 			);
 
 		_ = await dbContext.SaveChangesAsync();

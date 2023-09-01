@@ -33,7 +33,9 @@ internal class TgsRepository : ITgsRepository
 				vl.LotteryRebatePercentage,
 				vl.CardGameRebatePercentage,
 				vl.SportsRebatePercentage,
-				vl.VirtualSportsRebatePercentage))
+				vl.VirtualSportsRebatePercentage,
+				vl.WithdrawTransactionsPerDay,
+				vl.WithdrawTotalAmountPerDay))
 			.ToAsyncEnumerable();
 
 	public async ValueTask<VipLevelModifyModel?> GetVipLevelBaseModifyModelAsync(Guid id, CancellationToken cancellationToken = default)
@@ -163,7 +165,7 @@ internal class TgsRepository : ITgsRepository
 	}
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
-	{		
+	{
 		var limitDate = DateTimeOffset.UtcNow.AddDays(-180);
 
 		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()

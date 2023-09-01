@@ -48,7 +48,9 @@ public class VipLevelController : ControllerBase
 				QuarterlyBenefit = info.QuarterlyBenefit,
 				SlotRebate = info.SlotRebate,
 				SportsRebate = info.SportsRebate,
-				VirtualSportsRebate = info.VirtualSportsRebate
+				VirtualSportsRebate = info.VirtualSportsRebate,
+				WithdrawTotalAmountPerDay = info.WithdrawTotalAmountPerDay,
+				WithdrawTransactionsPerDay = info.WithdrawTransactionsPerDay
 			});
 	}
 
