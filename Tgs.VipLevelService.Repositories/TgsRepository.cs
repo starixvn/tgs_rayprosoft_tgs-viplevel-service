@@ -123,6 +123,8 @@ internal class TgsRepository : ITgsRepository
 			CardGameRebatePercentage = createModel.CardGameRebate,
 			SportsRebatePercentage = createModel.SportsRebate,
 			VirtualSportsRebatePercentage = createModel.VirtualSportsRebate,
+			WithdrawTotalAmountPerDay = createModel.WithdrawTotalAmountPerDay,
+			WithdrawTransactionsPerDay = createModel.WithdrawTransactionsPerDay,
 			CreatedByUsername = modifier,
 			UpdatedByUsername = modifier,
 			CreatedOn = currentDate,

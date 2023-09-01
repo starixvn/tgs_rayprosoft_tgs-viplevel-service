@@ -151,7 +151,9 @@ public class VipLevelTests
 				LotteryRebatePercentage = 11M,
 				SlotRebatePercentage = 12M,
 				SportsRebatePercentage = 13M,
-				VirtualSportsRebatePercentage = 14M
+				VirtualSportsRebatePercentage = 14M,
+				WithdrawTotalAmountPerDay = 15M,
+				WithdrawTransactionsPerDay = 16
 			});
 
 		_ = await dbContext.SaveChangesAsync();
@@ -172,7 +174,9 @@ public class VipLevelTests
 			LotteryRebate = 11M,
 			SlotRebate = 12M,
 			SportsRebate = 13M,
-			VirtualSportsRebate = 14M
+			VirtualSportsRebate = 14M,
+			WithdrawTotalAmountPerDay = 15M,
+			WithdrawTransactionsPerDay = 16
 		}.ToExpectedObject();
 
 		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
@@ -209,13 +213,98 @@ public class VipLevelTests
 			.3M,
 			.4M,
 			.5M,
-			.6M);
+			.6M,
+			-1,
+			-1M);
+
+		var expected = new
+		{
+			createInfo.LevelUpAccumulateBetAmount,
+			createInfo.LevelUpAccumulateDeposit,
+			createInfo.LevelKeepAccumulateBetAmount,
+			createInfo.LevelKeepAccumulateDeposit,
+			createInfo.LevelKeepCondition,
+			BirthReward = createInfo.BirthBenefit,
+			PromotionReward = createInfo.PromotionBenefit,
+			QuarterlyReward = createInfo.QuarterlyBenefit,
+			LiveDealerRebatePercentage = createInfo.LiveDealerRebate,
+			SlotRebatePercentage = createInfo.SlotRebate,
+			LotteryRebatePercentage = createInfo.LotteryRebate,
+			CardGameRebatePercentage = createInfo.CardGameRebate,
+			SportsRebatePercentage = createInfo.SportsRebate,
+			VirtualSportsRebatePercentage = createInfo.VirtualSportsRebate,
+			WithdrawTotalAmountPerDay = -1M,
+			WithdrawTransactionsPerDay = -1
+		};
 
 		var actual = await sut.CreateVipLevelAsync(brandId, createInfo, modifier);
 
 		var dbRow = await dbContext.VipLevels.FirstAsync();
 
 		Assert.AreEqual(actual, dbRow.Id);
+
+		expected.ToExpectedObject().ShouldMatch(dbRow);
+	}
+
+	[TestMethod]
+	public async Task 建立VipLevel_設定Withdraw限制()
+	{
+		await using var web = TestVipLevelApplication.Factory;
+
+		var httpClient = web.CreateClient();
+
+		var sut = new VipLevelServiceClient(httpClient);
+
+		var brandId = Guid.NewGuid();
+		var modifier = "tester";
+
+		var dbContext = web.Services.GetRequiredService<TgsContext>();
+
+		var createInfo = new VipLevelCreateInfo(
+			10M,
+			20M,
+			30M,
+			40M,
+			true,
+			100M,
+			50M,
+			60M,
+			.1M,
+			.2M,
+			.3M,
+			.4M,
+			.5M,
+			.6M,
+			3,
+			1000M);
+
+		var expected = new
+		{
+			createInfo.LevelUpAccumulateBetAmount,
+			createInfo.LevelUpAccumulateDeposit,
+			createInfo.LevelKeepAccumulateBetAmount,
+			createInfo.LevelKeepAccumulateDeposit,
+			createInfo.LevelKeepCondition,
+			BirthReward = createInfo.BirthBenefit,
+			PromotionReward = createInfo.PromotionBenefit,
+			QuarterlyReward = createInfo.QuarterlyBenefit,
+			LiveDealerRebatePercentage = createInfo.LiveDealerRebate,
+			SlotRebatePercentage = createInfo.SlotRebate,
+			LotteryRebatePercentage = createInfo.LotteryRebate,
+			CardGameRebatePercentage = createInfo.CardGameRebate,
+			SportsRebatePercentage = createInfo.SportsRebate,
+			VirtualSportsRebatePercentage = createInfo.VirtualSportsRebate,
+			createInfo.WithdrawTotalAmountPerDay,
+			createInfo.WithdrawTransactionsPerDay
+		};
+
+		var actual = await sut.CreateVipLevelAsync(brandId, createInfo, modifier);
+
+		var dbRow = await dbContext.VipLevels.FirstAsync();
+
+		Assert.AreEqual(actual, dbRow.Id);
+
+		expected.ToExpectedObject().ShouldMatch(dbRow);
 	}
 
 	[TestMethod]

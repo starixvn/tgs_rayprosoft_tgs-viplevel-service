@@ -118,7 +118,9 @@ public class VipLevelController : ControllerBase
 				createModel.LotteryRebate,
 				createModel.CardGameRebate,
 				createModel.SportsRebate,
-				createModel.VirtualSportsRebate),
+				createModel.VirtualSportsRebate,
+				createModel.WithdrawTransactionsPerDay,
+				createModel.WithdrawTotalAmountPerDay),
 			modifier);
 
 		return createService.GetAsync(command, HttpContext.RequestAborted);
