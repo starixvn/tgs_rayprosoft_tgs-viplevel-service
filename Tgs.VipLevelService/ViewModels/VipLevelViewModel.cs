@@ -89,4 +89,8 @@ public class VipLevelViewModel
 	/// Gets the virtual sports rebate.
 	/// </summary>
 	public decimal VirtualSportsRebate { get; init; }
+
+	public int WithdrawTransactionsPerDay { get; init; } = -1;
+
+	public decimal WithdrawTotalAmountPerDay { get; init; } = -1M;
 }

@@ -16,4 +16,6 @@ public record VipLevelInfo(
 	decimal LotteryRebate,
 	decimal CardGameRebate,
 	decimal SportsRebate,
-	decimal VirtualSportsRebate);
+	decimal VirtualSportsRebate,
+	int WithdrawTransactionsPerDay,
+	decimal WithdrawTotalAmountPerDay);

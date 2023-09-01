@@ -33,7 +33,9 @@ internal class TgsRepository : ITgsRepository
 				vl.LotteryRebatePercentage,
 				vl.CardGameRebatePercentage,
 				vl.SportsRebatePercentage,
-				vl.VirtualSportsRebatePercentage))
+				vl.VirtualSportsRebatePercentage,
+				vl.WithdrawTransactionsPerDay,
+				vl.WithdrawTotalAmountPerDay))
 			.ToAsyncEnumerable();
 
 	public async ValueTask<VipLevelModifyModel?> GetVipLevelBaseModifyModelAsync(Guid id, CancellationToken cancellationToken = default)
@@ -57,7 +59,9 @@ internal class TgsRepository : ITgsRepository
 				vl.LotteryRebatePercentage,
 				vl.CardGameRebatePercentage,
 				vl.SportsRebatePercentage,
-				vl.VirtualSportsRebatePercentage))
+				vl.VirtualSportsRebatePercentage,
+				vl.WithdrawTransactionsPerDay,
+				vl.WithdrawTotalAmountPerDay))
 			.FirstOrDefaultAsync(cancellationToken)
 			.ConfigureAwait(false);
 
@@ -87,6 +91,8 @@ internal class TgsRepository : ITgsRepository
 		viplevel.CardGameRebatePercentage = modifyModel.CardGameRebate;
 		viplevel.SportsRebatePercentage = modifyModel.SportsRebate;
 		viplevel.VirtualSportsRebatePercentage = modifyModel.VirtualSportsRebate;
+		viplevel.WithdrawTransactionsPerDay = modifyModel.WithdrawTransactionsPerDay;
+		viplevel.WithdrawTotalAmountPerDay = modifyModel.WithdrawTotalAmountPerDay;
 		viplevel.UpdatedByUsername = modifier;
 		viplevel.UpdatedOn = currentDate;
 
@@ -121,6 +127,8 @@ internal class TgsRepository : ITgsRepository
 			CardGameRebatePercentage = createModel.CardGameRebate,
 			SportsRebatePercentage = createModel.SportsRebate,
 			VirtualSportsRebatePercentage = createModel.VirtualSportsRebate,
+			WithdrawTotalAmountPerDay = createModel.WithdrawTotalAmountPerDay,
+			WithdrawTransactionsPerDay = createModel.WithdrawTransactionsPerDay,
 			CreatedByUsername = modifier,
 			UpdatedByUsername = modifier,
 			CreatedOn = currentDate,
@@ -163,7 +171,7 @@ internal class TgsRepository : ITgsRepository
 	}
 
 	private IQueryable<PlayerVipAdjustInfo> MakePlayerVipAdjustQuery(PlayerVipAdjustQueryConditions conditions)
-	{		
+	{
 		var limitDate = DateTimeOffset.UtcNow.AddDays(-180);
 
 		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()

@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Tgs.VipLevelService.Clients</RootNamespace>
     <PackageId>Tgs.VipLevelService.Client</PackageId>
-    <Version>0.0.7</Version>
+    <Version>0.0.8</Version>
     <Authors>Raypro</Authors>
     <Product>Tgs.VipLevelService.Client</Product>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service</PackageProjectUrl>

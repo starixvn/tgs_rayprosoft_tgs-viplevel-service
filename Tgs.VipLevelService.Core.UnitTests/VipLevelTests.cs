@@ -60,7 +60,9 @@ public class VipLevelTests
 				7M,
 				8M,
 				9M,
-				10M),
+				10M,
+				11,
+				12M),
 			"tester");
 
 		await sut.ExecuteAsync(command);
@@ -95,7 +97,9 @@ public class VipLevelTests
 				7M,
 				8M,
 				9M,
-				10M),
+				10M,
+				3,
+				5000M),
 			  "tester");
 
 		_ = await sut.GetAsync(command);
@@ -123,7 +127,9 @@ public class VipLevelTests
 		_ = await sut.QueryAsync(query).ToArrayAsync();
 
 		_ = fakeTgsRepository.Received(1)
-			.QueryPlayerVipAdjustInfosAsync(Arg.Any<PlayerVipAdjustQueryConditions>(), Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());
+			.QueryPlayerVipAdjustInfosAsync(
+				Arg.Any<PlayerVipAdjustQueryConditions>(),
+				Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());
 	}
 
 	[TestMethod]
