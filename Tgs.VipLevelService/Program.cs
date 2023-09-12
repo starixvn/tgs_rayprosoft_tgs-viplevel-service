@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.AspNetCore;
@@ -42,13 +42,15 @@ builder.Services
 		conifg.GetSection("Opentelemetry:Tracing").Bind(options);
 	})
 	.Services
-	.AddOpenTelemetryTracing(builder => builder
+	.AddOpenTelemetry()
+	.WithTracing(builder => builder
 		.SetResourceBuilder(ResourceBuilder.CreateDefault()
 		.AddEnvironmentVariableDetector())
 		.AddSource("Tgs.*")
 		.AddAspNetCoreInstrumentation()
 		.AddProfileViewExporter()
 		.AddOtlpExporter())
+	.Services
 	.Configure<AspNetCoreInstrumentationOptions>(options => options.Filter =
 		httpContext => !httpContext.Request.Path.HasValue
 			|| !httpContext.Request.Path.StartsWithSegments("/swagger")

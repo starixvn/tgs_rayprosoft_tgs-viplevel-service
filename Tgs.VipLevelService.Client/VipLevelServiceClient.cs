@@ -53,7 +53,9 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 
 		_ = response.EnsureSuccessStatusCode();
 
-		return await response.Content.ReadFromJsonAsync<Guid>(_SerializerOptions, cancellationToken);
+		return await response.Content.ReadFromJsonAsync<Guid>(
+			_SerializerOptions,
+			cancellationToken).ConfigureAwait(false);
 	}
 
 	public async ValueTask UpdateVipLevelAsync(
@@ -62,7 +64,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		string modifier,
 		CancellationToken cancellationToken = default)
 	{
-		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo);
+		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo, _SerializerOptions);
 
 		var requestContent = JsonContent.Create(patch, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
@@ -88,7 +90,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		{
 			queryStrings.Add("bc", conditions.CreateOnRange.Value.Begin.ToString("o"));
 			queryStrings.Add("ec", conditions.CreateOnRange.Value.End.ToString("o"));
-		}		
+		}
 
 		if (paging.ShowAll == true)
 			queryStrings.Add("all", "true");
