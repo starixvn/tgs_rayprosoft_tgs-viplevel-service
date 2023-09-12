@@ -1,7 +1,6 @@
 ﻿using ExpectedObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tgs.VipLevelService.Clients;
 using Tgs.VipLevelService.Entities;
 

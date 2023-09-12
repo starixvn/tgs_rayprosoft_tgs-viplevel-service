@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>Tgs.VipLevelService.Clients</RootNamespace>
     <PackageId>Tgs.VipLevelService.Client</PackageId>
-    <Version>0.0.8</Version>
+    <Version>0.0.9</Version>
     <Authors>Raypro</Authors>
     <Product>Tgs.VipLevelService.Client</Product>
     <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service</PackageProjectUrl>
@@ -15,13 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JsonPatch.Net" Version="2.0.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="JsonPatch.Net" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
     <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
   </ItemGroup>
 

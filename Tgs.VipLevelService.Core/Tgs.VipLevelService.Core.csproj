@@ -8,13 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
-    <PackageReference Include="TGS.ServiceUtility" Version="0.1.0" />
-	<PackageReference Include="PagingUtility" Version="1.1.0" />
+    <PackageReference Include="Tgs.Paging.AsyncEnumerable" Version="1.2.1" />
+    <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
 	<PackageReference Include="PagingUtility.AsyncEnumerable" Version="1.1.0" />
   </ItemGroup>
 
