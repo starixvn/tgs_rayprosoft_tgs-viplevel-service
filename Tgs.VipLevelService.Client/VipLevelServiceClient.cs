@@ -64,7 +64,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		string modifier,
 		CancellationToken cancellationToken = default)
 	{
-		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo, _SerializerOptions);
+		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo);
 
 		var requestContent = JsonContent.Create(patch, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
