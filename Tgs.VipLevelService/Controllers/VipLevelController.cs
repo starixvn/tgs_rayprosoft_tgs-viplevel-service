@@ -78,7 +78,7 @@ public class VipLevelController : ControllerBase
 			.GetAsync(query, HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 
-		var modifiedModel = patch.Apply(baseModel);
+		var modifiedModel = patch.Apply(baseModel, jsonOptionsAccessor.Value.JsonSerializerOptions);
 
 		var patchCommand = new PatchVipLevelCommand(id, modifiedModel!, modifier);
 
