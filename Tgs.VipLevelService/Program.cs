@@ -28,8 +28,7 @@ builder.Services
 
 builder.Services
 	.AddRouting(options => options.LowercaseUrls = true)
-	.AddControllers()
-	.AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
+	.AddControllers();
 
 builder.Services
 	.AddOptions<OtlpExporterOptions>()
