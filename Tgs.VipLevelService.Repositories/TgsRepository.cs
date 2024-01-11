@@ -4,17 +4,10 @@ using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
 
-internal class TgsRepository : ITgsRepository
+internal class TgsRepository(TgsContext tgsContext) : ITgsRepository
 {
-	private readonly TgsContext _tgsContext;
-
-	public TgsRepository(TgsContext tgsContext)
-	{
-		_tgsContext = tgsContext ?? throw new ArgumentNullException(nameof(tgsContext));
-	}
-
 	public IAsyncEnumerable<VipLevelInfo> QueryAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default)
-		=> _tgsContext.VipLevels
+		=> tgsContext.VipLevels
 			.Where(vl => vl.BrandId == brandId)
 			.Select(vl => new VipLevelInfo(
 				vl.Id,
@@ -39,7 +32,7 @@ internal class TgsRepository : ITgsRepository
 			.ToAsyncEnumerable();
 
 	public async ValueTask<VipLevelModifyModel?> GetVipLevelBaseModifyModelAsync(Guid id, CancellationToken cancellationToken = default)
-		=> await _tgsContext.VipLevels
+		=> await tgsContext.VipLevels
 			.FindAsync(new object[] { id }, cancellationToken: cancellationToken)
 			.AsTask()
 			.ToAsyncEnumerable()
@@ -67,7 +60,7 @@ internal class TgsRepository : ITgsRepository
 
 	public async ValueTask ModifyVipLevelAsync(Guid id, VipLevelModifyModel modifyModel, string modifier, CancellationToken cancellationToken = default)
 	{
-		var viplevel = await _tgsContext.VipLevels
+		var viplevel = await tgsContext.VipLevels
 			.FindAsync(new object[] { id }, cancellationToken)
 			.ConfigureAwait(false);
 
@@ -96,14 +89,14 @@ internal class TgsRepository : ITgsRepository
 		viplevel.UpdatedByUsername = modifier;
 		viplevel.UpdatedOn = currentDate;
 
-		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+		_ = await tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 	}
 
 	public async ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelCreateModel createModel, string modifier, CancellationToken cancellationToken = default)
 	{
 		var currentDate = DateTime.UtcNow;
 
-		var maxVipLevel = await _tgsContext.VipLevels
+		var maxVipLevel = await tgsContext.VipLevels
 			.Where(vip => vip.BrandId == brandId)
 			.MaxAsync(vip => (int?)vip.Level, cancellationToken)
 			.ConfigureAwait(false) ?? 0;
@@ -135,11 +128,11 @@ internal class TgsRepository : ITgsRepository
 			UpdatedOn = currentDate
 		};
 
-		_ = await _tgsContext.VipLevels
+		_ = await tgsContext.VipLevels
 			.AddAsync(newVipLevel, cancellationToken)
 			.ConfigureAwait(false);
 
-		_ = await _tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+		_ = await tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 	}
 
 	public IAsyncEnumerable<PlayerVipAdjustInfo> QueryPlayerVipAdjustInfosAsync(
@@ -174,7 +167,7 @@ internal class TgsRepository : ITgsRepository
 	{
 		var limitDate = DateTimeOffset.UtcNow.AddDays(-180);
 
-		var dataQuery = _tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
+		var dataQuery = tgsContext.PlayerVipLevelAdjustRecords.AsQueryable()
 			.Where(pr => pr.PlayerCode == conditions.PlayerCode
 				&& pr.CreatedOn >= limitDate.UtcDateTime);
 

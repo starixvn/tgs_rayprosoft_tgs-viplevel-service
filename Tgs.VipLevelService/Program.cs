@@ -1,9 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Mime;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+
+var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,12 +20,32 @@ builder.Logging
 		options.ParseStateValues = true;
 		_ = options.AddFluentdForwardExporter(fluentOptions =>
 		{
-			var nodeIp = builder.Configuration.GetValue<string>("NODE_IP");
+			var nodeIp = builder.Configuration.GetValue<string>("NODE_IP")!;
 			fluentOptions.Host = nodeIp;
-			fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME");
+			fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME")!;
 			fluentOptions.UseMessagePack();
 		});
 	});
+
+// Add services to the container.
+builder.Services
+	.AddRouting(options => options.LowercaseUrls = true)
+	.AddControllers(options =>
+	{
+		options.Filters.Add(new ProducesAttribute(MediaTypeNames.Application.Json));
+		options.Filters.Add(new ConsumesAttribute(MediaTypeNames.Application.Json));
+	})
+	.AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "VipLevelService", Version = "v1" });
+
+	foreach (var xmlFileName in Directory.EnumerateFiles(AppContext.BaseDirectory, "*.xml"))
+		c.IncludeXmlComments(xmlFileName);
+});
 
 builder.Services
 	.AddVipLevelServices()
@@ -27,55 +53,46 @@ builder.Services
 		.UseNpgsql("Name=Tgs"));
 
 builder.Services
-	.AddRouting(options => options.LowercaseUrls = true)
-	.AddControllers();
-
-builder.Services
-	.AddOptions<OtlpExporterOptions>()
-	.Configure<IConfiguration>((options, conifg) =>
-	{
-		var nodeIp = conifg.GetValue<string>("NODE_IP");
-
-		if (!string.IsNullOrWhiteSpace(nodeIp))
-			options.Endpoint = new Uri($"http://{nodeIp}:4317");
-
-		conifg.GetSection("Opentelemetry:Tracing").Bind(options);
-	})
-	.Services
 	.AddOpenTelemetry()
 	.WithTracing(builder => builder
 		.SetResourceBuilder(ResourceBuilder.CreateDefault()
-		.AddEnvironmentVariableDetector())
+			.AddEnvironmentVariableDetector())
 		.AddSource("Tgs.*")
-		.AddAspNetCoreInstrumentation()
-		.AddProfileViewExporter()
-		.AddOtlpExporter())
-	.Services
-	.Configure<AspNetCoreInstrumentationOptions>(options => options.Filter =
+		.AddSource("TGS.*")
+		.AddSource("Valhalla.*")
+		.AddAspNetCoreInstrumentation(options => options.Filter =
 		httpContext => !httpContext.Request.Path.HasValue
 			|| !httpContext.Request.Path.StartsWithSegments("/swagger")
 			&& !httpContext.Request.Path.StartsWithSegments("/healthz")
+			&& !httpContext.Request.Path.StartsWithSegments("/profiler/")
+			&& !httpContext.Request.Path.StartsWithSegments("/hangfire")
 			&& !httpContext.Request.Path.StartsWithSegments("/metrics")
-			&& !new[] { "html", "ico", "png", "jpg" }.Any(
-				ext => httpContext.Request.Path.Value.EndsWith($".{ext}")));
+			&& !filterInstrumentations.Any(ext => httpContext.Request.Path.Value.EndsWith($".{ext}")))
+		.AddHttpClientInstrumentation()
+		.AddGrpcClientInstrumentation()
+		.AddGrpcCoreInstrumentation()
+		.AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true)
+		.AddOtlpExporter())
+	.WithMetrics(meterBuiler => meterBuiler
+	.SetResourceBuilder(ResourceBuilder.CreateDefault()
+		.AddEnvironmentVariableDetector())
+		.AddRuntimeInstrumentation()
+		.AddAspNetCoreInstrumentation()
+		.AddOtlpExporter())
+	.Services
+	.AddInterceptionService()
+	.AddServiceUtiltiyInterceptors();
 
-builder.Services
-	.AddHealthChecks();
-
-builder.Services.AddSwaggerGen(c =>
-{
-	c.SwaggerDoc("v1", new OpenApiInfo { Title = "VipLevelService", Version = "v1" });
-
-	foreach (var path in Directory.EnumerateFiles(AppContext.BaseDirectory, "*.xml"))
-		c.IncludeXmlComments(path);
-});
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-app.MapControllers();
-app.MapSwagger();
+_ = app.UseSwagger();
+_ = app.UseSwaggerUI();
 
-app.UseSwaggerUI();
+_ = app.MapControllers();
+_ = app.MapSwagger();
+
 app.UseHealthChecks("/healthz");
 
 app.Run();

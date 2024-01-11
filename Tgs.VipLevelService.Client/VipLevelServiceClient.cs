@@ -6,7 +6,7 @@ using Json.Patch;
 
 namespace Tgs.VipLevelService.Clients;
 
-internal class VipLevelServiceClient : IVipLevelServiceClient
+internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceClient
 {
 	private static readonly JsonSerializerOptions _SerializerOptions = new()
 	{
@@ -15,15 +15,8 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		Converters = { new JsonStringEnumConverter() }
 	};
 
-	private readonly HttpClient _httpClient;
-
-	public VipLevelServiceClient(HttpClient httpClient)
-	{
-		_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-	}
-
 	public IAsyncEnumerable<VipLevelInfo> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default)
-		=> _httpClient
+		=> httpClient
 			.GetAsync($"/vip/{brandId}", cancellationToken)
 			.ToAsyncEnumerable()
 			.Do(response => response.EnsureSuccessStatusCode())
@@ -46,7 +39,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		var requestContent = JsonContent.Create(createInfo, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
 
-		var response = await _httpClient.PutAsync(
+		var response = await httpClient.PutAsync(
 			$"/vip/{brandId}",
 			requestContent,
 			cancellationToken).ConfigureAwait(false);
@@ -69,7 +62,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		var requestContent = JsonContent.Create(patch, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
 
-		var response = await _httpClient
+		var response = await httpClient
 			.PatchAsync($"/vip/{vipId}", requestContent, cancellationToken)
 			.ConfigureAwait(false);
 
@@ -111,7 +104,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 				queryStrings.Add("desc", "true");
 		}
 
-		var response = await _httpClient
+		var response = await httpClient
 			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
 			.ConfigureAwait(false);
 

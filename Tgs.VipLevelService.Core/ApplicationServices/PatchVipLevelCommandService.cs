@@ -2,17 +2,10 @@
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class PatchVipLevelCommandService : ICommandService<PatchVipLevelCommand>
+internal class PatchVipLevelCommandService(ITgsRepository tgsRepository) : ICommandService<PatchVipLevelCommand>
 {
-	private readonly ITgsRepository _tgsRepository;
-
-	public PatchVipLevelCommandService(ITgsRepository tgsRepository)
-	{
-		_tgsRepository = tgsRepository ?? throw new ArgumentNullException(nameof(tgsRepository));
-	}
-
 	public ValueTask ExecuteAsync(PatchVipLevelCommand command, CancellationToken cancellationToken = default)
-		=> _tgsRepository.ModifyVipLevelAsync(
+		=> tgsRepository.ModifyVipLevelAsync(
 			command.Id,
 			command.ModifyModel,
 			command.Modifier,

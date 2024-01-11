@@ -4,8 +4,6 @@ metadata:
   name: {{ include "viplevel.fullname" . }}
   labels:
     {{- include "viplevel.labels" . | nindent 4 }}
-  annotations:
-    reloader.stakater.com/auto: "true"
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -20,7 +18,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "viplevel.selectorLabels" . | nindent 8 }}
+        {{- include "viplevel.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -46,31 +47,42 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tgs-connections
-                  key: tgs            
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
+                  key: tgs
+            - name: ConnectionStrings__Nats
+              valueFrom:
+                secretKeyRef:
+                  name: tgs-connections
+                  key: nats
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                secretKeyRef:
+                  name: tgs-connections
+                  key: redis
           volumeMounts:
             - mountPath: /app/appsettings.Production.json
               name: appsettings
               readOnly: true
               subPath: appsettings.json
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
           startupProbe:
             httpGet:
               path: /healthz
               port: http
-            periodSeconds: 2
             failureThreshold: 30
-          readinessProbe:
-            httpGet:
-              path: /healthz
-              port: http
-            periodSeconds: 5
+            periodSeconds: 2
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: monitor
-          image: otel/opentelemetry-collector:0.75.0          
+          image: otel/opentelemetry-collector:0.89.0
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - --config=/etc/otel/config.yaml
@@ -115,7 +127,7 @@ spec:
       volumes:
         - name: appsettings
           configMap:
-            name: configmap-{{ include "viplevel.fullname" . }}        
+            name: configmap-{{ include "viplevel.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
