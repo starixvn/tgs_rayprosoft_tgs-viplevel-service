@@ -1,24 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>Tgs.VipLevelService.Clients</RootNamespace>
-    <PackageId>Tgs.VipLevelService.Client</PackageId>
-    <Version>0.0.9</Version>
-    <Authors>Raypro</Authors>
-    <Product>Tgs.VipLevelService.Client</Product>
-    <PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service</PackageProjectUrl>
-    <RepositoryUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service.git</RepositoryUrl>
-    <PackageTags>Tgs VipLevel</PackageTags>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="JsonPatch.Net" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="System.Interactive.Async" Version="6.0.1" />
-  </ItemGroup>
+	<PropertyGroup>
+		<Version>0.0.10</Version>
+		<Authors>Raypro</Authors>
+		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service</PackageProjectUrl>
+		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-viplevel-service.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<RootNamespace>Tgs.VipLevelService.Client</RootNamespace>
+		<PackageId>Tgs.VipLevelService.Client</PackageId>
+		<Title>Tgs.VipLevelService.Client</Title>
+		<Description>Tgs.VipLevelService.Client</Description>
+		<PackageTags>Tgs VipLevelService Client</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JsonPatch.Net" Version="2.1.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+		<PackageReference Include="System.Interactive.Async" Version="6.0.1" />
+	</ItemGroup>
 
 </Project>

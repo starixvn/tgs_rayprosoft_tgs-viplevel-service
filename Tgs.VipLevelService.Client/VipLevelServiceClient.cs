@@ -6,7 +6,7 @@ using Json.Patch;
 
 namespace Tgs.VipLevelService.Clients;
 
-internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceClient
+internal class VipLevelServiceClient : IVipLevelServiceClient
 {
 	private static readonly JsonSerializerOptions _SerializerOptions = new()
 	{
@@ -15,8 +15,15 @@ internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceCl
 		Converters = { new JsonStringEnumConverter() }
 	};
 
+	private readonly HttpClient _httpClient;
+
+	public VipLevelServiceClient(HttpClient httpClient)
+	{
+		_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+	}
+
 	public IAsyncEnumerable<VipLevelInfo> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default)
-		=> httpClient
+		=> _httpClient
 			.GetAsync($"/vip/{brandId}", cancellationToken)
 			.ToAsyncEnumerable()
 			.Do(response => response.EnsureSuccessStatusCode())
@@ -39,7 +46,7 @@ internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceCl
 		var requestContent = JsonContent.Create(createInfo, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
 
-		var response = await httpClient.PutAsync(
+		var response = await _httpClient.PutAsync(
 			$"/vip/{brandId}",
 			requestContent,
 			cancellationToken).ConfigureAwait(false);
@@ -62,7 +69,7 @@ internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceCl
 		var requestContent = JsonContent.Create(patch, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
 
-		var response = await httpClient
+		var response = await _httpClient
 			.PatchAsync($"/vip/{vipId}", requestContent, cancellationToken)
 			.ConfigureAwait(false);
 
@@ -104,7 +111,7 @@ internal class VipLevelServiceClient(HttpClient httpClient) : IVipLevelServiceCl
 				queryStrings.Add("desc", "true");
 		}
 
-		var response = await httpClient
+		var response = await _httpClient
 			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
 			.ConfigureAwait(false);
 

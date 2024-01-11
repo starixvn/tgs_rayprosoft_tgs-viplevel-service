@@ -22,10 +22,13 @@ public partial class TgsContext : DbContext
     {
         modelBuilder
             .HasPostgresExtension("ltree")
-            .HasPostgresExtension("pg_trgm");
+            .HasPostgresExtension("pageinspect")
+            .HasPostgresExtension("pg_stat_statements")
+            .HasPostgresExtension("pg_trgm")
+            .HasPostgresExtension("uuid-ossp");
 
-            modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
-            modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
         OnModelCreatingPartial(modelBuilder);
     }
 

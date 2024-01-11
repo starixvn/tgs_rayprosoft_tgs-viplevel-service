@@ -9,15 +9,15 @@ public partial class PlayerVipLevelAdjustRecord
 {
     public Guid Id { get; set; }
 
-    public DateTime CreatedOn { get; set; }
-
-    public Guid NewVipId { get; set; }
+    public string PlayerCode { get; set; } = null!;
 
     public Guid OldVipId { get; set; }
 
+    public Guid NewVipId { get; set; }
+
     public Guid OperatorId { get; set; }
 
-    public string PlayerCode { get; set; } = null!;
-
     public string Remark { get; set; } = null!;
+
+    public DateTime CreatedOn { get; set; }
 }
