@@ -2,6 +2,6 @@
 
 public enum PlayerVipLevelAutoState
 {
-	ENABLE = 0,
-	DISABLE = 1
+	Enable = 0,
+	Disable = 1
 }

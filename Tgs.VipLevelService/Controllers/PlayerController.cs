@@ -3,16 +3,15 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
 using Tgs.VipLevelService.Models;
-using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class PlayerController : ControllerBase
 {
-	[HttpGet("{playerCode}/viplevel")]
-	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelPlayerCodeGetAsync(
+	[HttpGet("{playerCode}/viplevel", Name = "PlayerVipLevel_Get")]
+	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(
 		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelInfo> service,
 		string playerCode)
 	{
@@ -29,20 +28,20 @@ public class PlayerController : ControllerBase
 			playerVipLevelInfo.AutoState);
 	}
 
-	[HttpPost("{playerCode}/viplevel/register")]
-	public ValueTask PlayerVipLeveRegisterAsync(
-		[FromServices] ICommandService<PlayerVipLeveRegisterCommand> service,
+	[HttpPost("{playerCode}/viplevel/register", Name = "PlayerVipLevel_Register")]
+	public ValueTask PlayerVipLevelRegisterAsync(
+		[FromServices] ICommandService<PlayerVipLevelRegisterCommand> service,
 		string playerCode,
-		[FromBody] PlayerVipLeveRegisterViewModel source)
+		[FromBody] PlayerVipLevelRegisterViewModel source)
 		=> service.ExecuteAsync(
-			command: new PlayerVipLeveRegisterCommand(
+			command: new PlayerVipLevelRegisterCommand(
 				playerCode,
 				source.VipLevelId,
 				source.VipLevel,
 				source.AutoState),
 			cancellationToken: HttpContext.RequestAborted);
 
-	[HttpPost("{playerCode}/viplevel/manual")]
+	[HttpPost("{playerCode}/viplevel/manual", Name = "PlayerVipLevel_Manual")]
 	public ValueTask PlayerVipLevelManualAsync(
 		[FromServices] ICommandService<PlayerVipLevelManualCommand> service,
 		string playerCode,
@@ -58,7 +57,7 @@ public class PlayerController : ControllerBase
 				source.Remark),
 			cancellationToken: HttpContext.RequestAborted);
 
-	[HttpPost("{playerCode}/viplevel/system")]
+	[HttpPost("{playerCode}/viplevel/system", Name = "PlayerVipLevel_System")]
 	public ValueTask PlayerVipLevelSystemAsync(
 		[FromServices] ICommandService<PlayerVipLevelSystemCommand> service,
 		string playerCode,
@@ -71,7 +70,7 @@ public class PlayerController : ControllerBase
 				source.AutoState),
 			cancellationToken: HttpContext.RequestAborted);
 
-	[HttpGet("{playerCode}/viplevel/log")]
+	[HttpGet("{playerCode}/viplevel/log", Name = "PlayerVipLevelLog_Query")]
 	public async ValueTask<PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>> PlayerVipLevelLogQueryAsync(
 		[FromServices] IQueryService<PlayerVipLevelLogQuery, PlayerVipLevelLogResult> queryService,
 		[FromServices] IGetService<PlayerVipLevelLogCountQuery, int> countService,

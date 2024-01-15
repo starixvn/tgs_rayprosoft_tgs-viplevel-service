@@ -1,6 +1,6 @@
-﻿namespace Tgs.VipLevelService.Clients;
+﻿namespace Tgs.VipLevelService.Common.ViewModels;
 
-public class PagingResponse<TItem>
+public class PagingResponseViewModel<TItem>
 {
 	public IEnumerable<TItem> Items { get; set; } = default!;
 

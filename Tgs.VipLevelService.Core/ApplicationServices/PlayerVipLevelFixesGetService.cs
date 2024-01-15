@@ -27,7 +27,7 @@ internal class PlayerVipLevelFixesGetService(
 			playerCode: playerVipIdInfo.PlayerCode,
 			vipLevelId: vipLevelInfo.Id,
 			vipLevel: vipLevelInfo.Level,
-			autoState: PlayerVipLevelAutoState.ENABLE,
+			autoState: PlayerVipLevelAutoState.Enable,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(true);
 

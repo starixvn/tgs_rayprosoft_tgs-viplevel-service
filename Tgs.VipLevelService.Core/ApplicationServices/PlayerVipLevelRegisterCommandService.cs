@@ -5,13 +5,13 @@ using Tgs.VipLevelService.Common;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class PlayerVipLeveRegisterCommandService(
+internal class PlayerVipLevelRegisterCommandService(
 	IVipLevelRepository vipLevelRepository,
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
-	ICommandService<PlayerVipLeveRegisterLogPublishCommand> publishService) : ICommandService<PlayerVipLeveRegisterCommand>
+	ICommandService<PlayerVipLevelRegisterLogPublishCommand> publishService) : ICommandService<PlayerVipLevelRegisterCommand>
 {
-	public async ValueTask ExecuteAsync(PlayerVipLeveRegisterCommand command, CancellationToken cancellationToken = default)
+	public async ValueTask ExecuteAsync(PlayerVipLevelRegisterCommand command, CancellationToken cancellationToken = default)
 	{
 		var playerInfo = await playerRepository.GetAsync(
 			playerCode: command.PlayerCode,
@@ -47,7 +47,7 @@ internal class PlayerVipLeveRegisterCommandService(
 			.ConfigureAwait(false);
 
 		await publishService.ExecuteAsync(
-			command: new PlayerVipLeveRegisterLogPublishCommand(
+			command: new PlayerVipLevelRegisterLogPublishCommand(
 				BrandId: playerInfo.BrandId,
 				PlayerCode: playerInfo.PlayerCode,
 				AfterLevel: vipLevelInfo.Level,

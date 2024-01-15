@@ -1,8 +1,13 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
 using Json.Patch;
+using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Common.ViewModels;
 
 namespace Tgs.VipLevelService.Clients;
 
@@ -37,11 +42,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ToAsyncEnumerable()
 			.SelectMany(arr => arr.ToAsyncEnumerable());
 
-	public async ValueTask<Guid> CreateVipLevelAsync(
-		Guid brandId,
-		VipLevelCreateInfo createInfo,
-		string modifier,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<Guid> CreateVipLevelAsync(Guid brandId, VipLevelCreateInfo createInfo, string modifier, CancellationToken cancellationToken = default)
 	{
 		var requestContent = JsonContent.Create(createInfo, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
@@ -58,11 +59,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			cancellationToken).ConfigureAwait(false);
 	}
 
-	public async ValueTask UpdateVipLevelAsync(
-		Guid vipId,
-		VipLevelUpdateInfo updateInfo,
-		string modifier,
-		CancellationToken cancellationToken = default)
+	public async ValueTask UpdateVipLevelAsync(Guid vipId, VipLevelUpdateInfo updateInfo, string modifier, CancellationToken cancellationToken = default)
 	{
 		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo, _SerializerOptions);
 
@@ -76,10 +73,7 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		_ = response.EnsureSuccessStatusCode();
 	}
 
-	public async ValueTask<PagingResponse<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(
-		PlayerVipAdjustQueryConditions conditions,
-		Paging paging,
-		CancellationToken cancellationToken = default)
+	public async ValueTask<PagingResponseViewModel<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging paging, CancellationToken cancellationToken = default)
 	{
 		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
 
@@ -121,6 +115,105 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ReadAsStringAsync(cancellationToken)
 			.ConfigureAwait(false);
 
-		return JsonSerializer.Deserialize<PagingResponse<PlayerVipAdjustInfo>>(contentJson, _SerializerOptions)!;
+		return JsonSerializer.Deserialize<PagingResponseViewModel<PlayerVipAdjustInfo>>(contentJson, _SerializerOptions)!;
+	}
+
+	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(string playerCode, CancellationToken cancellationToken = default)
+		=> await _httpClient.GetAsync($"/player/{playerCode}/viplevel", cancellationToken)
+		.ToAsyncEnumerable()
+		.Do(response => response.EnsureSuccessStatusCode())
+		.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
+		.SelectMany(response => response.Content
+			.ReadFromJsonAsync<PlayerVipLevelInfoViewModel>(_SerializerOptions, cancellationToken)
+			.ToAsyncEnumerable())
+		.FirstOrDefaultAsync(cancellationToken: cancellationToken)
+		.ConfigureAwait(false)
+		?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
+
+	public async ValueTask PlayerVipLevelRegisterAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
+	{
+		var source = new PlayerVipLevelRegisterViewModel
+		{
+			VipLevel = vipLevel,
+			VipLevelId = vipLevelId,
+			AutoState = autoState
+		};
+		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/register");
+		var builder = new UriBuilder(path);
+		string url = builder.ToString();
+		var httpContent = new StringContent(JsonSerializer.Serialize(source, _SerializerOptions), Encoding.UTF8, MediaTypeNames.Application.Json);
+
+		_ = await _httpClient.PostAsync(url, httpContent, cancellationToken)
+			.ToAsyncEnumerable()
+		   .Do(response => response.EnsureSuccessStatusCode())
+		   .FirstAsync(cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
+	}
+
+	public async ValueTask PlayerVipLevelManualAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid createdUserId, string createdUsername, string remark, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
+	{
+		var source = new PlayerVipLevelManualViewModel
+		{
+			VipLevel = vipLevel,
+			VipLevelId = vipLevelId,
+			AutoState = autoState,
+			CreatedUserId = createdUserId,
+			CreatedUsername = createdUsername,
+			Remark = remark
+		};
+		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/manual");
+		var builder = new UriBuilder(path);
+		string url = builder.ToString();
+		var httpContent = new StringContent(JsonSerializer.Serialize(source, _SerializerOptions), Encoding.UTF8, MediaTypeNames.Application.Json);
+
+		_ = await _httpClient.PostAsync(url, httpContent, cancellationToken)
+			.ToAsyncEnumerable()
+		   .Do(response => response.EnsureSuccessStatusCode())
+		   .FirstAsync(cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
+	}
+
+	public async ValueTask PlayerVipLevelSystemAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
+	{
+		var source = new PlayerVipLevelSystemViewModel
+		{
+			VipLevel = vipLevel,
+			VipLevelId = vipLevelId,
+			AutoState = autoState
+		};
+		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/system");
+		var builder = new UriBuilder(path);
+		string url = builder.ToString();
+		var httpContent = new StringContent(JsonSerializer.Serialize(source, _SerializerOptions), Encoding.UTF8, MediaTypeNames.Application.Json);
+
+		_ = await _httpClient.PostAsync(url, httpContent, cancellationToken)
+			.ToAsyncEnumerable()
+		   .Do(response => response.EnsureSuccessStatusCode())
+		   .FirstAsync(cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
+	}
+
+	public async ValueTask<PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>> PlayerVipLevelLogQueryAsync(string playerCode, DateTimeOffset startOn, DateTimeOffset endOn, int page, int rowCount, CancellationToken cancellationToken = default)
+	{
+		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/log");
+		var builder = new UriBuilder(path);
+		var query = HttpUtility.ParseQueryString(builder.Query);
+		query["startOn"] = startOn.ToString("u");
+		query["endOn"] = endOn.ToString("u");
+		query["page"] = page.ToString();
+		query["rowCount"] = rowCount.ToString();
+		builder.Query = query.ToString();
+		string url = builder.ToString();
+
+		return await _httpClient.GetAsync(url, cancellationToken)
+			.ToAsyncEnumerable()
+			.Do(response => response.EnsureSuccessStatusCode())
+			.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
+			.SelectMany(response => response.Content
+				.ReadFromJsonAsync<PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>>(_SerializerOptions, cancellationToken)
+				.ToAsyncEnumerable())
+			.FirstOrDefaultAsync(cancellationToken: cancellationToken)
+			.ConfigureAwait(false)
+			?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 	}
 }

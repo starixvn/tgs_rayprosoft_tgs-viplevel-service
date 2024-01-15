@@ -6,10 +6,9 @@ using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.IntegrationTests;
 
-[TestClass]
 public class VipLevelTests
 {
-	[TestMethod]
+	[Fact]
 	public async Task GetVipLevels()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -49,10 +48,10 @@ public class VipLevelTests
 
 		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
 
-		Assert.AreEqual(2, actual.Length);
+		Assert.Equal(2, actual.Length);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task 取得Brand_VipLevels_比對Withdraw設定值()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -112,11 +111,11 @@ public class VipLevelTests
 
 		var actual = await sut.GetBrandAllVipLevelsAsync(brandId).ToArrayAsync();
 
-		Assert.AreEqual(2, actual.Length);
+		Assert.Equal(2, actual.Length);
 		expected.ToExpectedObject().ShouldMatch(actual);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task GetVipLevels_Data_Should_Match()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -184,7 +183,7 @@ public class VipLevelTests
 		expected.ShouldMatch(actualItem);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task CreateVipLevel()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -240,12 +239,12 @@ public class VipLevelTests
 
 		var dbRow = await dbContext.VipLevels.FirstAsync();
 
-		Assert.AreEqual(actual, dbRow.Id);
+		Assert.Equal(actual, dbRow.Id);
 
 		expected.ToExpectedObject().ShouldMatch(dbRow);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task 建立VipLevel_設定Withdraw限制()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -301,12 +300,12 @@ public class VipLevelTests
 
 		var dbRow = await dbContext.VipLevels.FirstAsync();
 
-		Assert.AreEqual(actual, dbRow.Id);
+		Assert.Equal(actual, dbRow.Id);
 
 		expected.ToExpectedObject().ShouldMatch(dbRow);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task UpdateVipLevel()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -378,7 +377,7 @@ public class VipLevelTests
 		expected.ToExpectedObject().ShouldMatch(dbRow.Entity);
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Query_Player_Vip_Adjust_Infos()
 	{
 		await using var web = TestVipLevelApplication.Factory;
@@ -447,6 +446,6 @@ public class VipLevelTests
 
 		var actual = await sut.QueryPlayerVipAdjustInfosAsync(condition, paging);
 
-		Assert.AreEqual(2, actual.TotalCount);
+		Assert.Equal(2, actual.TotalCount);
 	}
 }

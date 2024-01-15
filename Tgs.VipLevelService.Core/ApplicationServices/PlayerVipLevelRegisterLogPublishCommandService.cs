@@ -4,17 +4,18 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Common.MessageModels;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class PlayerVipLeveRegisterLogPublishCommandService(
-	ILogger<PlayerVipLeveRegisterLogPublishCommandService> logger,
-	IMessageSender messageSender) : ICommandService<PlayerVipLeveRegisterLogPublishCommand>
+internal class PlayerVipLevelRegisterLogPublishCommandService(
+	ILogger<PlayerVipLevelRegisterLogPublishCommandService> logger,
+	IMessageSender messageSender) : ICommandService<PlayerVipLevelRegisterLogPublishCommand>
 {
-	public async ValueTask ExecuteAsync(PlayerVipLeveRegisterLogPublishCommand command, CancellationToken cancellationToken = default)
+	public async ValueTask ExecuteAsync(PlayerVipLevelRegisterLogPublishCommand command, CancellationToken cancellationToken = default)
 	{
-		var message = new PlayerVipLevelLogRegisterMessage(
+		var message = new PlayerVipLevelLogRegisterMessageModel(
 			BrandId: command.BrandId,
 			PlayerCode: command.PlayerCode,
 			AfterLevel: command.AfterLevel,

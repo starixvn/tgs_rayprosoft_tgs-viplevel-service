@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Common.MessageModels;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
@@ -14,7 +15,7 @@ internal class PlayerVipLevelSystemLogPublishCommandService(
 {
 	public async ValueTask ExecuteAsync(PlayerVipLevelSystemLogPublishCommand command, CancellationToken cancellationToken = default)
 	{
-		var message = new PlayerVipLevelLogSystemMessage(
+		var message = new PlayerVipLevelLogSystemMessageModel(
 			BrandId: command.BrandId,
 			PlayerCode: command.PlayerCode,
 			BeforeLevel: command.BeforeLevel,

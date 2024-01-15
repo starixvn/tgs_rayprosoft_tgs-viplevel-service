@@ -48,7 +48,7 @@ internal class PlayerVipLevelLogQueryService(IPlayerVipLevelLogRepository reposi
 
 			int BeforeLevel = 0;
 			Guid BeforeLevelId = Guid.Empty;
-			PlayerVipLevelAutoState BeforeAutoState = PlayerVipLevelAutoState.ENABLE;
+			PlayerVipLevelAutoState BeforeAutoState = PlayerVipLevelAutoState.Enable;
 			if (before is not null)
 			{
 				BeforeLevel = before.VipLevel;
@@ -58,7 +58,7 @@ internal class PlayerVipLevelLogQueryService(IPlayerVipLevelLogRepository reposi
 
 			var AfterLevel = 0;
 			var AfterLevelId = Guid.Empty;
-			var AfterAutoState = PlayerVipLevelAutoState.ENABLE;
+			var AfterAutoState = PlayerVipLevelAutoState.Enable;
 			if (after is not null)
 			{
 				AfterLevel = after.VipLevel;

@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using NSubstitute;
+﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
-using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common;
 using Tgs.VipLevelService.Models;
@@ -27,9 +20,9 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			Type: PlayerVipLevelLogType.Register,
 			BeforeLevel: 0,
-			BeforeAutoState: PlayerVipLevelAutoState.ENABLE,
+			BeforeAutoState: PlayerVipLevelAutoState.Enable,
 			AfterLevel: 1,
-			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
+			AfterAutoState: PlayerVipLevelAutoState.Enable,
 			CreatedUserId: Guid.Empty,
 			CreatedUsername: string.Empty,
 			Remark: string.Empty);
@@ -90,7 +83,7 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 				PlayerCode: command.PlayerCode,
 				VipLevelId: afterVipLevelInfoInfo.Id,
 				VipLevel: afterVipLevelInfoInfo.Level,
-				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
+				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable)),
 			createdUserId: Arg.Is(command.CreatedUserId),
 			createdUsername: Arg.Is(command.CreatedUsername),
 			cancellationToken: Arg.Any<CancellationToken>());
@@ -108,9 +101,9 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			Type: PlayerVipLevelLogType.System,
 			BeforeLevel: 1,
-			BeforeAutoState: PlayerVipLevelAutoState.ENABLE,
+			BeforeAutoState: PlayerVipLevelAutoState.Enable,
 			AfterLevel: 2,
-			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
+			AfterAutoState: PlayerVipLevelAutoState.Enable,
 			CreatedUserId: Guid.Empty,
 			CreatedUsername: string.Empty,
 			Remark: string.Empty);
@@ -189,12 +182,12 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 				PlayerCode: command.PlayerCode,
 				VipLevelId: beforeVipLevelInfoInfo.Id,
 				VipLevel: beforeVipLevelInfoInfo.Level,
-				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
+				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable)),
 			after: Arg.Is(new PlayerVipLevelInfo(
 				PlayerCode: command.PlayerCode,
 				VipLevelId: afterVipLevelInfoInfo.Id,
 				VipLevel: afterVipLevelInfoInfo.Level,
-				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
+				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable)),
 			createdUserId: Arg.Is(command.CreatedUserId),
 			createdUsername: Arg.Is(command.CreatedUsername),
 			cancellationToken: Arg.Any<CancellationToken>());
@@ -212,12 +205,12 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			Type: PlayerVipLevelLogType.Manual,
 			BeforeLevel: 1,
-			BeforeAutoState: PlayerVipLevelAutoState.ENABLE,
+			BeforeAutoState: PlayerVipLevelAutoState.Enable,
 			AfterLevel: 2,
-			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
+			AfterAutoState: PlayerVipLevelAutoState.Enable,
 			CreatedUserId: Guid.NewGuid(),
 			CreatedUsername: "admin.enabled",
-			Remark:"test");
+			Remark: "test");
 
 		var beforeVipLevelInfoInfo = new VipLevelInfo(
 			Id: Guid.NewGuid(),
@@ -293,12 +286,12 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 				PlayerCode: command.PlayerCode,
 				VipLevelId: beforeVipLevelInfoInfo.Id,
 				VipLevel: beforeVipLevelInfoInfo.Level,
-				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
+				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable)),
 			after: Arg.Is(new PlayerVipLevelInfo(
 				PlayerCode: command.PlayerCode,
 				VipLevelId: afterVipLevelInfoInfo.Id,
 				VipLevel: afterVipLevelInfoInfo.Level,
-				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
+				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable)),
 			createdUserId: Arg.Is(command.CreatedUserId),
 			createdUsername: Arg.Is(command.CreatedUsername),
 			remark: Arg.Is(command.Remark),

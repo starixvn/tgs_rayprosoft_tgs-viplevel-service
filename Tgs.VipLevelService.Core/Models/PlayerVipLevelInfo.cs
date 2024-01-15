@@ -6,4 +6,4 @@ public record PlayerVipLevelInfo(
    string PlayerCode,
    Guid VipLevelId,
    int VipLevel = 0,
-   PlayerVipLevelAutoState AutoState = PlayerVipLevelAutoState.ENABLE);
+   PlayerVipLevelAutoState AutoState = PlayerVipLevelAutoState.Enable);

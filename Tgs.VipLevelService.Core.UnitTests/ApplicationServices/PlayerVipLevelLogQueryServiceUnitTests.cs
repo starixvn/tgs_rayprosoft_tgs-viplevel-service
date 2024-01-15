@@ -32,7 +32,7 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					PlayerCode: query.PlayerCode,
 					VipLevelId: afterLevelId,
 					VipLevel: afterLevel,
-					AutoState: PlayerVipLevelAutoState.ENABLE)),
+					AutoState: PlayerVipLevelAutoState.Enable)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: Guid.Empty,
 				CreatedUsername: string.Empty,
@@ -59,10 +59,10 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 		Assert.Equal(PlayerVipLevelLogType.Register, results.First().Type);
 		Assert.Equal(Guid.Empty, results.First().BeforeLevelId);
 		Assert.Equal(0, results.First().BeforeLevel);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().BeforeAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().BeforeAutoState);
 		Assert.Equal(afterLevel, results.First().AfterLevel);
 		Assert.Equal(afterLevelId, results.First().AfterLevelId);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().AfterAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().AfterAutoState);
 		Assert.Equal(Guid.Empty, results.First().CreatedUserId);
 		Assert.Equal(string.Empty, results.First().CreatedUsername);
 	}
@@ -92,12 +92,12 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					PlayerCode: query.PlayerCode,
 					VipLevelId: beforeLevelId,
 					VipLevel: beforeLevel,
-					AutoState: PlayerVipLevelAutoState.ENABLE)),
+					AutoState: PlayerVipLevelAutoState.Enable)),
 				After: JsonSerializer.Serialize(new PlayerVipLevelInfo(
 					PlayerCode: query.PlayerCode,
 					VipLevelId: afterLevelId,
 					VipLevel: afterLevel,
-					AutoState: PlayerVipLevelAutoState.ENABLE)),
+					AutoState: PlayerVipLevelAutoState.Enable)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: Guid.Empty,
 				CreatedUsername: string.Empty,
@@ -124,10 +124,10 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 		Assert.Equal(PlayerVipLevelLogType.System, results.First().Type);
 		Assert.Equal(beforeLevelId, results.First().BeforeLevelId);
 		Assert.Equal(beforeLevel, results.First().BeforeLevel);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().BeforeAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().BeforeAutoState);
 		Assert.Equal(afterLevel, results.First().AfterLevel);
 		Assert.Equal(afterLevelId, results.First().AfterLevelId);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().AfterAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().AfterAutoState);
 		Assert.Equal(Guid.Empty, results.First().CreatedUserId);
 		Assert.Equal(string.Empty, results.First().CreatedUsername);
 	}
@@ -159,12 +159,12 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					PlayerCode: query.PlayerCode,
 					VipLevelId: beforeLevelId,
 					VipLevel: beforeLevel,
-					AutoState: PlayerVipLevelAutoState.ENABLE)),
+					AutoState: PlayerVipLevelAutoState.Enable)),
 				After: JsonSerializer.Serialize(new PlayerVipLevelInfo(
 					PlayerCode: query.PlayerCode,
 					VipLevelId: afterLevelId,
 					VipLevel: afterLevel,
-					AutoState: PlayerVipLevelAutoState.ENABLE)),
+					AutoState: PlayerVipLevelAutoState.Enable)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: createdUserId,
 				CreatedUsername:  createdUsername,
@@ -191,10 +191,10 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 		Assert.Equal(PlayerVipLevelLogType.System, results.First().Type);
 		Assert.Equal(beforeLevelId, results.First().BeforeLevelId);
 		Assert.Equal(beforeLevel, results.First().BeforeLevel);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().BeforeAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().BeforeAutoState);
 		Assert.Equal(afterLevel, results.First().AfterLevel);
 		Assert.Equal(afterLevelId, results.First().AfterLevelId);
-		Assert.Equal(PlayerVipLevelAutoState.ENABLE, results.First().AfterAutoState);
+		Assert.Equal(PlayerVipLevelAutoState.Enable, results.First().AfterAutoState);
 		Assert.Equal(createdUserId, results.First().CreatedUserId);
 		Assert.Equal(createdUsername, results.First().CreatedUsername);
 	}

@@ -4,6 +4,7 @@ using System.Text.Json;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Common.MessageModels;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.Messages;
@@ -15,7 +16,7 @@ public class PlayerVipLevelLogSystemMessageHandler(
 	public ValueTask HandleAsync(string subject, ReadOnlyMemory<byte> data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
 	{
 		var json = Encoding.UTF8.GetString(data.Span);
-		var message = JsonSerializer.Deserialize<PlayerVipLevelLogSystemMessage>(json)
+		var message = JsonSerializer.Deserialize<PlayerVipLevelLogSystemMessageModel>(json)
 			?? throw new NullReferenceException("The request data resolves to a null value");
 
 		logger.LogInformation("LogOn:{logOn} Subject:{subject} Mesaage:This message has been received.({message})",
@@ -28,7 +29,7 @@ public class PlayerVipLevelLogSystemMessageHandler(
 			PlayerCode: message.PlayerCode,
 			Type: PlayerVipLevelLogType.System,
 			BeforeLevel: message.BeforeLevel ?? 0,
-			BeforeAutoState: message.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE,
+			BeforeAutoState: message.BeforeAutoState ?? PlayerVipLevelAutoState.Enable,
 			AfterLevel: message.AfterLevel,
 			AfterAutoState: message.AfterAutoState,
 			CreatedUserId: Guid.Empty,

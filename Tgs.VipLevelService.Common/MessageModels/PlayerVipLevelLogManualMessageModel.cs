@@ -1,5 +1,5 @@
-﻿namespace Tgs.VipLevelService.Common;
-public record PlayerVipLevelLogManualMessage(
+﻿namespace Tgs.VipLevelService.Common.MessageModels;
+public record PlayerVipLevelLogManualMessageModel(
 	Guid BrandId,
 	string PlayerCode,
 	int? BeforeLevel,

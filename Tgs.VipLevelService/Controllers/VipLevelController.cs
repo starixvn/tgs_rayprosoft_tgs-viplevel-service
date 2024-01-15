@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Tgs.Paging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
+using Tgs.VipLevelService.Common.ViewModels;
 using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
@@ -24,10 +25,10 @@ public class VipLevelController : ControllerBase
 	/// <returns></returns>
 	[HttpGet("{brandId}", Name = "GetBrandAllVipLevels")]
 	public IAsyncEnumerable<VipLevelViewModel> GetBrandAllVipLevelsAsync(
-		[FromServices] IQueryService<AllVipLevelsQuery, VipLevelInfo> queryService,
+		[FromServices] IQueryService<VipLevelQuery, VipLevelInfo> queryService,
 		Guid brandId)
 	{
-		var query = new AllVipLevelsQuery(brandId);
+		var query = new VipLevelQuery(brandId);
 
 		return queryService.QueryAsync(query, HttpContext.RequestAborted)
 			.Select(info => new VipLevelViewModel
@@ -58,21 +59,21 @@ public class VipLevelController : ControllerBase
 	/// Patches the vip level asynchronous.
 	/// </summary>
 	/// <param name="getModelService">The get model service.</param>
-	/// <param name="patchService">The patch service.</param>
+	/// <param name="modifyService">The modify service.</param>
 	/// <param name="jsonOptionsAccessor">The json options accessor.</param>
 	/// <param name="modifier">The modifier.</param>
 	/// <param name="id">The identifier.</param>
 	/// <param name="patch">The patch.</param>
 	[HttpPatch("{id}", Name = "PatchVipLevel")]
 	public async Task PatchVipLevelAsync(
-		[FromServices] IGetService<GetVipLevelBaseModifyModelQuery, VipLevelModifyModel?> getModelService,
-		[FromServices] ICommandService<PatchVipLevelCommand> patchService,
+		[FromServices] IGetService<VipLevelModifyQuery, VipLevelModifyModel> getModelService,
+		[FromServices] ICommandService<VipLevelModifyCommand> modifyService,
 		[FromServices] IOptions<JsonOptions> jsonOptionsAccessor,
 		[FromHeader(Name = "Modifier")] string modifier,
 		Guid id,
 		[FromBody] JsonPatch patch)
 	{
-		var query = new GetVipLevelBaseModifyModelQuery(id);
+		var query = new VipLevelModifyQuery(id);
 
 		var baseModel = await getModelService
 			.GetAsync(query, HttpContext.RequestAborted)
@@ -80,9 +81,9 @@ public class VipLevelController : ControllerBase
 
 		var modifiedModel = patch.Apply(baseModel, jsonOptionsAccessor.Value.JsonSerializerOptions);
 
-		var patchCommand = new PatchVipLevelCommand(id, modifiedModel!, modifier);
+		var patchCommand = new VipLevelModifyCommand(id, modifiedModel!, modifier);
 
-		await patchService
+		await modifyService
 			.ExecuteAsync(patchCommand, HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 	}
@@ -97,12 +98,12 @@ public class VipLevelController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{brandId}", Name = "CreateVipLevel")]
 	public ValueTask<Guid> CreateVipLevelAsync(
-		[FromServices] IGetService<CreateVipLevelCommand, Guid> createService,
+		[FromServices] IGetService<VipLevelCreateCommand, Guid> createService,
 		[FromHeader(Name = "Modifier")] string modifier,
 		Guid brandId,
 		[FromBody] VipLevelCreateViewModel createModel)
 	{
-		var command = new CreateVipLevelCommand(
+		var command = new VipLevelCreateCommand(
 			brandId,
 			new VipLevelCreateModel(
 				createModel.LevelUpAccumulateBetAmount,

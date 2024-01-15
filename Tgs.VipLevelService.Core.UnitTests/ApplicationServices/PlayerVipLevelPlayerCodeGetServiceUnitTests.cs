@@ -18,16 +18,16 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePlayerVipLevelFixesService = Substitute.For<IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo>>();
 
-		var command = new PlayerVipLevelPlayerCodeQuery(
+		var query = new PlayerVipLevelPlayerCodeQuery(
 			PlayerCode: "4ucmqplxb029");
 
 		var playerVipLevelInfo = new PlayerVipLevelInfo(
-			PlayerCode: command.PlayerCode,
+			PlayerCode: query.PlayerCode,
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 		_ = fakePlayerVipLevelRepository.GetAsync(
-			playerCode: Arg.Is(command.PlayerCode),
+			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelInfo);
 
@@ -35,10 +35,10 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 			fakePlayerVipLevelRepository,
 			fakePlayerVipLevelFixesService);
 
-		var actual = await service.GetAsync(command);
+		var actual = await service.GetAsync(query);
 
 		Assert.NotNull(actual);
-		Assert.Equal(1, playerVipLevelInfo.VipLevel);
+		Assert.Equal(1, actual.VipLevel);
 	}
 
 	[Fact]
@@ -47,23 +47,23 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePlayerVipLevelFixesService = Substitute.For<IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo>>();
 
-		var command = new PlayerVipLevelPlayerCodeQuery(
+		var query = new PlayerVipLevelPlayerCodeQuery(
 			PlayerCode: "4ucmqplxb029");
 
 		_ = fakePlayerVipLevelRepository.GetAsync(
-			playerCode: Arg.Is(command.PlayerCode),
+			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns((PlayerVipLevelInfo?)null);
 
 		var playerVipLevelInfo = new PlayerVipLevelInfo(
-			PlayerCode: command.PlayerCode,
+			PlayerCode: query.PlayerCode,
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
-		var query = new PlayerVipLevelFixesQuery(
-			command.PlayerCode);
+			AutoState: PlayerVipLevelAutoState.Enable);
+		var fixesQuery = new PlayerVipLevelFixesQuery(
+			query.PlayerCode);
 		_ = fakePlayerVipLevelFixesService.GetAsync(
-			query: Arg.Is(query),
+			query: Arg.Is(fixesQuery),
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelInfo);
 
@@ -71,9 +71,9 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 			fakePlayerVipLevelRepository,
 			fakePlayerVipLevelFixesService);
 
-		var actual = await service.GetAsync(command);
+		var actual = await service.GetAsync(query);
 
 		Assert.NotNull(actual);
-		Assert.Equal(1, playerVipLevelInfo.VipLevel);
+		Assert.Equal(1, actual.VipLevel);
 	}
 }

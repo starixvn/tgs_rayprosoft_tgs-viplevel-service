@@ -27,7 +27,7 @@ internal class PlayerVipLevelLogCreateCommandService(
 					PlayerCode: command.PlayerCode,
 					VipLevelId: beforeVipLevelInfoInfo.Id,
 					VipLevel: beforeVipLevelInfoInfo.Level,
-					AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE);
+					AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable);
 			}
 		}
 
@@ -42,7 +42,7 @@ internal class PlayerVipLevelLogCreateCommandService(
 			PlayerCode: command.PlayerCode,
 			VipLevelId: afterVipLevelInfoInfo.Id,
 			VipLevel: afterVipLevelInfoInfo.Level,
-			AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE);
+			AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable);
 
 		var id = await serialNumberGenerator.GenerateAsync(
 			cancellationToken: cancellationToken)

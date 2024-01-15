@@ -2,7 +2,7 @@
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-public record PlayerVipLeveRegisterCommand(
+public record PlayerVipLevelRegisterCommand(
 	string PlayerCode,
 	Guid? VipLevelId,
 	int? VipLevel,

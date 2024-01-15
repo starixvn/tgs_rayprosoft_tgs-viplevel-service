@@ -62,7 +62,7 @@ public class PlayerVipLevelFixesGetServiceUnitTests
 			PlayerCode: playerVipIdInfo.PlayerCode,
 			VipLevelId: playerVipIdInfo.VipId,
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 		_ = fakePlayerVipLevelRepository.GetAsync(
 			playerCode: Arg.Is(playerVipIdInfo.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -81,7 +81,7 @@ public class PlayerVipLevelFixesGetServiceUnitTests
 			playerCode: Arg.Is(playerVipIdInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
-			autoState: Arg.Is(PlayerVipLevelAutoState.ENABLE),
+			autoState: Arg.Is(PlayerVipLevelAutoState.Enable),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }

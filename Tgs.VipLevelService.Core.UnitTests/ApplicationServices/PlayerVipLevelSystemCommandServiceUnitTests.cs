@@ -21,7 +21,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: null,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -67,7 +67,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: playerInfo.PlayerCode,
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 		_ = fakePlayerVipLevelRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -125,7 +125,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: null,
 			VipLevel: 2,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -171,7 +171,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: playerInfo.PlayerCode,
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 		_ = fakePlayerVipLevelRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -229,7 +229,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: null,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -280,7 +280,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			PlayerCode: playerInfo.PlayerCode,
 			VipLevelId: Guid.NewGuid(),
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.ENABLE);
+			AutoState: PlayerVipLevelAutoState.Enable);
 		var query = new PlayerVipLevelFixesQuery(
 			playerInfo.PlayerCode);
 		_ = fakePlayerVipLevelFixesService.GetAsync(
