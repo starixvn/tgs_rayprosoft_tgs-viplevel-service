@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Linq;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Tgs.VipLevelService.Common;
 using Tgs.VipLevelService.Entities;
@@ -9,7 +10,7 @@ namespace Tgs.VipLevelService.Repositories;
 internal class PlayerVipLevelLogRepository(
 	TgsContext context) : IPlayerVipLevelLogRepository
 {
-	public async ValueTask CreateAsync(Guid id, string playerCode, PlayerVipLevelLogType type, PlayerVipLevelInfo? before, PlayerVipLevelInfo after, Guid createdUserId = default, string createdUsername = "", CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, string playerCode, PlayerVipLevelLogType type, PlayerVipLevelInfo? before, PlayerVipLevelInfo after, Guid createdUserId = default, string createdUsername = "", string remark = "", CancellationToken cancellationToken = default)
 	{
 		string beforeJsonString = (before is null) ? "{}" : JsonSerializer.Serialize(before);
 
@@ -22,6 +23,7 @@ internal class PlayerVipLevelLogRepository(
 			After = JsonSerializer.Serialize(after),
 			CreatedUserId = createdUserId,
 			CreatedUsername = createdUsername,
+			Remark = remark
 		};
 
 		_ = await context.PlayerVipLevelLogs
@@ -45,15 +47,16 @@ internal class PlayerVipLevelLogRepository(
 		 .OrderByDescending(keySelector: keySelector => keySelector.CreatedOn)
 		 .Skip(limit * offset)
 		 .Take(limit)
-		 .Select(selector: selector => new PlayerVipLevelLogInfo(
-			 selector.Id,
-			 selector.PlayerCode,
-			 (PlayerVipLevelLogType)selector.Type,
-			 selector.Before,
-			 selector.After,
-			 selector.CreatedOn,
-			 selector.CreatedUserId,
-			 selector.CreatedUsername))
+		 .Select(selector: log => new PlayerVipLevelLogInfo(
+			 log.Id,
+			 log.PlayerCode,
+			 (PlayerVipLevelLogType)log.Type,
+			 log.Before,
+			 log.After,
+			 log.CreatedOn,
+			 log.CreatedUserId,
+			 log.CreatedUsername,
+			 log.Remark))
 		 .ToAsyncEnumerable();
 	}
 

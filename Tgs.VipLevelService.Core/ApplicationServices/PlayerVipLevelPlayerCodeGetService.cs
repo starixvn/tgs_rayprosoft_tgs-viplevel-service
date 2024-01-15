@@ -2,6 +2,7 @@
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class PlayerVipLevelPlayerCodeGetService(
 	IPlayerVipLevelRepository playerVipLevelRepository,
 	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> fixesService) : IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelInfo>

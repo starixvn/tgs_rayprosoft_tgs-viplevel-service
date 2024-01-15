@@ -11,4 +11,5 @@ public record PlayerVipLevelLogResult(
 	PlayerVipLevelAutoState AfterAutoState,
 	DateTimeOffset CreatedOn,
 	Guid CreatedUserId,
-	string CreatedUsername);
+	string CreatedUsername,
+	string Remark);

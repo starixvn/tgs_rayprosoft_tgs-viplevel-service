@@ -46,4 +46,9 @@ public partial class PlayerVipLevelLog
     /// 創建使用者名稱
     /// </summary>
     public string CreatedUsername { get; set; } = null!;
+
+    /// <summary>
+    /// 備註
+    /// </summary>
+    public string Remark { get; set; } = null!;
 }

@@ -10,4 +10,5 @@ public record PlayerVipLevelLogCreateCommand(
 	int AfterLevel,
 	PlayerVipLevelAutoState AfterAutoState,
 	Guid CreatedUserId,
-	string CreatedUsername);
+	string CreatedUsername,
+	string Remark);

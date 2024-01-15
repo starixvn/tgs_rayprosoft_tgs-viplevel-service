@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text;
+
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Common;
 using Valhalla.MessageQueue;
@@ -19,11 +22,12 @@ internal class PlayerVipLevelManualLogPublishCommandService(
 			AfterLevel: command.AfterLevel,
 			AfterAutoState: command.AfterAutoState,
 			CreatedUserId: command.CreatedUserId,
-			CreatedUsername: command.CreatedUsername);
+			CreatedUsername: command.CreatedUsername,
+			Remark: command.Remark);
 
 		await messageSender.PublishAsync(
 			subject: PlayerVipLevelLogNatsConsts.Manual,
-			data: message,
+			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message)),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 

@@ -50,6 +50,10 @@ namespace Tgs.VipLevelService.Entities.Configurations
             .HasMaxLength(16)
             .HasComment("玩家代碼")
             .HasColumnName("player_code");
+            entity.Property(e => e.Remark)
+            .HasDefaultValueSql("''::text")
+            .HasComment("備註")
+            .HasColumnName("remark");
             entity.Property(e => e.Type)
             .HasDefaultValue(1)
             .HasComment("日誌類型")

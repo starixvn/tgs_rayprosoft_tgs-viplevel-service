@@ -5,7 +5,7 @@ namespace Tgs.VipLevelService;
 
 public interface IPlayerVipLevelLogRepository
 {
-	ValueTask CreateAsync(Guid id, string playerCode, PlayerVipLevelLogType type, PlayerVipLevelInfo? before, PlayerVipLevelInfo after, Guid createdUserId = default, string createdUsername = "", CancellationToken cancellationToken = default);
+	ValueTask CreateAsync(Guid id, string playerCode, PlayerVipLevelLogType type, PlayerVipLevelInfo? before, PlayerVipLevelInfo after, Guid createdUserId = default, string createdUsername = "", string remark = "", CancellationToken cancellationToken = default);
 
 	IAsyncEnumerable<PlayerVipLevelLogInfo> QueryAsync(string playerCode, DateTimeOffset startOn, DateTimeOffset endOn, int offset = 0, int limit = 20, CancellationToken cancellationToken = default);
 

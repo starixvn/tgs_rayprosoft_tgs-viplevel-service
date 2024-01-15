@@ -1,4 +1,7 @@
-﻿using Tgs.ServiceUtility;
+﻿using System.Text;
+
+using System.Text.Json;
+using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common;
 using Valhalla.MessageQueue;
@@ -7,25 +10,30 @@ namespace Tgs.VipLevelService.Messages;
 
 public class PlayerVipLevelLogManualMessageHandler(
 	ILogger<PlayerVipLevelLogManualMessageHandler> logger,
-	ICommandService<PlayerVipLevelLogCreateCommand> service) : IMessageHandler<PlayerVipLevelLogManualMessage>
+	ICommandService<PlayerVipLevelLogCreateCommand> service) : IMessageHandler<ReadOnlyMemory<byte>>
 {
-	public ValueTask HandleAsync(string subject, PlayerVipLevelLogManualMessage data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
+	public ValueTask HandleAsync(string subject, ReadOnlyMemory<byte> data, IEnumerable<MessageHeaderValue>? headerValues, CancellationToken cancellationToken = default)
 	{
-		logger.LogInformation("LogOn:{logOn} Subject:{subject} Mesaage:This message has been received.({data})",
+		var json = Encoding.UTF8.GetString(data.Span);
+		var message = JsonSerializer.Deserialize<PlayerVipLevelLogManualMessage>(json)
+			?? throw new NullReferenceException("The request data resolves to a null value");
+
+		logger.LogInformation("LogOn:{logOn} Subject:{subject} Mesaage:This message has been received.({message})",
 			DateTime.Now.ToString("o"),
 			subject,
-			data);
+			message);
 
 		var command = new PlayerVipLevelLogCreateCommand(
-			BrandId: data.BrandId,
-			PlayerCode: data.PlayerCode,
+			BrandId: message.BrandId,
+			PlayerCode: message.PlayerCode,
 			Type: PlayerVipLevelLogType.Manual,
-			BeforeLevel: data.BeforeLevel,
-			BeforeAutoState: data.BeforeAutoState,
-			AfterLevel: data.AfterLevel,
-			AfterAutoState: data.AfterAutoState,
-			CreatedUserId: data.CreatedUserId,
-			CreatedUsername: data.CreatedUsername);
+			BeforeLevel: message.BeforeLevel,
+			BeforeAutoState: message.BeforeAutoState,
+			AfterLevel: message.AfterLevel,
+			AfterAutoState: message.AfterAutoState,
+			CreatedUserId: message.CreatedUserId,
+			CreatedUsername: message.CreatedUsername,
+			Remark: message.Remark);
 
 		return service.ExecuteAsync(
 			command: command,

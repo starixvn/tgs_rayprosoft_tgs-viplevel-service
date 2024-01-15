@@ -31,7 +31,8 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			AfterLevel: 1,
 			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.Empty,
-			CreatedUsername: string.Empty);
+			CreatedUsername: string.Empty,
+			Remark: string.Empty);
 
 		_ = fakeVipLevelRepository
 			.GetAsync(
@@ -111,7 +112,8 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			AfterLevel: 2,
 			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.Empty,
-			CreatedUsername: string.Empty);
+			CreatedUsername: string.Empty,
+			Remark: string.Empty);
 
 		var beforeVipLevelInfoInfo = new VipLevelInfo(
 			Id: Guid.NewGuid(),
@@ -214,7 +216,8 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 			AfterLevel: 2,
 			AfterAutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.NewGuid(),
-			CreatedUsername: "admin.enabled");
+			CreatedUsername: "admin.enabled",
+			Remark:"test");
 
 		var beforeVipLevelInfoInfo = new VipLevelInfo(
 			Id: Guid.NewGuid(),

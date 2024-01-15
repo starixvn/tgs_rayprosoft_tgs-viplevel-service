@@ -8,4 +8,5 @@ public record PlayerVipLevelManualCommand(
 	int? VipLevel,
 	PlayerVipLevelAutoState AutoState,
 	Guid CreatedUserId,
-	string CreatedUsername);
+	string CreatedUsername,
+	string Remark);

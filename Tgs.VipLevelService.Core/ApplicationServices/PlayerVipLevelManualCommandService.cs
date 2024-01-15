@@ -67,7 +67,8 @@ internal class PlayerVipLevelManualCommandService(
 				AfterLevel: vipLevelInfo.Level,
 				AfterAutoState: command.AutoState,
 				CreatedUserId: command.CreatedUserId,
-				CreatedUsername: command.CreatedUsername),
+				CreatedUsername: command.CreatedUsername,
+				Remark: command.Remark),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}

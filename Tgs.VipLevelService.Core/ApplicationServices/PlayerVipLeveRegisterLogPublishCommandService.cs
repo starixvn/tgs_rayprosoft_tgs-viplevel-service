@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text;
+
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Common;
 using Valhalla.MessageQueue;
@@ -19,7 +22,7 @@ internal class PlayerVipLeveRegisterLogPublishCommandService(
 
 		await messageSender.PublishAsync(
 			subject: PlayerVipLevelLogNatsConsts.Register,
-			data: message,
+			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message)),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 

@@ -10,4 +10,5 @@ public record PlayerVipLevelLogInfo(
 	   string After,
 	   DateTimeOffset CreatedOn,
 	   Guid CreatedUserId,
-	   string CreatedUsername);
+	   string CreatedUsername,
+	   string Remark);

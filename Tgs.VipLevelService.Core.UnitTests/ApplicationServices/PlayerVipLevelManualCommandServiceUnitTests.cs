@@ -23,7 +23,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			VipLevel: null,
 			AutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.NewGuid(),
-			CreatedUsername: "admin.enabled");
+			CreatedUsername: "admin.enabled",
+			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -108,7 +109,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			AfterLevel: vipLevelInfo.Level,
 			AfterAutoState: command.AutoState,
 			CreatedUserId: command.CreatedUserId,
-			CreatedUsername: command.CreatedUsername);
+			CreatedUsername: command.CreatedUsername,
+			Remark: command.Remark);
 		await fakePlayerVipLevelManualLogPublishService
 			.Received(1)
 			.ExecuteAsync(
@@ -131,7 +133,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			VipLevel: 2,
 			AutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.NewGuid(),
-			CreatedUsername: "admin.enabled");
+			CreatedUsername: "admin.enabled",
+			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -216,7 +219,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			AfterLevel: vipLevelInfo.Level,
 			AfterAutoState: command.AutoState,
 			CreatedUserId: command.CreatedUserId,
-			CreatedUsername: command.CreatedUsername);
+			CreatedUsername: command.CreatedUsername,
+			Remark: command.Remark);
 		await fakePlayerVipLevelManualLogPublishService
 			.Received(1)
 			.ExecuteAsync(
@@ -239,7 +243,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			VipLevel: null,
 			AutoState: PlayerVipLevelAutoState.ENABLE,
 			CreatedUserId: Guid.NewGuid(),
-			CreatedUsername: "admin.enabled");
+			CreatedUsername: "admin.enabled",
+			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -331,7 +336,8 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			AfterLevel: vipLevelInfo.Level,
 			AfterAutoState: command.AutoState,
 			CreatedUserId: command.CreatedUserId,
-			CreatedUsername: command.CreatedUsername);
+			CreatedUsername: command.CreatedUsername,
+			Remark: command.Remark);
 		await fakePlayerVipLevelManualLogPublishService
 			.Received(1)
 			.ExecuteAsync(

@@ -6,6 +6,7 @@ using Tgs.VipLevelService.Models;
 using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
+
 [Route("api/[controller]")]
 [ApiController]
 public class PlayerController : ControllerBase
@@ -53,7 +54,8 @@ public class PlayerController : ControllerBase
 				source.VipLevel,
 				source.AutoState,
 				source.CreatedUserId,
-				source.CreatedUsername),
+				source.CreatedUsername,
+				source.Remark),
 			cancellationToken: HttpContext.RequestAborted);
 
 	[HttpPost("{playerCode}/viplevel/system")]
@@ -121,7 +123,8 @@ public class PlayerController : ControllerBase
 				AfterAutoState: log.AfterAutoState,
 				CreatedOn: log.CreatedOn,
 				CreatedUserId: log.CreatedUserId,
-				CreatedUsername: log.CreatedUsername)),
+				CreatedUsername: log.CreatedUsername,
+				Remark: log.Remark)),
 			Page = source.Page,
 			Rows = source.RowCount,
 			TotalCount = count

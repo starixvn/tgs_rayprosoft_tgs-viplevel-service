@@ -76,7 +76,8 @@ internal class PlayerVipLevelLogQueryService(IPlayerVipLevelLogRepository reposi
 				AfterAutoState: AfterAutoState,
 				CreatedOn: playerVipLevelLogInfo.CreatedOn,
 				CreatedUserId: playerVipLevelLogInfo.CreatedUserId,
-				CreatedUsername: playerVipLevelLogInfo.CreatedUsername);
+				CreatedUsername: playerVipLevelLogInfo.CreatedUsername,
+				Remark: playerVipLevelLogInfo.Remark);
 		}
 	}
 }

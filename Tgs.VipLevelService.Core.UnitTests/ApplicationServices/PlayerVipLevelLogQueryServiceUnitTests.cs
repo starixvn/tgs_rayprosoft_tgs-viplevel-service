@@ -35,7 +35,8 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					AutoState: PlayerVipLevelAutoState.ENABLE)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: Guid.Empty,
-				CreatedUsername: string.Empty
+				CreatedUsername: string.Empty,
+				Remark:string.Empty
 				)
 		};
 		_ = fakePlayerVipLevelLogRepository.QueryAsync(
@@ -99,7 +100,8 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					AutoState: PlayerVipLevelAutoState.ENABLE)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: Guid.Empty,
-				CreatedUsername: string.Empty
+				CreatedUsername: string.Empty,
+				Remark:string.Empty
 				)
 		};
 		_ = fakePlayerVipLevelLogRepository.QueryAsync(
@@ -165,7 +167,8 @@ public class PlayerVipLevelLogQueryServiceUnitTests
 					AutoState: PlayerVipLevelAutoState.ENABLE)),
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: createdUserId,
-				CreatedUsername:  createdUsername
+				CreatedUsername:  createdUsername,
+				Remark:"test"
 				)
 		};
 		_ = fakePlayerVipLevelLogRepository.QueryAsync(
