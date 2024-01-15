@@ -56,6 +56,7 @@ internal class PlayerVipLevelLogCreateCommandService(
 			after: afterPlayerVipLevelInfo!,
 			createdUserId: command.CreatedUserId,
 			createdUsername: command.CreatedUsername,
+			remark: command.Remark,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
