@@ -47,7 +47,7 @@ Selector labels
 */}}
 {{- define "viplevel.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "viplevel.name" . }}
-app: {{ include "viplevel.name" . }}
+app: tgs-viplevel
 tgs.kind: viplevel
 tgs.viplevel.kind: api
 {{- end }}
