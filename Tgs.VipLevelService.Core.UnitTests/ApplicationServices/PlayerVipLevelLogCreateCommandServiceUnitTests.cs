@@ -301,6 +301,7 @@ public class PlayerVipLevelLogCreateCommandServiceUnitTests
 				AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.ENABLE)),
 			createdUserId: Arg.Is(command.CreatedUserId),
 			createdUsername: Arg.Is(command.CreatedUsername),
+			remark: Arg.Is(command.Remark),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }
