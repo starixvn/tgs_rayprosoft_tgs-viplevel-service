@@ -14,7 +14,19 @@ public partial class TgsContext : DbContext
     {
     }
 
+    public virtual DbSet<Brand> Brands { get; set; }
+
+    public virtual DbSet<Licensee> Licensees { get; set; }
+
+    public virtual DbSet<Player> Players { get; set; }
+
+    public virtual DbSet<PlayerVipLevel> PlayerVipLevels { get; set; }
+
     public virtual DbSet<PlayerVipLevelAdjustRecord> PlayerVipLevelAdjustRecords { get; set; }
+
+    public virtual DbSet<PlayerVipLevelLog> PlayerVipLevelLogs { get; set; }
+
+    public virtual DbSet<Reseller> Resellers { get; set; }
 
     public virtual DbSet<VipLevel> VipLevels { get; set; }
 
@@ -27,7 +39,13 @@ public partial class TgsContext : DbContext
             .HasPostgresExtension("pg_trgm")
             .HasPostgresExtension("uuid-ossp");
 
+        modelBuilder.ApplyConfiguration(new Configurations.BrandConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.LicenseeConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
         OnModelCreatingPartial(modelBuilder);
     }

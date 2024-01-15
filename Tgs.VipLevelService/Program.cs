@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using System.Text.Json.Serialization;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Instrumentation.AspNetCore;
+using NATS.Client.Core;
+using OpenTelemetry.Metrics;
+
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetry.Metrics;
+using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Messages;
 
 var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
 
@@ -47,10 +50,30 @@ builder.Services.AddSwaggerGen(c =>
 		c.IncludeXmlComments(xmlFileName);
 });
 
+builder.Services.AddVipLevelServices(
+	(sp, dbBuilder) =>
+	{
+		var config = sp.GetRequiredService<IConfiguration>();
+		_ = dbBuilder.UseNpgsql(config.GetConnectionString("Tgs"));
+	},
+	(options, sp) =>
+	{
+		var configuration = sp.GetRequiredService<IConfiguration>();
+		options.ConnectionString = configuration.GetConnectionString("Redis")!;
+	});
+
 builder.Services
-	.AddVipLevelServices()
-	.AddVipLevelRepositories(dbOptions => dbOptions
-		.UseNpgsql("Name=Tgs"));
+	.AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with
+	{
+		Url = builder.Configuration.GetConnectionString("Nats")!
+	}))
+	.AddMessageQueue()
+	.AddNatsMessageQueue(config => config
+	.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
+	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(PlayerVipLevelLogNatsConsts.Register, PlayerVipLevelLogNatsConsts.Register)
+	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(PlayerVipLevelLogNatsConsts.System, PlayerVipLevelLogNatsConsts.System)
+	.AddHandler<PlayerVipLevelLogManualMessageHandler>(PlayerVipLevelLogNatsConsts.Manual, PlayerVipLevelLogNatsConsts.Manual))
+	.AddNatsGlobPatternExchange("*");
 
 builder.Services
 	.AddOpenTelemetry()

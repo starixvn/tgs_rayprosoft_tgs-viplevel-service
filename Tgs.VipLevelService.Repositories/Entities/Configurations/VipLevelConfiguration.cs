@@ -80,6 +80,11 @@ namespace Tgs.VipLevelService.Entities.Configurations
             .HasDefaultValueSql("'-1'::integer")
             .HasColumnName("withdraw_transactions_per_day");
 
+            entity.HasOne(d => d.Brand).WithMany(p => p.VipLevels)
+            .HasForeignKey(d => d.BrandId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_vip_levels_brands_brand_id");
+
             OnConfigurePartial(entity);
         }
 

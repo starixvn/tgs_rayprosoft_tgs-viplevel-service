@@ -52,4 +52,8 @@ public partial class VipLevel
     public decimal WithdrawTotalAmountPerDay { get; set; }
 
     public int WithdrawTransactionsPerDay { get; set; }
+
+    public virtual Brand Brand { get; set; } = null!;
+
+    public virtual ICollection<Player> Players { get; set; } = new List<Player>();
 }

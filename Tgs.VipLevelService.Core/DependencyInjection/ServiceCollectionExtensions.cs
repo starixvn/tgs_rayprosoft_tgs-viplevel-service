@@ -4,7 +4,11 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddVipLevelServices(this IServiceCollection services)
+	public static IServiceCollection AddVipLevelCore(
+		this IServiceCollection services)
 		=> services
-			.RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient);
+		.RegisterAllServiceUtilityTypes(
+			Assembly.GetExecutingAssembly(),
+			ServiceLifetime.Transient)
+		.AddSerialNumberGenerator();
 }

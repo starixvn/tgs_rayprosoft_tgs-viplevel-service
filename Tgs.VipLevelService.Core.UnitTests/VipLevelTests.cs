@@ -3,10 +3,9 @@ using Tgs.VipLevelService.ApplicationServices;
 
 namespace Tgs.VipLevelService.Core.UnitTests;
 
-[TestClass]
 public class VipLevelTests
 {
-	[TestMethod]
+	[Fact]
 	public async Task QueryVipLevels()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
@@ -21,7 +20,7 @@ public class VipLevelTests
 			.QueryAllVipLevelsAsync(Arg.Is(query.BrandId));
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Get_VipLevel_BaseModifyModel()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
@@ -36,7 +35,7 @@ public class VipLevelTests
 			.GetVipLevelBaseModifyModelAsync(Arg.Is(query.Id));
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Patch_VipLevel()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
@@ -74,7 +73,7 @@ public class VipLevelTests
 				Arg.Is(command.Modifier));
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Create_VipLevel()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
@@ -112,7 +111,7 @@ public class VipLevelTests
 				Arg.Is(command.Modifier));
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Query_Player_Vip_Adjust_Infos()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();
@@ -132,7 +131,7 @@ public class VipLevelTests
 				Arg.Any<Paging.Paging<PlayerVipAdjustInfo>>());
 	}
 
-	[TestMethod]
+	[Fact]
 	public async Task Count_Player_Vip_Adjust_Infos()
 	{
 		var fakeTgsRepository = Substitute.For<ITgsRepository>();

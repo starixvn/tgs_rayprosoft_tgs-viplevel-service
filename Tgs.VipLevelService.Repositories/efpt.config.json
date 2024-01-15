@@ -20,7 +20,31 @@
   "T4TemplatePath": null,
   "Tables": [
     {
+      "Name": "dbo.brands",
+      "ObjectType": 0
+    },
+    {
+      "Name": "dbo.licensees",
+      "ObjectType": 0
+    },
+    {
       "Name": "dbo.player_vip_level_adjust_records",
+      "ObjectType": 0
+    },
+    {
+      "Name": "dbo.player_vip_level_logs",
+      "ObjectType": 0
+    },
+    {
+      "Name": "dbo.player_vip_levels",
+      "ObjectType": 0
+    },
+    {
+      "Name": "dbo.players",
+      "ObjectType": 0
+    },
+    {
+      "Name": "dbo.resellers",
       "ObjectType": 0
     },
     {

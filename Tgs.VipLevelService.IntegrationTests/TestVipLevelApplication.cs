@@ -29,5 +29,6 @@ internal static class TestVipLevelApplication
 							InMemoryEventId.TransactionIgnoredWarning));
 
 					return new TgsContext(dbContextOptionsBuilder.Options);
-				}))));
+				}))
+			.AddFakeNatsMessageQueue()));
 }

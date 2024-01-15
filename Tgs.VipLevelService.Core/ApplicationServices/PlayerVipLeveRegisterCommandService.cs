@@ -1,0 +1,58 @@
+﻿using Microsoft.Extensions.Logging;
+using Tgs.SerialNumberGenerator;
+using Tgs.ServiceUtility;
+using Tgs.VipLevelService.Common;
+
+namespace Tgs.VipLevelService.ApplicationServices;
+
+internal class PlayerVipLeveRegisterCommandService(
+	IVipLevelRepository vipLevelRepository,
+	IPlayerRepository playerRepository,
+	IPlayerVipLevelRepository playerVipLevelRepository,
+	ICommandService<PlayerVipLeveRegisterLogPublishCommand> publishService) : ICommandService<PlayerVipLeveRegisterCommand>
+{
+	public async ValueTask ExecuteAsync(PlayerVipLeveRegisterCommand command, CancellationToken cancellationToken = default)
+	{
+		var playerInfo = await playerRepository.GetAsync(
+			playerCode: command.PlayerCode,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		VipLevelInfo vipLevelInfo = command.VipLevel.HasValue
+			? await vipLevelRepository.GetAsync(
+				brandId: playerInfo.BrandId,
+				level: command.VipLevel.Value,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false)
+				?? throw new NullReferenceException()
+			: await vipLevelRepository.GetAsync(
+				brandId: playerInfo.BrandId,
+				id: command.VipLevelId!.Value,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false)
+				?? throw new NullReferenceException();
+
+		await playerRepository.UpdateAsync(
+			playerCode: playerInfo.PlayerCode,
+			vipLevelId: vipLevelInfo.Id,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		await playerVipLevelRepository.MergeAsync(
+			playerCode: playerInfo.PlayerCode,
+			vipLevelId: vipLevelInfo.Id,
+			vipLevel: vipLevelInfo.Level,
+			autoState: command.AutoState,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		await publishService.ExecuteAsync(
+			command: new PlayerVipLeveRegisterLogPublishCommand(
+				BrandId: playerInfo.BrandId,
+				PlayerCode: playerInfo.PlayerCode,
+				AfterLevel: vipLevelInfo.Level,
+				AfterAutoState: command.AutoState),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+	}
+}
