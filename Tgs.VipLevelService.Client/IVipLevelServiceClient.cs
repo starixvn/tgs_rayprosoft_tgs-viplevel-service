@@ -5,11 +5,11 @@ namespace Tgs.VipLevelService.Clients;
 
 public interface IVipLevelServiceClient
 {
-	ValueTask<Guid> CreateVipLevelAsync(Guid brandId, VipLevelCreateInfo createInfo, string modifier, CancellationToken cancellationToken = default);
+	ValueTask<Guid> CreateVipLevelAsync(Guid brandId, VipLevelCreateViewModel source, string modifier, CancellationToken cancellationToken = default);
 
-	IAsyncEnumerable<VipLevelInfo> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default);
+	IAsyncEnumerable<VipLevelInfoViewModel> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default);
 
-	ValueTask UpdateVipLevelAsync(Guid vipId, VipLevelUpdateInfo updateInfo, string modifier, CancellationToken cancellationToken = default);
+	ValueTask UpdateVipLevelAsync(Guid vipId, VipLevelUpdateViewModel source, string modifier, CancellationToken cancellationToken = default);
 
 	ValueTask<PagingResponseViewModel<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging paging, CancellationToken cancellationToken = default);
 

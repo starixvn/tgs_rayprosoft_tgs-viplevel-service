@@ -27,13 +27,13 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		_httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 	}
 
-	public IAsyncEnumerable<VipLevelInfo> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default)
+	public IAsyncEnumerable<VipLevelInfoViewModel> GetBrandAllVipLevelsAsync(Guid brandId, CancellationToken cancellationToken = default)
 		=> _httpClient
 			.GetAsync($"/vip/{brandId}", cancellationToken)
 			.ToAsyncEnumerable()
 			.Do(response => response.EnsureSuccessStatusCode())
 			.SelectMany(response => response.Content
-				.ReadFromJsonAsync<IEnumerable<VipLevelInfo>>(_SerializerOptions, cancellationToken)
+				.ReadFromJsonAsync<IEnumerable<VipLevelInfoViewModel>>(_SerializerOptions, cancellationToken)
 				.ToAsyncEnumerable()
 				.Where(collection => collection is not null)
 				.SelectMany(collection => collection!.ToAsyncEnumerable()))
@@ -42,9 +42,9 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ToAsyncEnumerable()
 			.SelectMany(arr => arr.ToAsyncEnumerable());
 
-	public async ValueTask<Guid> CreateVipLevelAsync(Guid brandId, VipLevelCreateInfo createInfo, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask<Guid> CreateVipLevelAsync(Guid brandId, VipLevelCreateViewModel source, string modifier, CancellationToken cancellationToken = default)
 	{
-		var requestContent = JsonContent.Create(createInfo, options: _SerializerOptions);
+		var requestContent = JsonContent.Create(source, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);
 
 		var response = await _httpClient.PutAsync(
@@ -59,9 +59,9 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			cancellationToken).ConfigureAwait(false);
 	}
 
-	public async ValueTask UpdateVipLevelAsync(Guid vipId, VipLevelUpdateInfo updateInfo, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask UpdateVipLevelAsync(Guid vipId, VipLevelUpdateViewModel source, string modifier, CancellationToken cancellationToken = default)
 	{
-		var patch = VipLevelUpdateInfo.Default.CreatePatch(updateInfo, _SerializerOptions);
+		var patch = VipLevelUpdateViewModel.Default.CreatePatch(source, _SerializerOptions);
 
 		var requestContent = JsonContent.Create(patch, options: _SerializerOptions);
 		requestContent.Headers.Add("Modifier", modifier);

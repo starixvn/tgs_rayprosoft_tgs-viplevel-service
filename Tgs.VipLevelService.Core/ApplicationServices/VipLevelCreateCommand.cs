@@ -1,2 +1,4 @@
-﻿namespace Tgs.VipLevelService.ApplicationServices;
-public record VipLevelCreateCommand(Guid BrandId, VipLevelCreateModel CreateModel, string Modifier);
+﻿using Tgs.VipLevelService.Models;
+
+namespace Tgs.VipLevelService.ApplicationServices;
+public record VipLevelCreateCommand(Guid BrandId, VipLevelCreate CreateModel, string Modifier);

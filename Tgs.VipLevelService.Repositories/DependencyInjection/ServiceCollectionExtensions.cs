@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
 		.AddDbContext<TgsContext>(dbContextOptions)
 		.AddTransient<ITgsRepository, TgsRepository>()
 		.AddTransient<IVipLevelRepository, VipLevelRepository>()
-		//.Decorate<IVipLevelRepository>((innerRepository, sp) => new VipLevelCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromMinutes(10)))
+		.Decorate<IVipLevelRepository>((innerRepository, sp) => new VipLevelCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromMinutes(5)))
 		.AddTransient<IPlayerRepository, PlayerRepository>()
 		.Decorate<IPlayerRepository>((innerRepository, sp) => new PlayerCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromDays(1)))
 		.AddTransient<IPlayerVipLevelLogRepository, PlayerVipLevelLogRepository>()

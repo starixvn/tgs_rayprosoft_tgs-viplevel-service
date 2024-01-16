@@ -5,6 +5,7 @@ using Tgs.Paging;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
+using Tgs.VipLevelService.Models;
 using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
@@ -23,36 +24,35 @@ public class VipLevelController : ControllerBase
 	/// <param name="queryService">The query service.</param>
 	/// <param name="brandId">The brand identifier.</param>
 	/// <returns></returns>
-	[HttpGet("{brandId}", Name = "GetBrandAllVipLevels")]
-	public IAsyncEnumerable<VipLevelViewModel> GetBrandAllVipLevelsAsync(
+	[HttpGet("{brandId}", Name = "VipLevel_Query")]
+	public IAsyncEnumerable<VipLevelInfoViewModel> VipLevelQueryAsync(
 		[FromServices] IQueryService<VipLevelQuery, VipLevelInfo> queryService,
 		Guid brandId)
 	{
 		var query = new VipLevelQuery(brandId);
 
 		return queryService.QueryAsync(query, HttpContext.RequestAborted)
-			.Select(info => new VipLevelViewModel
-			{
-				Id = info.Id,
-				BrandId = info.BrandId,
-				BirthBenefit = info.BirthBenefit,
-				CardGameRebate = info.CardGameRebate,
-				Level = info.Level,
-				LevelKeepAccumulateBetAmount = info.LevelKeepAccumulateBetAmount,
-				LevelKeepAccumulateDeposit = info.LevelKeepAccumulateDeposit,
-				LevelKeepCondition = info.LevelKeepCondition,
-				LevelUpAccumulateBetAmount = info.LevelUpAccumulateBetAmount,
-				LevelUpAccumulateDeposit = info.LevelUpAccumulateDeposit,
-				LiveDealerRebate = info.LiveDealerRebate,
-				LotteryRebate = info.LotteryRebate,
-				PromotionBenefit = info.PromotionBenefit,
-				QuarterlyBenefit = info.QuarterlyBenefit,
-				SlotRebate = info.SlotRebate,
-				SportsRebate = info.SportsRebate,
-				VirtualSportsRebate = info.VirtualSportsRebate,
-				WithdrawTotalAmountPerDay = info.WithdrawTotalAmountPerDay,
-				WithdrawTransactionsPerDay = info.WithdrawTransactionsPerDay
-			});
+			.Select(info => new VipLevelInfoViewModel(
+				Id: info.Id,
+				Level: info.Level,
+				BrandId: info.BrandId,
+				LevelUpAccumulateBetAmount: info.LevelUpAccumulateBetAmount,
+				LevelUpAccumulateDeposit: info.LevelUpAccumulateDeposit,
+				LevelKeepAccumulateBetAmount: info.LevelKeepAccumulateBetAmount,
+				LevelKeepAccumulateDeposit: info.LevelKeepAccumulateDeposit,
+				LevelKeepCondition: info.LevelKeepCondition,
+				BirthBenefit: info.BirthBenefit,
+				PromotionBenefit: info.PromotionBenefit,
+				QuarterlyBenefit: info.QuarterlyBenefit,
+				LiveDealerRebate: info.LiveDealerRebate,
+				SlotRebate: info.SlotRebate,
+				LotteryRebate: info.LotteryRebate,
+				CardGameRebate: info.CardGameRebate,
+				SportsRebate: info.SportsRebate,
+				VirtualSportsRebate: info.VirtualSportsRebate,
+				WithdrawTotalAmountPerDay: info.WithdrawTotalAmountPerDay,
+				WithdrawTransactionsPerDay: info.WithdrawTransactionsPerDay
+			));
 	}
 
 	/// <summary>
@@ -64,16 +64,16 @@ public class VipLevelController : ControllerBase
 	/// <param name="modifier">The modifier.</param>
 	/// <param name="id">The identifier.</param>
 	/// <param name="patch">The patch.</param>
-	[HttpPatch("{id}", Name = "PatchVipLevel")]
-	public async Task PatchVipLevelAsync(
-		[FromServices] IGetService<VipLevelModifyQuery, VipLevelModifyModel> getModelService,
-		[FromServices] ICommandService<VipLevelModifyCommand> modifyService,
+	[HttpPatch("{id}", Name = "VipLevel_Update")]
+	public async Task VipLevelUpdateAsync(
+		[FromServices] IGetService<VipLevelUpdateQuery, VipLevelUpdate> getModelService,
+		[FromServices] ICommandService<VipLevelUpdateCommand> modifyService,
 		[FromServices] IOptions<JsonOptions> jsonOptionsAccessor,
 		[FromHeader(Name = "Modifier")] string modifier,
 		Guid id,
 		[FromBody] JsonPatch patch)
 	{
-		var query = new VipLevelModifyQuery(id);
+		var query = new VipLevelUpdateQuery(id);
 
 		var baseModel = await getModelService
 			.GetAsync(query, HttpContext.RequestAborted)
@@ -81,7 +81,7 @@ public class VipLevelController : ControllerBase
 
 		var modifiedModel = patch.Apply(baseModel, jsonOptionsAccessor.Value.JsonSerializerOptions);
 
-		var patchCommand = new VipLevelModifyCommand(id, modifiedModel!, modifier);
+		var patchCommand = new VipLevelUpdateCommand(id, modifiedModel!, modifier);
 
 		await modifyService
 			.ExecuteAsync(patchCommand, HttpContext.RequestAborted)
@@ -89,42 +89,42 @@ public class VipLevelController : ControllerBase
 	}
 
 	/// <summary>
-	/// Creates the vip level asynchronous.
+	/// Vips the level create asynchronous.
 	/// </summary>
-	/// <param name="createService">The create service.</param>
+	/// <param name="service">The service.</param>
 	/// <param name="modifier">The modifier.</param>
 	/// <param name="brandId">The brand identifier.</param>
-	/// <param name="createModel">The create model.</param>
+	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	[HttpPut("{brandId}", Name = "CreateVipLevel")]
-	public ValueTask<Guid> CreateVipLevelAsync(
-		[FromServices] IGetService<VipLevelCreateCommand, Guid> createService,
+	[HttpPut("{brandId}", Name = "VipLevel_Create")]
+	public ValueTask<Guid> VipLevelCreateAsync(
+		[FromServices] IGetService<VipLevelCreateCommand, Guid> service,
 		[FromHeader(Name = "Modifier")] string modifier,
 		Guid brandId,
-		[FromBody] VipLevelCreateViewModel createModel)
+		[FromBody] VipLevelCreateViewModel source)
 	{
 		var command = new VipLevelCreateCommand(
 			brandId,
-			new VipLevelCreateModel(
-				createModel.LevelUpAccumulateBetAmount,
-				createModel.LevelUpAccumulateDeposit,
-				createModel.LevelKeepAccumulateBetAmount,
-				createModel.LevelKeepAccumulateDeposit,
-				createModel.LevelKeepCondition,
-				createModel.BirthBenefit,
-				createModel.PromotionBenefit,
-				createModel.QuarterlyBenefit,
-				createModel.LiveDealerRebate,
-				createModel.SlotRebate,
-				createModel.LotteryRebate,
-				createModel.CardGameRebate,
-				createModel.SportsRebate,
-				createModel.VirtualSportsRebate,
-				createModel.WithdrawTransactionsPerDay,
-				createModel.WithdrawTotalAmountPerDay),
+			new VipLevelCreate(
+				source.LevelUpAccumulateBetAmount,
+				source.LevelUpAccumulateDeposit,
+				source.LevelKeepAccumulateBetAmount,
+				source.LevelKeepAccumulateDeposit,
+				source.LevelKeepCondition,
+				source.BirthBenefit,
+				source.PromotionBenefit,
+				source.QuarterlyBenefit,
+				source.LiveDealerRebate,
+				source.SlotRebate,
+				source.LotteryRebate,
+				source.CardGameRebate,
+				source.SportsRebate,
+				source.VirtualSportsRebate,
+				source.WithdrawTransactionsPerDay,
+				source.WithdrawTotalAmountPerDay),
 			modifier);
 
-		return createService.GetAsync(command, HttpContext.RequestAborted);
+		return service.GetAsync(command, HttpContext.RequestAborted);
 	}
 
 	[HttpGet("playerAdjustInfo", Name = "QueryPlayerVipAdjustInfos")]

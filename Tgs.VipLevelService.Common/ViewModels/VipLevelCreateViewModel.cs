@@ -1,5 +1,5 @@
-﻿namespace Tgs.VipLevelService.Clients;
-public record VipLevelCreateInfo(
+﻿namespace Tgs.VipLevelService.Common.ViewModels;
+public record VipLevelCreateViewModel(
 	decimal LevelUpAccumulateBetAmount,
 	decimal LevelUpAccumulateDeposit,
 	decimal LevelKeepAccumulateBetAmount,

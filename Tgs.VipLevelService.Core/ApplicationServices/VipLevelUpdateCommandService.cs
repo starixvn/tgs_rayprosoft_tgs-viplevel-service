@@ -1,9 +1,10 @@
 ﻿using Tgs.ServiceUtility;
 
 namespace Tgs.VipLevelService.ApplicationServices;
-internal class VipLevelModifyCommandService(IVipLevelRepository repository) : ICommandService<VipLevelModifyCommand>
+
+internal class VipLevelUpdateCommandService(IVipLevelRepository repository) : ICommandService<VipLevelUpdateCommand>
 {
-	public async ValueTask ExecuteAsync(VipLevelModifyCommand command, CancellationToken cancellationToken = default)
+	public async ValueTask ExecuteAsync(VipLevelUpdateCommand command, CancellationToken cancellationToken = default)
 	{
 		var vipLevelInfo = await repository.GetAsync(
 			id: command.Id,
@@ -14,10 +15,9 @@ internal class VipLevelModifyCommandService(IVipLevelRepository repository) : IC
 		await repository.UpdateAsync(
 			id: vipLevelInfo.Id,
 			brandId: vipLevelInfo.BrandId,
-			modifyModel: command.ModifyModel,
+			update: command.Update,
 			modifier: command.Modifier,
 			cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
 }
-

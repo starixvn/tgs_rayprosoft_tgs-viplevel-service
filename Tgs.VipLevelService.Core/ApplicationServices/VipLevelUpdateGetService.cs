@@ -1,9 +1,10 @@
 ﻿using Tgs.ServiceUtility;
 
 namespace Tgs.VipLevelService.ApplicationServices;
-internal class VipLevelModifyGetService(IVipLevelRepository repository) : IGetService<VipLevelModifyQuery, VipLevelModifyModel>
+
+internal class VipLevelUpdateGetService(IVipLevelRepository repository) : IGetService<VipLevelUpdateQuery, VipLevelUpdate>
 {
-	public async ValueTask<VipLevelModifyModel> GetAsync(VipLevelModifyQuery query, CancellationToken cancellationToken = default)
+	public async ValueTask<VipLevelUpdate> GetAsync(VipLevelUpdateQuery query, CancellationToken cancellationToken = default)
 	{
 		var vipLevelInfo = await repository.GetAsync(
 			id: query.Id,
@@ -11,7 +12,7 @@ internal class VipLevelModifyGetService(IVipLevelRepository repository) : IGetSe
 			.ConfigureAwait(false)
 			?? throw new NullReferenceException();
 
-		return new VipLevelModifyModel(
+		return new VipLevelUpdate(
 			Level: vipLevelInfo.Level,
 			LevelUpAccumulateBetAmount: vipLevelInfo.LevelUpAccumulateBetAmount,
 			LevelUpAccumulateDeposit: vipLevelInfo.LevelUpAccumulateDeposit,

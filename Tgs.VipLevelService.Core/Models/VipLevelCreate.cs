@@ -1,7 +1,6 @@
-﻿namespace Tgs.VipLevelService;
+﻿namespace Tgs.VipLevelService.Models;
 
-public record VipLevelModifyModel(
-	int Level,
+public record VipLevelCreate(
 	decimal LevelUpAccumulateBetAmount,
 	decimal LevelUpAccumulateDeposit,
 	decimal LevelKeepAccumulateBetAmount,

@@ -1,8 +1,7 @@
-﻿namespace Tgs.VipLevelService.Clients;
-public record VipLevelInfo(
-	Guid Id,
+﻿namespace Tgs.VipLevelService;
+
+public record VipLevelUpdate(
 	int Level,
-	Guid BrandId,
 	decimal LevelUpAccumulateBetAmount,
 	decimal LevelUpAccumulateDeposit,
 	decimal LevelKeepAccumulateBetAmount,

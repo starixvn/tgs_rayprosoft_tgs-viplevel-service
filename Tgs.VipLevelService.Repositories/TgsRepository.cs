@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tgs.Paging;
 using Tgs.VipLevelService.Entities;
+using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
 
@@ -31,13 +32,13 @@ internal class TgsRepository(TgsContext tgsContext) : ITgsRepository
 				vl.WithdrawTotalAmountPerDay))
 			.ToAsyncEnumerable();
 
-	public async ValueTask<VipLevelModifyModel?> GetVipLevelBaseModifyModelAsync(Guid id, CancellationToken cancellationToken = default)
+	public async ValueTask<VipLevelUpdate?> GetVipLevelBaseModifyModelAsync(Guid id, CancellationToken cancellationToken = default)
 		=> await tgsContext.VipLevels
 			.FindAsync(new object[] { id }, cancellationToken: cancellationToken)
 			.AsTask()
 			.ToAsyncEnumerable()
 			.Where(vl => vl is not null)
-			.Select(vl => new VipLevelModifyModel(
+			.Select(vl => new VipLevelUpdate(
 				vl!.Level,
 				vl.LevelUpAccumulateBetAmount,
 				vl.LevelUpAccumulateDeposit,
@@ -58,7 +59,7 @@ internal class TgsRepository(TgsContext tgsContext) : ITgsRepository
 			.FirstOrDefaultAsync(cancellationToken)
 			.ConfigureAwait(false);
 
-	public async ValueTask ModifyVipLevelAsync(Guid id, VipLevelModifyModel modifyModel, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask ModifyVipLevelAsync(Guid id, VipLevelUpdate modifyModel, string modifier, CancellationToken cancellationToken = default)
 	{
 		var viplevel = await tgsContext.VipLevels
 			.FindAsync(new object[] { id }, cancellationToken)
@@ -92,7 +93,7 @@ internal class TgsRepository(TgsContext tgsContext) : ITgsRepository
 		_ = await tgsContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 	}
 
-	public async ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelCreateModel createModel, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask CreateVipLevelAsync(Guid id, Guid brandId, VipLevelCreate createModel, string modifier, CancellationToken cancellationToken = default)
 	{
 		var currentDate = DateTime.UtcNow;
 

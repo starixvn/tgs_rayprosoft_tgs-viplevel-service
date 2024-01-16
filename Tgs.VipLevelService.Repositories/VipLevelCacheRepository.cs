@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.Json;
 using StackExchange.Redis;
+using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
 
@@ -77,12 +78,12 @@ internal class VipLevelCacheRepository(
 			id: id,
 			cancellationToken: cancellationToken);
 
-	public async ValueTask UpdateAsync(Guid id, Guid brandId, VipLevelModifyModel modifyModel, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask UpdateAsync(Guid id, Guid brandId, VipLevelUpdate update, string modifier, CancellationToken cancellationToken = default)
 	{
 		await repository.UpdateAsync(
 			id: id,
 			brandId: brandId,
-			modifyModel: modifyModel,
+			update: update,
 			modifier: modifier,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
@@ -92,12 +93,12 @@ internal class VipLevelCacheRepository(
 			.ConfigureAwait(false);
 	}
 
-	public async ValueTask CreateAsync(Guid id, Guid brandId, VipLevelCreateModel createModel, string modifier, CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, Guid brandId, VipLevelCreate create, string modifier, CancellationToken cancellationToken = default)
 	{
 		await repository.CreateAsync(
 			id: id,
 			brandId: brandId,
-			createModel: createModel,
+			create: create,
 			modifier: modifier,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);

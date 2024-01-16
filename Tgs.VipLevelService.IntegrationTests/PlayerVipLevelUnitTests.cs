@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using OpenTelemetry.Resources;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Clients;
 using Tgs.VipLevelService.Common;
-using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Tgs.VipLevelService.IntegrationTests;
+
 public class PlayerVipLevelUnitTests
 {
 	[Fact]

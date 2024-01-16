@@ -1,5 +1,6 @@
 ﻿using NSubstitute;
 using Tgs.VipLevelService.ApplicationServices;
+using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests;
 
@@ -44,7 +45,7 @@ public class VipLevelTests
 
 		var command = new PatchVipLevelCommand(
 			Guid.NewGuid(),
-			new VipLevelModifyModel(
+			new VipLevelUpdate(
 				1,
 				10M,
 				20M,
@@ -82,7 +83,7 @@ public class VipLevelTests
 
 		var command = new CreateVipLevelCommand(
 			Guid.NewGuid(),
-			new VipLevelCreateModel(
+			new VipLevelCreate(
 				10M,
 				20M,
 				30M,

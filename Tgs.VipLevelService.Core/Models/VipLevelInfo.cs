@@ -1,4 +1,4 @@
-﻿namespace Tgs.VipLevelService;
+﻿namespace Tgs.VipLevelService.Models;
 public record VipLevelInfo(
 	Guid Id,
 	int Level,

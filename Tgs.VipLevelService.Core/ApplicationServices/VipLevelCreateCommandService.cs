@@ -1,6 +1,7 @@
 ﻿using Tgs.ServiceUtility;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class VipLevelCreateCommandService(ITgsRepository tgsRepository) : IGetService<VipLevelCreateCommand, Guid>
 {
 	public async ValueTask<Guid> GetAsync(VipLevelCreateCommand command, CancellationToken cancellationToken = default)

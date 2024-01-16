@@ -1,6 +1,8 @@
-﻿namespace Tgs.VipLevelService;
-
-public record VipLevelCreateModel(
+﻿namespace Tgs.VipLevelService.Common.ViewModels;
+public record VipLevelInfoViewModel(
+	Guid Id,
+	int Level,
+	Guid BrandId,
 	decimal LevelUpAccumulateBetAmount,
 	decimal LevelUpAccumulateDeposit,
 	decimal LevelKeepAccumulateBetAmount,
