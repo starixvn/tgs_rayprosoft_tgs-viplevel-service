@@ -109,6 +109,7 @@ internal class VipLevelRepository(
 			vl.VirtualSportsRebatePercentage,
 			vl.WithdrawTransactionsPerDay,
 			vl.WithdrawTotalAmountPerDay))
+		.OrderBy(keySelector: vl => vl.Level)
 		.ToAsyncEnumerable();
 
 	public async ValueTask UpdateAsync(Guid id, Guid brandId, VipLevelModifyModel modifyModel, string modifier, CancellationToken cancellationToken = default)
