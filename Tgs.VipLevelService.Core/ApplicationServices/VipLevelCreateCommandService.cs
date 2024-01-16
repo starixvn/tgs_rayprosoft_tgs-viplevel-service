@@ -2,18 +2,18 @@
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class VipLevelCreateCommandService(ITgsRepository tgsRepository) : IGetService<VipLevelCreateCommand, Guid>
+internal class VipLevelCreateCommandService(IVipLevelRepository repository) : IGetService<VipLevelCreateCommand, Guid>
 {
 	public async ValueTask<Guid> GetAsync(VipLevelCreateCommand command, CancellationToken cancellationToken = default)
 	{
 		var newId = Guid.NewGuid();
 
-		await tgsRepository.CreateVipLevelAsync(
-			newId,
-			command.BrandId,
-			command.CreateModel,
-			command.Modifier,
-			cancellationToken).ConfigureAwait(false);
+		await repository.CreateAsync(
+			id: newId,
+			brandId: command.BrandId,
+			create: command.CreateModel,
+			modifier: command.Modifier,
+			cancellationToken: cancellationToken).ConfigureAwait(false);
 
 		return newId;
 	}
