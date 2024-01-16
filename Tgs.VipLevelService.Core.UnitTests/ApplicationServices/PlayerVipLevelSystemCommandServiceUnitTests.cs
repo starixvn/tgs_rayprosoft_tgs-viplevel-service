@@ -20,8 +20,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 		var command = new PlayerVipLevelSystemCommand(
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: Guid.NewGuid(),
-			VipLevel: null,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			VipLevel: null);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -91,20 +90,18 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateSystemAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
-			autoState: Arg.Is(command.AutoState),
 			cancellationToken: Arg.Any<CancellationToken>());
 
 		var publishCommand = new PlayerVipLevelSystemLogPublishCommand(
 			BrandId: playerInfo.BrandId,
 			PlayerCode: playerInfo.PlayerCode,
 			BeforeLevel: beforePlayerVipLevelInfo.VipLevel,
-			BeforeAutoState: beforePlayerVipLevelInfo.AutoState,
 			AfterLevel: vipLevelInfo.Level,
-			AfterAutoState: command.AutoState);
+			AutoState: beforePlayerVipLevelInfo.AutoState);
 		await fakePlayerVipLevelSystemLogPublishService
 			.Received(1)
 			.ExecuteAsync(
@@ -124,8 +121,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 		var command = new PlayerVipLevelSystemCommand(
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: null,
-			VipLevel: 2,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			VipLevel: 2);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -195,20 +191,18 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateSystemAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
-			autoState: Arg.Is(command.AutoState),
 			cancellationToken: Arg.Any<CancellationToken>());
 
 		var publishCommand = new PlayerVipLevelSystemLogPublishCommand(
 			BrandId: playerInfo.BrandId,
 			PlayerCode: playerInfo.PlayerCode,
 			BeforeLevel: beforePlayerVipLevelInfo.VipLevel,
-			BeforeAutoState: beforePlayerVipLevelInfo.AutoState,
 			AfterLevel: vipLevelInfo.Level,
-			AfterAutoState: command.AutoState);
+			AutoState: beforePlayerVipLevelInfo.AutoState);
 		await fakePlayerVipLevelSystemLogPublishService
 			.Received(1)
 			.ExecuteAsync(
@@ -228,8 +222,7 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 		var command = new PlayerVipLevelSystemCommand(
 			PlayerCode: "4ucmqplxb029",
 			VipLevelId: Guid.NewGuid(),
-			VipLevel: null,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			VipLevel: null);
 
 		var playerInfo = new PlayerInfo(
 			Guid.NewGuid(),
@@ -306,20 +299,18 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateSystemAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
-			autoState: Arg.Is(command.AutoState),
 			cancellationToken: Arg.Any<CancellationToken>());
 
 		var publishCommand = new PlayerVipLevelSystemLogPublishCommand(
 			BrandId: playerInfo.BrandId,
 			PlayerCode: playerInfo.PlayerCode,
 			BeforeLevel: beforePlayerVipLevelInfo.VipLevel,
-			BeforeAutoState: beforePlayerVipLevelInfo.AutoState,
 			AfterLevel: vipLevelInfo.Level,
-			AfterAutoState: command.AutoState);
+			AutoState: beforePlayerVipLevelInfo.AutoState);
 		await fakePlayerVipLevelSystemLogPublishService
 			.Received(1)
 			.ExecuteAsync(

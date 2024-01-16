@@ -173,13 +173,12 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 		   .ConfigureAwait(false);
 	}
 
-	public async ValueTask PlayerVipLevelSystemAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelSystemAsync(string playerCode, int? vipLevel, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelSystemViewModel
 		{
 			VipLevel = vipLevel,
-			VipLevelId = vipLevelId,
-			AutoState = autoState
+			VipLevelId = vipLevelId
 		};
 		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/system");
 		var builder = new UriBuilder(path);

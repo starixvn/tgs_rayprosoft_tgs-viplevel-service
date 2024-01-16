@@ -66,8 +66,7 @@ public class PlayerController : ControllerBase
 			command: new PlayerVipLevelSystemCommand(
 				playerCode,
 				source.VipLevelId,
-				source.VipLevel,
-				source.AutoState),
+				source.VipLevel),
 			cancellationToken: HttpContext.RequestAborted);
 
 	[HttpGet("{playerCode}/viplevel/log", Name = "PlayerVipLevelLog_Query")]

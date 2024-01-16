@@ -49,8 +49,22 @@ internal class PlayerVipLevelCacheRepository(
 			.ConfigureAwait(false);
 	}
 
+	public async ValueTask UpdateSystemAsync(string playerCode, Guid vipLevelId, int vipLevel, CancellationToken cancellationToken = default)
+	{
+		await repository.UpdateSystemAsync(
+			playerCode: playerCode,
+			vipLevelId: vipLevelId,
+			vipLevel: vipLevel,
+			cancellationToken: cancellationToken)
+			 .ConfigureAwait(false);
+
+		_ = await DeleteAsync(
+			playerCode: playerCode)
+			.ConfigureAwait(false);
+	}
+
 	private static string GetKey(string playerCode)
-		=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
+			=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
 
 	private async ValueTask<PlayerVipLevelInfo?> GetAsync(string playerCode)
 	{

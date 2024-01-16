@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Tgs.SerialNumberGenerator;
-using Tgs.ServiceUtility;
-using Tgs.VipLevelService.Common;
+﻿using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
@@ -50,11 +47,10 @@ internal class PlayerVipLevelSystemCommandService(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		await playerVipLevelRepository.MergeAsync(
+		await playerVipLevelRepository.UpdateSystemAsync(
 			playerCode: playerInfo.PlayerCode,
 			vipLevelId: vipLevelInfo.Id,
 			vipLevel: vipLevelInfo.Level,
-			autoState: command.AutoState,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
@@ -63,9 +59,8 @@ internal class PlayerVipLevelSystemCommandService(
 				BrandId: playerInfo.BrandId,
 				PlayerCode: playerInfo.PlayerCode,
 				BeforeLevel: beforePlayerVipLevelInfo.VipLevel,
-				BeforeAutoState: beforePlayerVipLevelInfo.AutoState,
 				AfterLevel: vipLevelInfo.Level,
-				AfterAutoState: command.AutoState),
+				AutoState: beforePlayerVipLevelInfo.AutoState),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}

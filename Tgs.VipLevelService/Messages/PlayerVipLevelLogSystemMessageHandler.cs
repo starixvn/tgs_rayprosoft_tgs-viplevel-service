@@ -29,9 +29,9 @@ public class PlayerVipLevelLogSystemMessageHandler(
 			PlayerCode: message.PlayerCode,
 			Type: PlayerVipLevelLogType.System,
 			BeforeLevel: message.BeforeLevel ?? 0,
-			BeforeAutoState: message.BeforeAutoState ?? PlayerVipLevelAutoState.Enable,
+			BeforeAutoState: message.AutoState,
 			AfterLevel: message.AfterLevel,
-			AfterAutoState: message.AfterAutoState,
+			AfterAutoState: message.AutoState,
 			CreatedUserId: Guid.Empty,
 			CreatedUsername: string.Empty,
 			Remark: string.Empty);

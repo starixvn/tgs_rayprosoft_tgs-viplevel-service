@@ -104,7 +104,6 @@ public class PlayerVipLevelUnitTests
 	{
 		var playerCode = "4ucmqplxb029";
 		var vipLevel = 1;
-		var autoState = PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelSystemCommand>>();
 		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -112,13 +111,12 @@ public class PlayerVipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelSystemAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState);
+		await client.PlayerVipLevelSystemAsync(playerCode: playerCode, vipLevel: vipLevel);
 
 		var command = new PlayerVipLevelSystemCommand(
 			PlayerCode: playerCode,
 			VipLevelId: null,
-			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			VipLevel: 1);
 
 		_ = fakeService
 		.Received(1)
@@ -133,7 +131,6 @@ public class PlayerVipLevelUnitTests
 		var playerCode = "4ucmqplxb029";
 		int? vipLevel = null;
 		var vipLevelId = Guid.NewGuid();
-		var autoState = PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelSystemCommand>>();
 		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -141,13 +138,12 @@ public class PlayerVipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelSystemAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState, vipLevelId: vipLevelId);
+		await client.PlayerVipLevelSystemAsync(playerCode: playerCode, vipLevel: vipLevel, vipLevelId: vipLevelId);
 
 		var command = new PlayerVipLevelSystemCommand(
 			PlayerCode: playerCode,
 			VipLevelId: vipLevelId,
-			VipLevel: vipLevel,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			VipLevel: vipLevel);
 
 		_ = fakeService
 		.Received(1)

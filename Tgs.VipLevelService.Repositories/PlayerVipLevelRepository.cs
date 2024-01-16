@@ -54,4 +54,38 @@ internal class PlayerVipLevelRepository(
 			 cancellationToken: cancellationToken)
 			 .ConfigureAwait(false);
 	}
+
+	public async ValueTask UpdateSystemAsync(string playerCode, Guid vipLevelId, int vipLevel, CancellationToken cancellationToken = default)
+	{
+		var playerVipLevel = context.PlayerVipLevels
+			 .FirstOrDefault(predicate: predicate => predicate.PlayerCode == playerCode);
+
+		if (playerVipLevel is null)
+		{
+			var entity = new PlayerVipLevel
+			{
+				PlayerCode = playerCode,
+				VipLevelId = vipLevelId,
+				VipLevel = vipLevel,
+				AutoState = (int)PlayerVipLevelAutoState.Enable
+			};
+
+			_ = await context.PlayerVipLevels.AddAsync(
+				entity: entity,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+		}
+		else
+		{
+			playerVipLevel.VipLevelId = vipLevelId;
+			playerVipLevel.VipLevel = vipLevel;
+
+			_ = context.PlayerVipLevels.Update(
+				entity: playerVipLevel);
+		}
+
+		_ = await context.SaveChangesAsync(
+			 cancellationToken: cancellationToken)
+			 .ConfigureAwait(false);
+	}
 }

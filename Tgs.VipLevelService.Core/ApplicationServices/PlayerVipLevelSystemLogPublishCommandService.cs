@@ -19,9 +19,8 @@ internal class PlayerVipLevelSystemLogPublishCommandService(
 			BrandId: command.BrandId,
 			PlayerCode: command.PlayerCode,
 			BeforeLevel: command.BeforeLevel,
-			BeforeAutoState: command.BeforeAutoState,
 			AfterLevel: command.AfterLevel,
-			AfterAutoState: command.AfterAutoState);
+			AutoState: command.AutoState);
 
 		await messageSender.PublishAsync(
 			subject: PlayerVipLevelLogNatsConsts.System,
