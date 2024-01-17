@@ -44,17 +44,19 @@ public class PlayerController : ControllerBase
 	[HttpPost("{playerCode}/viplevel/manual", Name = "PlayerVipLevel_Manual")]
 	public ValueTask PlayerVipLevelManualAsync(
 		[FromServices] ICommandService<PlayerVipLevelManualCommand> service,
+		[FromHeader(Name = "ModifierUserId")] Guid modifierUserId,
+		[FromHeader(Name = "ModifierUsername")] string modifierUsername,
 		string playerCode,
 		[FromBody] PlayerVipLevelManualViewModel source)
 		=> service.ExecuteAsync(
 			command: new PlayerVipLevelManualCommand(
-				playerCode,
-				source.VipLevelId,
-				source.VipLevel,
-				source.AutoState,
-				source.CreatedUserId,
-				source.CreatedUsername,
-				source.Remark),
+				PlayerCode: playerCode,
+				VipLevelId: source.VipLevelId,
+				VipLevel: source.VipLevel,
+				AutoState: source.AutoState,
+				CreatedUserId: modifierUserId,
+				CreatedUsername: modifierUsername,
+				Remark: source.Remark),
 			cancellationToken: HttpContext.RequestAborted);
 
 	[HttpPost("{playerCode}/viplevel/system", Name = "PlayerVipLevel_System")]

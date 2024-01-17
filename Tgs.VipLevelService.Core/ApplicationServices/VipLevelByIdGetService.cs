@@ -7,7 +7,6 @@ internal class VipLevelByIdGetService(IVipLevelRepository repository) : IGetServ
 {
 	public ValueTask<VipLevelInfo?> GetAsync(VipLevelByIdQuery query, CancellationToken cancellationToken = default)
 		=> repository.GetAsync(
-			brandId: query.BrandId,
 			id: query.Id,
 			cancellationToken: cancellationToken);
 }

@@ -168,7 +168,7 @@ public class PlayerVipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelManualAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState, createdUserId: createdUserId, createdUsername: createdUsername, remark: remark);
+		await client.PlayerVipLevelManualAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState, modifierUserId: createdUserId, modifierUsername: createdUsername, remark: remark);
 
 		var command = new PlayerVipLevelManualCommand(
 			PlayerCode: playerCode,
@@ -203,7 +203,7 @@ public class PlayerVipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelManualAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState, createdUserId: createdUserId, createdUsername: createdUsername, remark: remark, vipLevelId: vipLevelId);
+		await client.PlayerVipLevelManualAsync(playerCode: playerCode, vipLevel: vipLevel, autoState: autoState, modifierUserId: createdUserId, modifierUsername: createdUsername, remark: remark, vipLevelId: vipLevelId);
 
 		var command = new PlayerVipLevelManualCommand(
 			PlayerCode: playerCode,

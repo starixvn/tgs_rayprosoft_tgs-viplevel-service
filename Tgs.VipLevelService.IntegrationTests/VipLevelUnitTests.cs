@@ -53,7 +53,7 @@ public class VipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.GetBrandAllVipLevelsAsync(
+		var actual = await client.VipLevelQueryAsync(
 			brandId: brandId)
 			.ToArrayAsync();
 
@@ -81,11 +81,163 @@ public class VipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.GetBrandAllVipLevelsAsync(
+		var actual = await client.VipLevelQueryAsync(
 			brandId: brandId)
 			.ToArrayAsync();
 
 		Assert.Empty(actual);
+	}
+
+	[Fact]
+	public async Task VipLevel_ByLevel_Query()
+	{
+		var brandId = Guid.NewGuid();
+		var level = 1;
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
+
+			var query = new VipLevelByLevelQuery(
+				BrandId: brandId,
+				Level: level);
+			var vipLevelInfo = new VipLevelInfo(
+				Id: Guid.NewGuid(),
+				Level: level,
+				BrandId: brandId,
+				LevelUpAccumulateBetAmount: 0,
+				LevelUpAccumulateDeposit: 0,
+				LevelKeepAccumulateBetAmount: 0,
+				LevelKeepAccumulateDeposit: 0,
+				LevelKeepCondition: true,
+				BirthBenefit: 100.0m,
+				PromotionBenefit: 100.0m,
+				QuarterlyBenefit: 100.0m,
+				LiveDealerRebate: 0.0m,
+				SlotRebate: 0.0m,
+				LotteryRebate: 0.0m,
+				CardGameRebate: 0.0m,
+				SportsRebate: 0.0m,
+				VirtualSportsRebate: 0.0m,
+				WithdrawTransactionsPerDay: -1,
+				WithdrawTotalAmountPerDay: -1);
+			_ = fakeQueryService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(vipLevelInfo);
+			_ = services.AddTransient(_ => fakeQueryService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.VipLevelGetAsync(
+			brandId: brandId,
+			level: level);
+
+		Assert.NotNull(actual);
+	}
+
+	[Fact]
+	public async Task VipLevel_ByLevel_Query_Null()
+	{
+		var brandId = Guid.NewGuid();
+		var level = 1;
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
+
+			var query = new VipLevelByLevelQuery(
+				BrandId: brandId,
+				Level: level);
+			_ = fakeQueryService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns((VipLevelInfo?)null);
+			_ = services.AddTransient(_ => fakeQueryService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.VipLevelGetAsync(
+			brandId: brandId,
+			level: level);
+
+		Assert.Null(actual);
+	}
+
+	[Fact]
+	public async Task VipLevel_ById_Query()
+	{
+		var id = Guid.NewGuid();
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
+
+			var query = new VipLevelByIdQuery(
+				Id: id);
+			var vipLevelInfo = new VipLevelInfo(
+				Id: id,
+				Level: 1,
+				BrandId: Guid.NewGuid(),
+				LevelUpAccumulateBetAmount: 0,
+				LevelUpAccumulateDeposit: 0,
+				LevelKeepAccumulateBetAmount: 0,
+				LevelKeepAccumulateDeposit: 0,
+				LevelKeepCondition: true,
+				BirthBenefit: 100.0m,
+				PromotionBenefit: 100.0m,
+				QuarterlyBenefit: 100.0m,
+				LiveDealerRebate: 0.0m,
+				SlotRebate: 0.0m,
+				LotteryRebate: 0.0m,
+				CardGameRebate: 0.0m,
+				SportsRebate: 0.0m,
+				VirtualSportsRebate: 0.0m,
+				WithdrawTransactionsPerDay: -1,
+				WithdrawTotalAmountPerDay: -1);
+			_ = fakeQueryService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(vipLevelInfo);
+			_ = services.AddTransient(_ => fakeQueryService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.VipLevelGetAsync(id: id);
+
+		Assert.NotNull(actual);
+	}
+
+	[Fact]
+	public async Task VipLevel_ById_Query_Null()
+	{
+		var id = Guid.NewGuid();
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
+
+			var query = new VipLevelByIdQuery(
+				Id: id);
+			_ = fakeQueryService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns((VipLevelInfo?)null);
+			_ = services.AddTransient(_ => fakeQueryService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.VipLevelGetAsync(id: id);
+
+		Assert.Null(actual);
 	}
 
 	[Fact]
@@ -146,7 +298,7 @@ public class VipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.CreateVipLevelAsync(
+		var actual = await client.VipLevelCreateAsync(
 			brandId: brandId,
 			source: source,
 			modifier: modifier);
@@ -236,7 +388,7 @@ public class VipLevelUnitTests
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.UpdateVipLevelAsync(
+		await client.VipLevelUpdateAsync(
 			vipId: vipId,
 			source: source,
 			modifier: modifier);

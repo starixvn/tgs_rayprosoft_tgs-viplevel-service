@@ -29,7 +29,7 @@ internal class VipLevelCacheRepository(
 				?? Enumerable.Empty<VipLevelInfo>();
 			if (vipLevelInfos.Any())
 			{
-				_ = await SetAsync(
+				_ = await SetQueryAsync(
 					brandId: brandId,
 					source: vipLevelInfos)
 					.ConfigureAwait(false);
@@ -73,10 +73,29 @@ internal class VipLevelCacheRepository(
 		return vipLevelInfos.FirstOrDefault(predicate: vl => vl.BrandId == brandId && vl.Level == level);
 	}
 
-	public ValueTask<VipLevelInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
-		=> repository.GetAsync(
-			id: id,
-			cancellationToken: cancellationToken);
+	public async ValueTask<VipLevelInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
+	{
+		var vipLevelInfo = await CacheVipIdAsync(id)
+			.ConfigureAwait(false);
+
+		if (vipLevelInfo is null)
+		{
+			vipLevelInfo = await repository.GetAsync(
+				id: id,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+
+			if (vipLevelInfo is not null)
+			{
+				await SetVipIdAsync(
+					vipId: id,
+					vipLevelInfo)
+					.ConfigureAwait(false);
+			}
+		}
+
+		return vipLevelInfo;
+	}
 
 	public async ValueTask UpdateAsync(Guid id, Guid brandId, VipLevelUpdate update, string modifier, CancellationToken cancellationToken = default)
 	{
@@ -88,8 +107,11 @@ internal class VipLevelCacheRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		await DeleteAsync(
+		await DeleteQueryAsync(
 			brandId: brandId)
+			.ConfigureAwait(false);
+		await DeleteVipIdAsync(
+			vipId: id)
 			.ConfigureAwait(false);
 	}
 
@@ -103,17 +125,23 @@ internal class VipLevelCacheRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		await DeleteAsync(
+		await DeleteQueryAsync(
 			brandId: brandId)
+			.ConfigureAwait(false);
+		await DeleteVipIdAsync(
+			vipId: id)
 			.ConfigureAwait(false);
 	}
 
-	private static string GetKey(Guid brandId)
-								=> string.Concat(typeof(VipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(VipLevelCacheRepository).Name!.ToLower(), ":", brandId);
+	private static string GetQueryKey(Guid brandId)
+		=> string.Concat(typeof(VipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(VipLevelCacheRepository).Name!.ToLower(), ":query:", brandId);
+
+	private static string GetVipIdKey(Guid vipId)
+		=> string.Concat(typeof(VipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(VipLevelCacheRepository).Name!.ToLower(), ":get:", vipId);
 
 	private async IAsyncEnumerable<VipLevelInfo> CacheQueryAsync(Guid brandId)
 	{
-		var key = GetKey(brandId);
+		var key = GetQueryKey(brandId);
 		var vipLevelInfos = Enumerable.Empty<VipLevelInfo>();
 		if (await database.KeyExistsAsync(key).ConfigureAwait(false))
 		{
@@ -139,16 +167,48 @@ internal class VipLevelCacheRepository(
 		}
 	}
 
-	private async ValueTask<bool> SetAsync(Guid brandId, IEnumerable<VipLevelInfo> source)
+	private async ValueTask<VipLevelInfo?> CacheVipIdAsync(Guid vipId)
+	{
+		var key = GetVipIdKey(vipId);
+		var vipLevelInfo = default(VipLevelInfo);
+		if (await database.KeyExistsAsync(key).ConfigureAwait(false))
+		{
+			var value = await database.StringGetAsync(
+				key: key)
+				.ConfigureAwait(false);
+
+			if (!value.IsNullOrEmpty)
+			{
+				vipLevelInfo = JsonSerializer.Deserialize<VipLevelInfo>(value.ToString());
+			}
+		}
+
+		return vipLevelInfo;
+	}
+
+	private async ValueTask<bool> SetQueryAsync(Guid brandId, IEnumerable<VipLevelInfo> source)
 		=> await database.StringSetAsync(
-			key: GetKey(brandId),
+			key: GetQueryKey(brandId),
 			value: JsonSerializer.Serialize(source),
 			expiry: Expiry)
 		.ConfigureAwait(false);
 
-	private async ValueTask<bool> DeleteAsync(Guid brandId)
+	private async ValueTask<bool> DeleteQueryAsync(Guid brandId)
 		=> await database.KeyDeleteAsync(
-			key: GetKey(brandId),
+			key: GetQueryKey(brandId),
+			flags: CommandFlags.FireAndForget)
+		.ConfigureAwait(false);
+
+	private async ValueTask<bool> SetVipIdAsync(Guid vipId, VipLevelInfo source)
+		=> await database.StringSetAsync(
+			key: GetVipIdKey(vipId),
+			value: JsonSerializer.Serialize(source),
+			expiry: Expiry)
+		.ConfigureAwait(false);
+
+	private async ValueTask<bool> DeleteVipIdAsync(Guid vipId)
+		=> await database.KeyDeleteAsync(
+			key: GetVipIdKey(vipId),
 			flags: CommandFlags.FireAndForget)
 		.ConfigureAwait(false);
 }

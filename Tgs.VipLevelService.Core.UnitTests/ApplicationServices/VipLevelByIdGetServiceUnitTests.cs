@@ -13,7 +13,6 @@ public class VipLevelByIdGetServiceUnitTests
 		var sut = new VipLevelByIdGetService(fakeVipLevelRepository);
 
 		var query = new VipLevelByIdQuery(
-			BrandId: Guid.NewGuid(),
 			Id: Guid.NewGuid());
 
 		_ = await sut.GetAsync(query);
@@ -21,7 +20,6 @@ public class VipLevelByIdGetServiceUnitTests
 		_ = fakeVipLevelRepository
 			.Received(1)
 			.GetAsync(
-			brandId: Arg.Is(query.BrandId),
 			id: Arg.Is(query.Id),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
