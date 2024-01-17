@@ -7,6 +7,5 @@ public record PlayerVipLevelManualViewModel
 	public int? VipLevel { get; init; }
 	[Required]
 	public PlayerVipLevelAutoState AutoState { get; init; }
-	[Required]
 	public string Remark { get; init; } = default!;
 }
