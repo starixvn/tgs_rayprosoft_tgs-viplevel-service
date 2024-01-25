@@ -130,4 +130,30 @@ public class PlayerController : ControllerBase
 			TotalCount = count
 		};
 	}
+
+	[HttpGet("{playerCode}/viplevel/exp", Name = "PlayerVipLevel_Exp_Get")]
+	public async ValueTask<PlayerVipLevelExpInfoViewModel> PlayerVipLevelExpGetAsync(
+		[FromServices] IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?> service,
+		string playerCode)
+	{
+		var playerVipLevelExpInfo = await service.GetAsync(
+			query: new PlayerVipLevelExpGetQuery(
+				PlayerCode: playerCode),
+			cancellationToken: HttpContext.RequestAborted)
+			.ConfigureAwait(true);
+
+		return playerVipLevelExpInfo is null
+			? new PlayerVipLevelExpInfoViewModel(
+				PlayerCode: playerCode,
+				AccumDepositId: Guid.Empty,
+				AccumDeposit: 0.0m,
+				AccumTurnoverId: Guid.Empty,
+				AccumTurnover: 0.0m)
+			: new PlayerVipLevelExpInfoViewModel(
+				PlayerCode: playerVipLevelExpInfo.PlayerCode,
+				AccumDepositId: playerVipLevelExpInfo.AccumDepositId,
+				AccumDeposit: playerVipLevelExpInfo.AccumDeposit,
+				AccumTurnoverId: playerVipLevelExpInfo.AccumTurnoverId,
+				AccumTurnover: playerVipLevelExpInfo.AccumTurnover);
+	}
 }

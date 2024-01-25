@@ -21,5 +21,6 @@ public static class ServiceCollectionExtensions
 		.Decorate<IPlayerRepository>((innerRepository, sp) => new PlayerCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromDays(1)))
 		.AddTransient<IPlayerVipLevelLogRepository, PlayerVipLevelLogRepository>()
 		.AddTransient<IPlayerVipLevelRepository, PlayerVipLevelRepository>()
-		.Decorate<IPlayerVipLevelRepository>((innerRepository, sp) => new PlayerVipLevelCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromMinutes(10)));
+		.Decorate<IPlayerVipLevelRepository>((innerRepository, sp) => new PlayerVipLevelCacheRepository(redisDatabaseResolver(sp), innerRepository, TimeSpan.FromMinutes(10)))
+		.AddTransient<IPlayerVipLevelExpRepository, PlayerVipLevelExpRepository>();
 }

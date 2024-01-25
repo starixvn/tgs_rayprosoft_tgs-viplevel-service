@@ -43,6 +43,71 @@ public class PlayerVipLevelUnitTests
 	}
 
 	[Fact]
+	public async Task PlayerVipLevel_Exp_Get()
+	{
+		var playerCode = "4ucmqplxb029";
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeService = Substitute.For<IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?>>();
+
+			var query = new PlayerVipLevelExpGetQuery(playerCode);
+
+			_ = fakeService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(new PlayerVipLevelExpInfo(
+				PlayerCode: query.PlayerCode,
+				AccumDepositId: Guid.NewGuid(),
+				AccumDeposit: 100m,
+				AccumTurnoverId: Guid.NewGuid(),
+				AccumTurnover: 199m));
+
+			_ = services.AddTransient(_ => fakeService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.PlayerVipLevelExpGetAsync(playerCode: playerCode);
+
+		Assert.NotNull(actual);
+		Assert.Equal(100m, actual.AccumDeposit);
+		Assert.Equal(199m, actual.AccumTurnover);
+	}
+
+	[Fact]
+	public async Task PlayerVipLevel_Exp_Get_Is_Null()
+	{
+		var playerCode = "4ucmqplxb029";
+
+		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeService = Substitute.For<IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?>>();
+
+			var query = new PlayerVipLevelExpGetQuery(playerCode);
+
+			_ = fakeService.GetAsync(
+				query: Arg.Is(query),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns((PlayerVipLevelExpInfo?)null);
+
+			_ = services.AddTransient(_ => fakeService);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.PlayerVipLevelExpGetAsync(playerCode: playerCode);
+
+		Assert.NotNull(actual);
+		Assert.Equal(Guid.Empty, actual.AccumDepositId);
+		Assert.Equal(0.0m, actual.AccumDeposit);
+		Assert.Equal(Guid.Empty, actual.AccumTurnoverId);
+		Assert.Equal(0.0m, actual.AccumTurnover);
+	}
+
+	[Fact]
 	public async Task PlayerVipLevel_Register_VipLevel()
 	{
 		var playerCode = "4ucmqplxb029";

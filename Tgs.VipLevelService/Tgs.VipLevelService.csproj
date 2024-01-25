@@ -13,13 +13,15 @@
 		<DockerfileTag Condition="$(DockerfileTag) == ''">viplevel-api</DockerfileTag>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<DocumentationFile>obj\Tgs.VipLevelService.xml</DocumentationFile>
-		<NoWarn>CS1591</NoWarn>
+	<PropertyGroup>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<NoWarn>$(NoWarn);1591;0063</NoWarn>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<ProduceReferenceAssembly>True</ProduceReferenceAssembly>
 	</PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.3.4" />
+		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.3.7" />
 		<PackageReference Include="JsonPatch.Net" Version="2.1.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
 		<PackageReference Include="Npgsql.OpenTelemetry" Version="8.0.1" />

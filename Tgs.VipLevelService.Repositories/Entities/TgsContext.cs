@@ -24,6 +24,8 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<PlayerVipLevelAdjustRecord> PlayerVipLevelAdjustRecords { get; set; }
 
+    public virtual DbSet<PlayerVipLevelExp> PlayerVipLevelExps { get; set; }
+
     public virtual DbSet<PlayerVipLevelLog> PlayerVipLevelLogs { get; set; }
 
     public virtual DbSet<Reseller> Resellers { get; set; }
@@ -44,6 +46,7 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());

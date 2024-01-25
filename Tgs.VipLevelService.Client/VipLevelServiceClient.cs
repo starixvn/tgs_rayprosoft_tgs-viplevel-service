@@ -237,4 +237,16 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			.ConfigureAwait(false)
 			?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 	}
+
+	public async ValueTask<PlayerVipLevelExpInfoViewModel> PlayerVipLevelExpGetAsync(string playerCode, CancellationToken cancellationToken = default)
+		=> await _httpClient.GetAsync($"/player/{playerCode}/viplevel/exp", cancellationToken)
+		.ToAsyncEnumerable()
+		.Do(response => response.EnsureSuccessStatusCode())
+		.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
+		.SelectMany(response => response.Content
+			.ReadFromJsonAsync<PlayerVipLevelExpInfoViewModel>(_SerializerOptions, cancellationToken)
+			.ToAsyncEnumerable())
+		.FirstOrDefaultAsync(cancellationToken: cancellationToken)
+		.ConfigureAwait(false)
+		?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 }
