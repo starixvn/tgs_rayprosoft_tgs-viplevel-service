@@ -5,8 +5,8 @@ using Tgs.VipLevelService.Models;
 namespace Tgs.VipLevelService.Repositories;
 
 internal class PlayerCacheRepository(
-	IDatabase database,
 	IPlayerRepository repository,
+	IDatabase database,
 	TimeSpan Expiry) : IPlayerRepository
 {
 	public async ValueTask<PlayerInfo> GetAsync(string playerCode, CancellationToken cancellationToken = default)

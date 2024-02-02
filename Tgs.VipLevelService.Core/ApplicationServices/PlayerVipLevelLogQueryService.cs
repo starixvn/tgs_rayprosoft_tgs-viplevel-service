@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Tgs.ServiceUtility;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;

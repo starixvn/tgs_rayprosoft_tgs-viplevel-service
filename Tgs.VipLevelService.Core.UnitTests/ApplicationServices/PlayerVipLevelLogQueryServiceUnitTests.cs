@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using NSubstitute;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;

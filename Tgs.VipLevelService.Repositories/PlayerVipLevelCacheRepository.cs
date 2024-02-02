@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 using StackExchange.Redis;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
 
 internal class PlayerVipLevelCacheRepository(
-	IDatabase database,
 	IPlayerVipLevelRepository repository,
+	IDatabase database,
 	TimeSpan Expiry) : IPlayerVipLevelRepository
 {
 	public async ValueTask<PlayerVipLevelInfo?> GetAsync(string playerCode, CancellationToken cancellationToken = default)

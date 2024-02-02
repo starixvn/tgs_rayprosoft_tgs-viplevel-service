@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
+﻿using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
+
 public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 {
 	[Fact]

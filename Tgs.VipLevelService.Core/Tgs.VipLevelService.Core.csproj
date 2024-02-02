@@ -8,10 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\viplevelservice.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.60.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="PhoenixToolkits.MessageQueue" Version="2.1.0" />
     <PackageReference Include="PhoenixToolkits.MessageQueue.Nats" Version="2.1.1" />
+    <PackageReference Include="PhoenixToolkits.Protobuf.ExtendTypes" Version="0.0.6" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="Tgs.MessageQueue.Nats.Serializers" Version="0.0.2" />
     <PackageReference Include="Tgs.Paging.AsyncEnumerable" Version="1.2.1" />
     <PackageReference Include="Tgs.SerialNumberGenerator" Version="1.0.1" />
     <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
@@ -19,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tgs.VipLevelService.Common\Tgs.VipLevelService.Common.csproj" />
+    <Protobuf Include="Protos\viplevelservice.proto" GrpcServices="None" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,4 @@
-﻿using Tgs.VipLevelService.Common;
-
-namespace Tgs.VipLevelService.ApplicationServices;
+﻿namespace Tgs.VipLevelService.ApplicationServices;
 
 public record PlayerVipLevelSystemCommand(
 	string PlayerCode,

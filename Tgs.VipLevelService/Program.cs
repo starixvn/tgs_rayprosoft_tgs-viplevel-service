@@ -9,7 +9,9 @@ using OpenTelemetry.Metrics;
 
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Tgs.VipLevelService.Common;
+using Tgs.MessageQueue.Nats.Serializers;
+using Tgs.VipLevelService;
+
 using Tgs.VipLevelService.Messages;
 
 var filterInstrumentations = new[] { "html", "ico", "png", "jpg" };
@@ -65,14 +67,16 @@ builder.Services.AddVipLevelServices(
 builder.Services
 	.AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with
 	{
-		Url = builder.Configuration.GetConnectionString("Nats")!
+		Url = builder.Configuration.GetConnectionString("Nats")!,
+		SerializerRegistry = TgsNatsSerializerRegistration.Default
 	}))
 	.AddMessageQueue()
 	.AddNatsMessageQueue(config => config
 	.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
 	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(PlayerVipLevelLogNatsConsts.Register, PlayerVipLevelLogNatsConsts.Register)
 	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(PlayerVipLevelLogNatsConsts.System, PlayerVipLevelLogNatsConsts.System)
-	.AddHandler<PlayerVipLevelLogManualMessageHandler>(PlayerVipLevelLogNatsConsts.Manual, PlayerVipLevelLogNatsConsts.Manual))
+	.AddHandler<PlayerVipLevelLogManualMessageHandler>(PlayerVipLevelLogNatsConsts.Manual, PlayerVipLevelLogNatsConsts.Manual)
+	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelSnapshotNatsConsts.Create, VipLevelSnapshotNatsConsts.Create))
 	.AddNatsGlobPatternExchange("*");
 
 builder.Services

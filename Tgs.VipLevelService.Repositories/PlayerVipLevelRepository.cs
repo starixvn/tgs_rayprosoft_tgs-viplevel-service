@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 

@@ -32,6 +32,8 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<VipLevel> VipLevels { get; set; }
 
+    public virtual DbSet<VipLevelSnapshot> VipLevelSnapshots { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -50,6 +52,7 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.VipLevelSnapshotConfiguration());
         OnModelCreatingPartial(modelBuilder);
     }
 

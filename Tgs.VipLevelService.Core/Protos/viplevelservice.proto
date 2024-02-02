@@ -1,0 +1,64 @@
+﻿syntax = "proto3";
+
+
+import "google/protobuf/timestamp.proto";
+import "phoenix/protobuf/guid.proto";
+//import "phoenix/protobuf/decimal.proto";
+
+option csharp_namespace = "Tgs.VipLevelService.Core.Protos";
+
+package viplevelservice;
+
+// The request message containing the user's name.
+message PlayerVipLevelLogManualRequest
+{
+	phoenix.protobuf.GuidValue brand_id = 1;
+	string player_code = 2;
+	int32 before_level = 3;
+	PlayerVipLevelAutoState before_auto_state= 4;
+	int32 after_level = 5;
+	PlayerVipLevelAutoState after_auto_state= 6;
+	phoenix.protobuf.GuidValue created_user_id = 7;
+	string created_username = 8;
+	string remark = 9;
+}
+
+message PlayerVipLevelLogRegisterRequest
+{
+	phoenix.protobuf.GuidValue brand_id = 1;
+	string player_code = 2;
+	int32 after_level = 3;
+	PlayerVipLevelAutoState after_auto_state= 4;
+}
+
+message PlayerVipLevelLogSystemRequest
+{
+	phoenix.protobuf.GuidValue brand_id = 1;
+	string player_code = 2;
+	int32 before_level = 3;
+	int32 after_level = 4;
+	PlayerVipLevelAutoState auto_state = 5;
+}
+
+message VipLevelSnapshotRequest
+{
+	phoenix.protobuf.GuidValue brand_id = 1;
+	google.protobuf.Timestamp effective_on = 2;
+	phoenix.protobuf.GuidValue snapshot_user_id = 3;
+	string snapshot_username = 4;
+}
+
+
+// 玩家VipLevel自動狀態
+enum PlayerVipLevelAutoState{
+    PLAYER_VIP_LEVEL_AUTO_STATE_ENABLE = 0;
+    PLAYER_VIP_LEVEL_AUTO_STATE_DISABLE = 1;
+}
+
+// 玩家VipLevel日誌類型
+enum PlayerVipLevelLogType{
+	PLAYER_VIP_LEVEL_LOG_TYPE_UNKNOWN = 0;
+	PLAYER_VIP_LEVEL_LOG_TYPE_REGISTER = 1;
+	PLAYER_VIP_LEVEL_LOG_TYPE_SYSTEM = 2;
+	PLAYER_VIP_LEVEL_LOG_TYPE_MANUAL = 3;
+}

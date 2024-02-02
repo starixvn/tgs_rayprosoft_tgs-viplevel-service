@@ -1,4 +1,6 @@
-﻿namespace Tgs.VipLevelService;
+﻿using Tgs.VipLevelService;
+
+namespace Tgs.VipLevelService.Models;
 
 public record VipLevelUpdate(
 	int Level,

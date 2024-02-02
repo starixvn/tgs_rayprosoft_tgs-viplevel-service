@@ -39,6 +39,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Tgs.VipLevelService.Common\Tgs.VipLevelService.Common.csproj" />
 		<ProjectReference Include="..\Tgs.VipLevelService.Core\Tgs.VipLevelService.Core.csproj" />
 		<ProjectReference Include="..\Tgs.VipLevelService.Repositories\Tgs.VipLevelService.Repositories.csproj" />
 	</ItemGroup>

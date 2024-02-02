@@ -1,10 +1,7 @@
-﻿using System.Text;
-
-using System.Text.Json;
+﻿using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
-using Tgs.VipLevelService.Common;
-using Tgs.VipLevelService.Common.MessageModels;
+using Tgs.VipLevelService.Core.Protos;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
@@ -15,26 +12,28 @@ internal class PlayerVipLevelManualLogPublishCommandService(
 {
 	public async ValueTask ExecuteAsync(PlayerVipLevelManualLogPublishCommand command, CancellationToken cancellationToken = default)
 	{
-		var message = new PlayerVipLevelLogManualMessageModel(
-			BrandId: command.BrandId,
-			PlayerCode: command.PlayerCode,
-			BeforeLevel: command.BeforeLevel,
-			BeforeAutoState: command.BeforeAutoState,
-			AfterLevel: command.AfterLevel,
-			AfterAutoState: command.AfterAutoState,
-			CreatedUserId: command.CreatedUserId,
-			CreatedUsername: command.CreatedUsername,
-			Remark: command.Remark);
+		var request = new PlayerVipLevelLogManualRequest
+		{
+			BrandId = command.BrandId,
+			PlayerCode = command.PlayerCode,
+			BeforeLevel = command.BeforeLevel.GetValueOrDefault(0),
+			BeforeAutoState = command.BeforeAutoState ?? Core.Protos.PlayerVipLevelAutoState.Enable,
+			AfterLevel = command.AfterLevel,
+			AfterAutoState = command.AfterAutoState,
+			CreatedUserId = command.CreatedUserId,
+			CreatedUsername = command.CreatedUsername,
+			Remark = command.Remark
+		};
 
 		await messageSender.PublishAsync(
 			subject: PlayerVipLevelLogNatsConsts.Manual,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message)),
+			data: request.ToByteArray(),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		logger.LogInformation("LogOn:{logOn} Subject:{subject} Message:This message has been published.({message})",
 			DateTime.Now.ToString("u"),
 			PlayerVipLevelLogNatsConsts.Manual,
-			message);
+			request);
 	}
 }

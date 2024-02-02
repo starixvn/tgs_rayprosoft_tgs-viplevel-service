@@ -3,7 +3,6 @@ using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Clients;
-using Tgs.VipLevelService.Common;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.IntegrationTests;
@@ -28,7 +27,7 @@ public class PlayerVipLevelUnitTests
 					PlayerCode: query.PlayerCode,
 					VipLevelId: Guid.NewGuid(),
 					VipLevel: 1,
-					AutoState: PlayerVipLevelAutoState.Enable));
+					AutoState: Core.Protos.PlayerVipLevelAutoState.Enable));
 
 				_ = services.AddTransient(_ => fakeService);
 			}));
@@ -112,7 +111,7 @@ public class PlayerVipLevelUnitTests
 	{
 		var playerCode = "4ucmqplxb029";
 		var vipLevel = 1;
-		var autoState = PlayerVipLevelAutoState.Enable;
+		var autoState = Common.PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelRegisterCommand>>();
 		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -126,7 +125,7 @@ public class PlayerVipLevelUnitTests
 			PlayerCode: playerCode,
 			VipLevelId: null,
 			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			AutoState: Core.Protos.PlayerVipLevelAutoState.Enable);
 
 		_ = fakeService
 		.Received(1)
@@ -141,7 +140,7 @@ public class PlayerVipLevelUnitTests
 		var playerCode = "4ucmqplxb029";
 		int? vipLevel = null;
 		var vipLevelId = Guid.NewGuid();
-		var autoState = PlayerVipLevelAutoState.Enable;
+		var autoState = Common.PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelRegisterCommand>>();
 		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -155,7 +154,7 @@ public class PlayerVipLevelUnitTests
 			PlayerCode: playerCode,
 			VipLevelId: vipLevelId,
 			VipLevel: vipLevel,
-			AutoState: PlayerVipLevelAutoState.Enable);
+			AutoState: Core.Protos.PlayerVipLevelAutoState.Enable);
 
 		_ = fakeService
 		.Received(1)
@@ -222,7 +221,7 @@ public class PlayerVipLevelUnitTests
 	{
 		var playerCode = "4ucmqplxb029";
 		var vipLevel = 2;
-		var autoState = PlayerVipLevelAutoState.Enable;
+		var autoState = Common.PlayerVipLevelAutoState.Enable;
 		var createdUserId = Guid.NewGuid();
 		var createdUsername = "admin.enabled";
 		var remark = "調整玩家等級2";
@@ -239,7 +238,7 @@ public class PlayerVipLevelUnitTests
 			PlayerCode: playerCode,
 			VipLevelId: null,
 			VipLevel: 2,
-			AutoState: PlayerVipLevelAutoState.Enable,
+			AutoState: Core.Protos.PlayerVipLevelAutoState.Enable,
 			CreatedUserId: createdUserId,
 			CreatedUsername: createdUsername,
 			Remark: remark);
@@ -257,7 +256,7 @@ public class PlayerVipLevelUnitTests
 		var playerCode = "4ucmqplxb029";
 		int? vipLevel = null;
 		var vipLevelId = Guid.NewGuid();
-		var autoState = PlayerVipLevelAutoState.Enable;
+		var autoState = Common.PlayerVipLevelAutoState.Enable;
 		var createdUserId = Guid.NewGuid();
 		var createdUsername = "admin.enabled";
 		var remark = "調整玩家等級2";
@@ -274,7 +273,7 @@ public class PlayerVipLevelUnitTests
 			PlayerCode: playerCode,
 			VipLevelId: vipLevelId,
 			VipLevel: vipLevel,
-			AutoState: PlayerVipLevelAutoState.Enable,
+			AutoState: Core.Protos.PlayerVipLevelAutoState.Enable,
 			CreatedUserId: createdUserId,
 			CreatedUsername: createdUsername,
 			Remark: remark);
@@ -310,13 +309,13 @@ public class PlayerVipLevelUnitTests
 				RowCount: rowCount);
 			var playerVipLevelLogInfos = new PlayerVipLevelLogResult[]{
 			new (
-				Type: PlayerVipLevelLogType.Register,
+				Type: Core.Protos.PlayerVipLevelLogType.Register,
 				BeforeLevel: 0,
 				BeforeLevelId:Guid.Empty,
-				BeforeAutoState:PlayerVipLevelAutoState.Enable,
+				BeforeAutoState:Core.Protos.PlayerVipLevelAutoState.Enable,
 				AfterLevel: afterLevel,
 				AfterLevelId:afterLevelId,
-				AfterAutoState:PlayerVipLevelAutoState.Enable,
+				AfterAutoState:Core.Protos.PlayerVipLevelAutoState.Enable,
 				CreatedOn: DateTimeOffset.UtcNow.AddMinutes(-1),
 				CreatedUserId: Guid.Empty,
 				CreatedUsername: string.Empty,

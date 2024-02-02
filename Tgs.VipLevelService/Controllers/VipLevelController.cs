@@ -150,7 +150,7 @@ public class VipLevelController : ControllerBase
 	/// <param name="modifier">The modifier.</param>
 	/// <param name="id">The identifier.</param>
 	/// <param name="patch">The patch.</param>
-	[HttpPatch("{id}", Name = "VipLevel_Update")]
+	[HttpPatch("{id:guid}", Name = "VipLevel_Update")]
 	public async Task VipLevelUpdateAsync(
 		[FromServices] IGetService<VipLevelUpdateQuery, VipLevelUpdate> getModelService,
 		[FromServices] ICommandService<VipLevelUpdateCommand> modifyService,
@@ -182,7 +182,7 @@ public class VipLevelController : ControllerBase
 	/// <param name="brandId">The brand identifier.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	[HttpPut("{brandId}", Name = "VipLevel_Create")]
+	[HttpPut("{brandId:guid}", Name = "VipLevel_Create")]
 	public ValueTask<Guid> VipLevelCreateAsync(
 		[FromServices] IGetService<VipLevelCreateCommand, Guid> service,
 		[FromHeader(Name = "Modifier")] string modifier,

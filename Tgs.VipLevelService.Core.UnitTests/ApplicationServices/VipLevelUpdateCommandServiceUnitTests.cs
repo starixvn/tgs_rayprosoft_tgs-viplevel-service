@@ -5,7 +5,7 @@ using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 
-public class VipLevelUpdateCommandServiceUnitTest
+public class VipLevelUpdateCommandServiceUnitTests
 {
 	[Fact]
 	public async Task Normal_Process()

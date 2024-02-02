@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 

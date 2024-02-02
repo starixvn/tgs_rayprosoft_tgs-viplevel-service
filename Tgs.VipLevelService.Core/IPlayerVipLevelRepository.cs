@@ -1,4 +1,4 @@
-﻿using Tgs.VipLevelService.Common;
+﻿using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
@@ -25,7 +26,7 @@ public class PlayerController : ControllerBase
 			playerVipLevelInfo.PlayerCode,
 			playerVipLevelInfo.VipLevelId,
 			playerVipLevelInfo.VipLevel,
-			playerVipLevelInfo.AutoState);
+			(Common.PlayerVipLevelAutoState)playerVipLevelInfo.AutoState);
 	}
 
 	[HttpPost("{playerCode}/viplevel/register", Name = "PlayerVipLevel_Register")]
@@ -38,7 +39,7 @@ public class PlayerController : ControllerBase
 				playerCode,
 				source.VipLevelId,
 				source.VipLevel,
-				source.AutoState),
+				(Core.Protos.PlayerVipLevelAutoState)source.AutoState),
 			cancellationToken: HttpContext.RequestAborted);
 
 	[HttpPost("{playerCode}/viplevel/manual", Name = "PlayerVipLevel_Manual")]
@@ -53,7 +54,7 @@ public class PlayerController : ControllerBase
 				PlayerCode: playerCode,
 				VipLevelId: source.VipLevelId,
 				VipLevel: source.VipLevel,
-				AutoState: source.AutoState,
+				AutoState: (Core.Protos.PlayerVipLevelAutoState)source.AutoState,
 				CreatedUserId: modifierUserId,
 				CreatedUsername: modifierUsername,
 				Remark: source.Remark),
@@ -114,13 +115,13 @@ public class PlayerController : ControllerBase
 		return new PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>
 		{
 			Items = playerVipLevelLogResults.Select(selector: log => new PlayerVipLevelLogInfoViewModel(
-				Type: log.Type,
+				Type: (Common.PlayerVipLevelLogType)log.Type,
 				BeforeLevel: log.BeforeLevel,
 				BeforeLevelId: log.BeforeLevelId,
-				BeforeAutoState: log.BeforeAutoState,
+				BeforeAutoState: (Common.PlayerVipLevelAutoState)log.BeforeAutoState,
 				AfterLevel: log.AfterLevel,
 				AfterLevelId: log.AfterLevelId,
-				AfterAutoState: log.AfterAutoState,
+				AfterAutoState: (Common.PlayerVipLevelAutoState)log.AfterAutoState,
 				CreatedOn: log.CreatedOn,
 				CreatedUserId: log.CreatedUserId,
 				CreatedUsername: log.CreatedUsername,

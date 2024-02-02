@@ -6,8 +6,8 @@ using Tgs.VipLevelService.Models;
 namespace Tgs.VipLevelService.Repositories;
 
 internal class VipLevelCacheRepository(
-	IDatabase database,
 	IVipLevelRepository repository,
+	IDatabase database,
 	TimeSpan Expiry) : IVipLevelRepository
 {
 	public async IAsyncEnumerable<VipLevelInfo> QueryAsync(Guid brandId, [EnumeratorCancellation] CancellationToken cancellationToken = default)

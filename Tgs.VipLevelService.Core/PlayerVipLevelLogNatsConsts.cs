@@ -1,4 +1,4 @@
-﻿namespace Tgs.VipLevelService.Common;
+﻿namespace Tgs.VipLevelService;
 public record PlayerVipLevelLogNatsConsts
 {
 	public const string Register = "viplevel.playerviplevellog.register";

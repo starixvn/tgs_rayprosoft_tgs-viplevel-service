@@ -52,6 +52,10 @@
       "ObjectType": 0
     },
     {
+      "Name": "dbo.vip_level_snapshots",
+      "ObjectType": 0
+    },
+    {
       "Name": "dbo.vip_levels",
       "ObjectType": 0
     }

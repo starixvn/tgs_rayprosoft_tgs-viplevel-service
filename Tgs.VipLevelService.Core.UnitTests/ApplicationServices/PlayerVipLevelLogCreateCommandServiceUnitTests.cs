@@ -1,7 +1,7 @@
 ﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;

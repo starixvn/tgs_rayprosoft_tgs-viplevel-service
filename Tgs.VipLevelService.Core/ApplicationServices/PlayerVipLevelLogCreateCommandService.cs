@@ -1,6 +1,6 @@
 ﻿using Tgs.SerialNumberGenerator;
 using Tgs.ServiceUtility;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;

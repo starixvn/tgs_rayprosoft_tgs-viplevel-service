@@ -1,12 +1,12 @@
 ﻿using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService.Common;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 
-public class PlayerVipLevelRegisterCommandServiceUnitTest
+public class PlayerVipLevelRegisterCommandServiceUnitTests
 {
 	[Fact]
 	public async Task Normal_Process_VipLevel_Id()
