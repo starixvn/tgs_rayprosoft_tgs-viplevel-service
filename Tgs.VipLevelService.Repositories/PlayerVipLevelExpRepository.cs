@@ -15,7 +15,7 @@ internal class PlayerVipLevelExpRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		if (playerVipLevelExp is null)
+		if (playerVipLevelExp is not null)
 		{
 			return;
 		}
