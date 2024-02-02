@@ -14,20 +14,33 @@ public class PlayerVipLevelUnitTests
 	{
 		var playerCode = "4ucmqplxb029";
 
+		var result = new PlayerVipLevelPlayerCodeResult(
+			ResellerId: Guid.NewGuid(),
+			ResellerCode: "Demo",
+			LicenseeId: Guid.NewGuid(),
+			LicenseeCode: "TGS",
+			BrandId: Guid.NewGuid(),
+			BrandCode: "GPI",
+			PlayerCode: playerCode,
+			Username: "test",
+			VipLevelId: Guid.NewGuid(),
+			VipLevel: 1,
+			AutoState: Core.Protos.PlayerVipLevelAutoState.Enable,
+			AccumDepositId: Guid.NewGuid(),
+			AccumDeposit: 100,
+			AccumTurnoverId: Guid.NewGuid(),
+			AccumTurnover: 200);
+
 		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
 			{
-				var fakeService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelInfo>>();
+				var fakeService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>>();
 
 				var query = new PlayerVipLevelPlayerCodeQuery(playerCode);
 
 				_ = fakeService.GetAsync(
 					query: Arg.Is(query),
 					cancellationToken: Arg.Any<CancellationToken>())
-				.Returns(new PlayerVipLevelInfo(
-					PlayerCode: query.PlayerCode,
-					VipLevelId: Guid.NewGuid(),
-					VipLevel: 1,
-					AutoState: Core.Protos.PlayerVipLevelAutoState.Enable));
+				.Returns(result);
 
 				_ = services.AddTransient(_ => fakeService);
 			}));
@@ -38,72 +51,21 @@ public class PlayerVipLevelUnitTests
 		var actual = await client.PlayerVipLevelGetAsync(playerCode: playerCode);
 
 		Assert.NotNull(actual);
-		Assert.Equal(1, actual.VipLevel);
-	}
-
-	[Fact]
-	public async Task PlayerVipLevel_Exp_Get()
-	{
-		var playerCode = "4ucmqplxb029";
-
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
-		{
-			var fakeService = Substitute.For<IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?>>();
-
-			var query = new PlayerVipLevelExpGetQuery(playerCode);
-
-			_ = fakeService.GetAsync(
-				query: Arg.Is(query),
-				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(new PlayerVipLevelExpInfo(
-				PlayerCode: query.PlayerCode,
-				AccumDepositId: Guid.NewGuid(),
-				AccumDeposit: 100m,
-				AccumTurnoverId: Guid.NewGuid(),
-				AccumTurnover: 199m));
-
-			_ = services.AddTransient(_ => fakeService);
-		}));
-
-		var httpClient = web.CreateDefaultClient();
-		var client = new VipLevelServiceClient(httpClient);
-
-		var actual = await client.PlayerVipLevelExpGetAsync(playerCode: playerCode);
-
-		Assert.NotNull(actual);
-		Assert.Equal(100m, actual.AccumDeposit);
-		Assert.Equal(199m, actual.AccumTurnover);
-	}
-
-	[Fact]
-	public async Task PlayerVipLevel_Exp_Get_Is_Null()
-	{
-		var playerCode = "4ucmqplxb029";
-
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
-		{
-			var fakeService = Substitute.For<IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?>>();
-
-			var query = new PlayerVipLevelExpGetQuery(playerCode);
-
-			_ = fakeService.GetAsync(
-				query: Arg.Is(query),
-				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns((PlayerVipLevelExpInfo?)null);
-
-			_ = services.AddTransient(_ => fakeService);
-		}));
-
-		var httpClient = web.CreateDefaultClient();
-		var client = new VipLevelServiceClient(httpClient);
-
-		var actual = await client.PlayerVipLevelExpGetAsync(playerCode: playerCode);
-
-		Assert.NotNull(actual);
-		Assert.Equal(Guid.Empty, actual.AccumDepositId);
-		Assert.Equal(0.0m, actual.AccumDeposit);
-		Assert.Equal(Guid.Empty, actual.AccumTurnoverId);
-		Assert.Equal(0.0m, actual.AccumTurnover);
+		Assert.Equal(result.ResellerId, actual.ResellerId);
+		Assert.Equal(result.ResellerCode, actual.ResellerCode);
+		Assert.Equal(result.LicenseeId, actual.LicenseeId);
+		Assert.Equal(result.LicenseeCode, actual.LicenseeCode);
+		Assert.Equal(result.BrandId, actual.BrandId);
+		Assert.Equal(result.BrandCode, actual.BrandCode);
+		Assert.Equal(result.PlayerCode, actual.PlayerCode);
+		Assert.Equal(result.Username, actual.Username);
+		Assert.Equal(result.VipLevelId, actual.VipLevelId);
+		Assert.Equal(result.VipLevel, actual.VipLevel);
+		Assert.Equal((int)result.AutoState, (int)actual.AutoState);
+		Assert.Equal(result.AccumDepositId, actual.AccumDepositId);
+		Assert.Equal(result.AccumDeposit, actual.AccumDeposit);
+		Assert.Equal(result.AccumTurnoverId, actual.AccumTurnoverId);
+		Assert.Equal(result.AccumTurnover, actual.AccumTurnover);
 	}
 
 	[Fact]

@@ -1,6 +1,17 @@
 ﻿namespace Tgs.VipLevelService.Common.ViewModels;
 public record PlayerVipLevelInfoViewModel(
-   string PlayerCode,
-   Guid VipLevelId,
-   int VipLevel,
-   PlayerVipLevelAutoState AutoState);
+	Guid ResellerId,
+	string ResellerCode,
+	Guid LicenseeId,
+	string LicenseeCode,
+	Guid BrandId,
+	string BrandCode,
+	string PlayerCode,
+	string Username,
+	Guid VipLevelId,
+	int VipLevel,
+	PlayerVipLevelAutoState AutoState,
+	Guid AccumDepositId,
+	decimal AccumDeposit,
+	Guid AccumTurnoverId,
+	decimal AccumTurnover);

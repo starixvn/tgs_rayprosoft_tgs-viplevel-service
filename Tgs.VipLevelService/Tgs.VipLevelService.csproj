@@ -7,10 +7,6 @@
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<UserSecretsId>06999bc9-8d21-472b-98d5-523b411be4f9</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<GlobalNugetConfig>$(UserProfile)\AppData\Roaming\NuGet\NuGet.Config</GlobalNugetConfig>
-		<GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
-		<DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
-		<DockerfileTag Condition="$(DockerfileTag) == ''">viplevel-api</DockerfileTag>
 	</PropertyGroup>
 
 	<PropertyGroup>

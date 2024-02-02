@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
+using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Controllers;
@@ -13,7 +14,7 @@ public class PlayerController : ControllerBase
 {
 	[HttpGet("{playerCode}/viplevel", Name = "PlayerVipLevel_Get")]
 	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(
-		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelInfo> service,
+		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult> service,
 		string playerCode)
 	{
 		var playerVipLevelInfo = await service.GetAsync(
@@ -23,10 +24,21 @@ public class PlayerController : ControllerBase
 			.ConfigureAwait(true);
 
 		return new PlayerVipLevelInfoViewModel(
-			playerVipLevelInfo.PlayerCode,
-			playerVipLevelInfo.VipLevelId,
-			playerVipLevelInfo.VipLevel,
-			(Common.PlayerVipLevelAutoState)playerVipLevelInfo.AutoState);
+			ResellerId: playerVipLevelInfo.ResellerId,
+			ResellerCode: playerVipLevelInfo.ResellerCode,
+			LicenseeId: playerVipLevelInfo.LicenseeId,
+			LicenseeCode: playerVipLevelInfo.LicenseeCode,
+			BrandId: playerVipLevelInfo.BrandId,
+			BrandCode: playerVipLevelInfo.BrandCode,
+			PlayerCode: playerVipLevelInfo.PlayerCode,
+			Username: playerVipLevelInfo.Username,
+			VipLevelId: playerVipLevelInfo.VipLevelId,
+			VipLevel: playerVipLevelInfo.VipLevel,
+			AutoState: (Common.PlayerVipLevelAutoState)playerVipLevelInfo.AutoState,
+			AccumDepositId: playerVipLevelInfo.AccumDepositId,
+			AccumDeposit: playerVipLevelInfo.AccumDeposit,
+			AccumTurnoverId: playerVipLevelInfo.AccumTurnoverId,
+			AccumTurnover: playerVipLevelInfo.AccumTurnover);
 	}
 
 	[HttpPost("{playerCode}/viplevel/register", Name = "PlayerVipLevel_Register")]
@@ -130,31 +142,5 @@ public class PlayerController : ControllerBase
 			Rows = source.RowCount,
 			TotalCount = count
 		};
-	}
-
-	[HttpGet("{playerCode}/viplevel/exp", Name = "PlayerVipLevel_Exp_Get")]
-	public async ValueTask<PlayerVipLevelExpInfoViewModel> PlayerVipLevelExpGetAsync(
-		[FromServices] IGetService<PlayerVipLevelExpGetQuery, PlayerVipLevelExpInfo?> service,
-		string playerCode)
-	{
-		var playerVipLevelExpInfo = await service.GetAsync(
-			query: new PlayerVipLevelExpGetQuery(
-				PlayerCode: playerCode),
-			cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(true);
-
-		return playerVipLevelExpInfo is null
-			? new PlayerVipLevelExpInfoViewModel(
-				PlayerCode: playerCode,
-				AccumDepositId: Guid.Empty,
-				AccumDeposit: 0.0m,
-				AccumTurnoverId: Guid.Empty,
-				AccumTurnover: 0.0m)
-			: new PlayerVipLevelExpInfoViewModel(
-				PlayerCode: playerVipLevelExpInfo.PlayerCode,
-				AccumDepositId: playerVipLevelExpInfo.AccumDepositId,
-				AccumDeposit: playerVipLevelExpInfo.AccumDeposit,
-				AccumTurnoverId: playerVipLevelExpInfo.AccumTurnoverId,
-				AccumTurnover: playerVipLevelExpInfo.AccumTurnover);
 	}
 }
