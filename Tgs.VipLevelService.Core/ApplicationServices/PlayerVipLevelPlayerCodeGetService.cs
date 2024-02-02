@@ -8,7 +8,7 @@ internal class PlayerVipLevelPlayerCodeGetService(
 	IPlayerVipLevelRepository playerVipLevelRepository,
 	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
 	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> playerVipLevelFixesService,
-	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>
+	ICommandService<PlayerVipLevelExpFixesCommand> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>
 {
 	public async ValueTask<PlayerVipLevelPlayerCodeResult> GetAsync(PlayerVipLevelPlayerCodeQuery query, CancellationToken cancellationToken = default)
 	{
@@ -30,12 +30,16 @@ internal class PlayerVipLevelPlayerCodeGetService(
 		var playerVipLevelExpInfo = await playerVipLevelExpRepository.GetAsync(
 			playerCode: playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
-			.ConfigureAwait(false)
-			?? await playerVipLevelExpFixesService.GetAsync(
-				query: new PlayerVipLevelExpFixesQuery(
-					PlayerCode: query.PlayerCode),
-				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
+
+		if (playerVipLevelExpInfo is null)
+		{
+			await playerVipLevelExpFixesService.ExecuteAsync(
+			   command: new PlayerVipLevelExpFixesCommand(
+				   PlayerCode: query.PlayerCode),
+			   cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
+		}
 
 		return new PlayerVipLevelPlayerCodeResult(
 			playerInfo.ResellerId,
@@ -49,9 +53,9 @@ internal class PlayerVipLevelPlayerCodeGetService(
 			playerVipLevelInfo.VipLevelId,
 			playerVipLevelInfo.VipLevel,
 			playerVipLevelInfo.AutoState,
-			playerVipLevelExpInfo.AccumDepositId,
-			playerVipLevelExpInfo.AccumDeposit,
-			playerVipLevelExpInfo.AccumTurnoverId,
-			playerVipLevelExpInfo.AccumTurnover);
+			playerVipLevelExpInfo?.AccumDepositId ?? Guid.Empty,
+			playerVipLevelExpInfo?.AccumDeposit ?? 0.0m,
+			playerVipLevelExpInfo?.AccumTurnoverId ?? Guid.Empty,
+			playerVipLevelExpInfo?.AccumTurnover ?? 0.0m);
 	}
 }
