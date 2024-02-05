@@ -43,6 +43,7 @@ internal class PlayerVipLevelUpgradePromotionCacheRepository(
 				VipId = vipLevelId,
 				LogOn = DateTimeOffset.UtcNow
 			}),
-			expiry: expiry)
+			expiry: expiry,
+			When.NotExists)
 		.ConfigureAwait(false);
 }
