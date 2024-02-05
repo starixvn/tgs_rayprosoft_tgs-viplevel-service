@@ -27,14 +27,15 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"GPI",
-			"4ucmqplxb029",
-			"4ucmqplxb029");
+			ResellerId: Guid.NewGuid(),
+			ResellerCode: "TGS",
+			LicenseeId: Guid.NewGuid(),
+			LicenseeCode: "TGS",
+			BrandId: Guid.NewGuid(),
+			BrandCode: "GPI",
+			PlayerCode: "4ucmqplxb029",
+			Username: "4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -137,14 +138,15 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"GPI",
-			"4ucmqplxb029",
-			"4ucmqplxb029");
+			ResellerId: Guid.NewGuid(),
+			ResellerCode: "TGS",
+			LicenseeId: Guid.NewGuid(),
+			LicenseeCode: "TGS",
+			BrandId: Guid.NewGuid(),
+			BrandCode: "GPI",
+			PlayerCode: "4ucmqplxb029",
+			Username: "4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -247,14 +249,15 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 			Remark: "test");
 
 		var playerInfo = new PlayerInfo(
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"TGS",
-			Guid.NewGuid(),
-			"GPI",
-			"4ucmqplxb029",
-			"4ucmqplxb029");
+			ResellerId: Guid.NewGuid(),
+			ResellerCode: "TGS",
+			LicenseeId: Guid.NewGuid(),
+			LicenseeCode: "TGS",
+			BrandId: Guid.NewGuid(),
+			BrandCode: "GPI",
+			PlayerCode: "4ucmqplxb029",
+			Username: "4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())

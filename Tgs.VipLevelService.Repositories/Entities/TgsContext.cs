@@ -24,9 +24,15 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<PlayerVipLevelAdjustRecord> PlayerVipLevelAdjustRecords { get; set; }
 
+    public virtual DbSet<PlayerVipLevelBirthdayPromotion> PlayerVipLevelBirthdayPromotions { get; set; }
+
     public virtual DbSet<PlayerVipLevelExp> PlayerVipLevelExps { get; set; }
 
     public virtual DbSet<PlayerVipLevelLog> PlayerVipLevelLogs { get; set; }
+
+    public virtual DbSet<PlayerVipLevelSeasonPromotion> PlayerVipLevelSeasonPromotions { get; set; }
+
+    public virtual DbSet<PlayerVipLevelUpgradePromotion> PlayerVipLevelUpgradePromotions { get; set; }
 
     public virtual DbSet<Reseller> Resellers { get; set; }
 
@@ -48,8 +54,11 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelBirthdayPromotionConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelSeasonPromotionConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelUpgradePromotionConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelSnapshotConfiguration());

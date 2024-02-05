@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Numerics;
+using Microsoft.EntityFrameworkCore;
 using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 
@@ -20,7 +21,8 @@ internal class PlayerRepository(
 			   BrandId = brand.Id,
 			   BrandCode = brand.Code,
 			   player.PlayerCode,
-			   player.Username
+			   player.Username,
+			   player.DefaultWalletId
 		   })
 		.Join(
 		   context.Licensees,
@@ -34,7 +36,8 @@ internal class PlayerRepository(
 			   combined.BrandId,
 			   combined.BrandCode,
 			   combined.PlayerCode,
-			   combined.Username
+			   combined.Username,
+			   combined.DefaultWalletId
 		   })
 		.Join(
 			context.Resellers,
@@ -49,7 +52,8 @@ internal class PlayerRepository(
 				combined.BrandId,
 				combined.BrandCode,
 				combined.PlayerCode,
-				combined.Username
+				combined.Username,
+				combined.DefaultWalletId
 			})
 		.Select(selector: selector => new PlayerInfo(
 			selector.ResellerId,
@@ -59,7 +63,8 @@ internal class PlayerRepository(
 			selector.BrandId,
 			selector.BrandCode,
 			selector.PlayerCode,
-			selector.Username))
+			selector.Username,
+			selector.DefaultWalletId))
 		.FirstOrDefaultAsync(
 			cancellationToken: cancellationToken)
 		.ConfigureAwait(false)

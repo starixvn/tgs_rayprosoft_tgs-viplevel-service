@@ -64,7 +64,7 @@ internal class PlayerVipLevelCacheRepository(
 	}
 
 	private static string GetKey(string playerCode)
-			=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
+		=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
 
 	private async ValueTask<PlayerVipLevelInfo?> GetAsync(string playerCode)
 	{

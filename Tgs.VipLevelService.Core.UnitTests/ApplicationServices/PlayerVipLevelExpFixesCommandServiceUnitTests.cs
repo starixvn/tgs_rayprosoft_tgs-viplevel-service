@@ -3,10 +3,10 @@ using NSubstitute;
 using Tgs.VipLevels.Exp.Worker.Common;
 using Tgs.VipLevels.Exp.Worker.Common.Protos;
 using Tgs.VipLevelService.ApplicationServices;
-using Tgs.VipLevelService.Models;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
+
 public class PlayerVipLevelExpFixesCommandServiceUnitTests
 {
 	[Fact]

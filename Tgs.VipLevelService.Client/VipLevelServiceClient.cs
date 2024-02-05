@@ -277,4 +277,24 @@ internal class VipLevelServiceClient : IVipLevelServiceClient
 			_SerializerOptions,
 			cancellationToken).ConfigureAwait(false);
 	}
+
+	public async ValueTask PlayerVipLevelUpgradePromotionAsync(string playerCode, Guid vipLevelId, Guid snapshotId, decimal amount, CancellationToken cancellationToken = default)
+	{
+		var source = new PlayerVipLevelUpgradePromotionViewModel
+		{
+			VipLevelId = vipLevelId,
+			SnapshotId = snapshotId,
+			Amount = amount
+		};
+		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/upgrade/promotion");
+		var builder = new UriBuilder(path);
+		string url = builder.ToString();
+		var jsonContent = JsonContent.Create(source, options: _SerializerOptions);
+
+		_ = await _httpClient.PostAsync(url, jsonContent, cancellationToken)
+			.ToAsyncEnumerable()
+		   .Do(response => response.EnsureSuccessStatusCode())
+		   .FirstAsync(cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
+	}
 }

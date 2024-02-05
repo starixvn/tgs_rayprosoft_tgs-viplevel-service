@@ -30,7 +30,8 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			Guid.NewGuid(),
 			"GPI",
 			"4ucmqplxb029",
-			"4ucmqplxb029");
+			"4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -131,7 +132,8 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			Guid.NewGuid(),
 			"GPI",
 			"4ucmqplxb029",
-			"4ucmqplxb029");
+			"4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -232,7 +234,8 @@ public class PlayerVipLevelSystemCommandServiceUnitTests
 			Guid.NewGuid(),
 			"GPI",
 			"4ucmqplxb029",
-			"4ucmqplxb029");
+			"4ucmqplxb029",
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(command.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())

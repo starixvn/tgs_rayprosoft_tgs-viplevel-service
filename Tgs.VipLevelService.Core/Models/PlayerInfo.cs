@@ -8,4 +8,5 @@ public record PlayerInfo(
 	Guid BrandId,
 	string BrandCode,
 	string PlayerCode,
-	string Username);
+	string Username,
+	Guid WalletId);

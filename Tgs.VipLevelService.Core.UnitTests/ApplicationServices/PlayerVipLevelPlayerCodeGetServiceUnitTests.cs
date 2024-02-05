@@ -28,7 +28,8 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 			BrandId: Guid.NewGuid(),
 			BrandCode: "GPI",
 			PlayerCode: query.PlayerCode,
-			Username: query.PlayerCode);
+			Username: query.PlayerCode,
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -116,7 +117,8 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 			BrandId: Guid.NewGuid(),
 			BrandCode: "GPI",
 			PlayerCode: query.PlayerCode,
-			Username: query.PlayerCode);
+			Username: query.PlayerCode,
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
@@ -203,7 +205,8 @@ public class PlayerVipLevelPlayerCodeGetServiceUnitTests
 			BrandId: Guid.NewGuid(),
 			BrandCode: "GPI",
 			PlayerCode: query.PlayerCode,
-			Username: query.PlayerCode);
+			Username: query.PlayerCode,
+			WalletId: Guid.NewGuid());
 		_ = fakePlayerRepository.GetAsync(
 			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())

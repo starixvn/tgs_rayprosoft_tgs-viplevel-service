@@ -16,6 +16,7 @@ public interface IVipLevelServiceClient
 
 	ValueTask VipLevelUpdateAsync(Guid vipId, VipLevelUpdateViewModel source, string modifier, CancellationToken cancellationToken = default);
 
+	[Obsolete("已過時,請改使用PlayerVipLevelLogQueryAsync")]
 	ValueTask<PagingResponseViewModel<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging paging, CancellationToken cancellationToken = default);
 
 	ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(string playerCode, CancellationToken cancellationToken = default);
@@ -32,4 +33,6 @@ public interface IVipLevelServiceClient
 
 	IAsyncEnumerable<VipLevelInfoViewModel> VipLevelSnapshotQueryVipLevelAsync(Guid id, CancellationToken cancellationToken = default);
 	ValueTask<Guid> VipLevelSnapshotCurrentSnapshotIdAsync(Guid brandId, CancellationToken cancellationToken = default);
+
+	ValueTask PlayerVipLevelUpgradePromotionAsync(string playerCode, Guid vipLevelId, Guid snapshotId, decimal amount, CancellationToken cancellationToken = default);
 }
