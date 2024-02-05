@@ -7,8 +7,12 @@ data:
     {
       "Logging": {
         "LogLevel": {
-          "Default": "Information"
+          "Default": "Warning"
         }
+      },
+      "VipLevelConnectionStrings": {
+        "CashServiceClientBaseUrl": "http://cashservice-api",
+        "PlayerBucketClientBaseUrl": "http://tgs-playerbucket-service"
       }
     }
   otel-collector-config.yaml: |
