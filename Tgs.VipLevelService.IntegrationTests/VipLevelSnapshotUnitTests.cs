@@ -14,7 +14,7 @@ public class VipLevelSnapshotUnitTests
 	{
 		var id = Guid.NewGuid();
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeService = Substitute.For<IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo>>();
 
@@ -63,7 +63,7 @@ public class VipLevelSnapshotUnitTests
 	{
 		var brandId = Guid.NewGuid();
 		var id = Guid.NewGuid();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeService = Substitute.For<IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid>>();
 

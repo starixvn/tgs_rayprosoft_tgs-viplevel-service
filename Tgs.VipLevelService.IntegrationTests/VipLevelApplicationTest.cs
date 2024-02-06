@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Exporter;
 
-internal class TestPlayerVipLevelApplication(Action<IWebHostBuilder>? webHostConfigure = null) : WebApplicationFactory<Program>
+internal class VipLevelApplicationTest(Action<IWebHostBuilder>? webHostConfigure = null) : WebApplicationFactory<Program>
 {
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{

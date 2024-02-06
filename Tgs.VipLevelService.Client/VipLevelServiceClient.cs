@@ -11,7 +11,7 @@ using Tgs.VipLevelService.Common.ViewModels;
 
 namespace Tgs.VipLevelService.Clients;
 
-internal class VipLevelServiceClient : IVipLevelServiceClient
+internal partial class VipLevelServiceClient : IVipLevelServiceClient
 {
 	private static readonly JsonSerializerOptions _SerializerOptions = new()
 	{

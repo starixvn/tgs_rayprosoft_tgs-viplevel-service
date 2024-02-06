@@ -31,7 +31,7 @@ public class PlayerVipLevelUnitTests
 			AccumTurnoverId: Guid.NewGuid(),
 			AccumTurnover: 200);
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 			{
 				var fakeService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>>();
 
@@ -76,7 +76,7 @@ public class PlayerVipLevelUnitTests
 		var autoState = Common.PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelRegisterCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -105,7 +105,7 @@ public class PlayerVipLevelUnitTests
 		var autoState = Common.PlayerVipLevelAutoState.Enable;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelRegisterCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -132,7 +132,7 @@ public class PlayerVipLevelUnitTests
 		var vipLevel = 1;
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelSystemCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -159,7 +159,7 @@ public class PlayerVipLevelUnitTests
 		var vipLevelId = Guid.NewGuid();
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelSystemCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -189,7 +189,7 @@ public class PlayerVipLevelUnitTests
 		var remark = "調整玩家等級2";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelManualCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -224,7 +224,7 @@ public class PlayerVipLevelUnitTests
 		var remark = "調整玩家等級2";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelManualCommand>>();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
 
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
@@ -258,7 +258,7 @@ public class PlayerVipLevelUnitTests
 
 		var afterLevelId = Guid.NewGuid();
 		var afterLevel = 1;
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IQueryService<PlayerVipLevelLogQuery, PlayerVipLevelLogResult>>();
 			var fakeCountService = Substitute.For<IGetService<PlayerVipLevelLogCountQuery, int>>();
@@ -319,7 +319,7 @@ public class PlayerVipLevelUnitTests
 		var snapshotId = Guid.NewGuid();
 		var amount = 100m;
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeService = Substitute.For<ICommandService<PlayerVipLevelUpgradePromotionCommand>>();
 

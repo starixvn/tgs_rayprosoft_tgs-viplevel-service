@@ -27,6 +27,6 @@ public static class ServiceCollectionExtensions
 		.AddTransient<IVipLevelSnapshotRepository, VipLevelSnapshotRepository>()
 		.AddTransient<IPlayerVipLevelUpgradePromotionRepository, PlayerVipLevelUpgradePromotionRepository>()
 		.Decorate<IPlayerVipLevelUpgradePromotionRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelUpgradePromotionCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)))
-		.AddTransient<IPlayerVipLevelBirthdayPromotionRepository, PlayerVipLevelBirthdayPromotionRepository>()
-		.Decorate<IPlayerVipLevelBirthdayPromotionRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelBirthdayPromotionCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)));
+		.AddTransient<IPlayerVipLevelBirthdayFormRepository, PlayerVipLevelBirthdayFormRepository>()
+		.Decorate<IPlayerVipLevelBirthdayFormRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelBirthdayFormCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)));
 }

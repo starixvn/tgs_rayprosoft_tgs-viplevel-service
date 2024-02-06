@@ -15,7 +15,7 @@ public class VipLevelUnitTests
 	{
 		var brandId = Guid.NewGuid();
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IQueryService<VipLevelQuery, VipLevelInfo>>();
 
@@ -65,7 +65,7 @@ public class VipLevelUnitTests
 	{
 		var brandId = Guid.NewGuid();
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IQueryService<VipLevelQuery, VipLevelInfo>>();
 
@@ -94,7 +94,7 @@ public class VipLevelUnitTests
 		var brandId = Guid.NewGuid();
 		var level = 1;
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
 
@@ -144,7 +144,7 @@ public class VipLevelUnitTests
 		var brandId = Guid.NewGuid();
 		var level = 1;
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
 
@@ -173,7 +173,7 @@ public class VipLevelUnitTests
 	{
 		var id = Guid.NewGuid();
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
 
@@ -219,7 +219,7 @@ public class VipLevelUnitTests
 	{
 		var id = Guid.NewGuid();
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
 
@@ -264,7 +264,7 @@ public class VipLevelUnitTests
 		var modifier = "admin.enabled";
 
 		var vipId = Guid.NewGuid();
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeQueryService = Substitute.For<IGetService<VipLevelCreateCommand, Guid>>();
 
@@ -330,7 +330,7 @@ public class VipLevelUnitTests
 			WithdrawTotalAmountPerDay: 3000M);
 		var modifier = "admin.enabled";
 
-		var web = new TestPlayerVipLevelApplication(builder => _ = builder.ConfigureServices(services =>
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakeGetService = Substitute.For<IGetService<VipLevelUpdateQuery, VipLevelUpdate>>();
 			var fakeCommandService = Substitute.For<ICommandService<VipLevelUpdateCommand>>();

@@ -24,7 +24,7 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<PlayerVipLevelAdjustRecord> PlayerVipLevelAdjustRecords { get; set; }
 
-    public virtual DbSet<PlayerVipLevelBirthdayPromotion> PlayerVipLevelBirthdayPromotions { get; set; }
+    public virtual DbSet<PlayerVipLevelBirthdayForm> PlayerVipLevelBirthdayForms { get; set; }
 
     public virtual DbSet<PlayerVipLevelExp> PlayerVipLevelExps { get; set; }
 
@@ -54,7 +54,7 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelAdjustRecordConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelBirthdayPromotionConfiguration());
+        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelBirthdayFormConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelSeasonPromotionConfiguration());
