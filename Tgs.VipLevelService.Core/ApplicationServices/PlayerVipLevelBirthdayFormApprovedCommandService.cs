@@ -5,6 +5,7 @@ using Tgs.Service.PlayerBuckets;
 using Tgs.ServiceUtility;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class PlayerVipLevelBirthdayFormApprovedCommandService(
 	ILogger<PlayerVipLevelBirthdayFormApprovedCommandService> logger,
 	IPlayerVipLevelBirthdayFormRepository playerVipLevelBirthdayFormRepository,
@@ -22,7 +23,7 @@ internal class PlayerVipLevelBirthdayFormApprovedCommandService(
 
 		if (form.State is Core.Protos.PlayerVipLevelBirthdayFormState.Approved or Core.Protos.PlayerVipLevelBirthdayFormState.Reject)
 		{
-			logger.LogInformation("LogOn:{logOn} Message:This form({id}) has been reviewed.({state})",
+			logger.LogWarning("LogOn:{logOn} Message:This form({id}) has been reviewed.({state})",
 				DateTime.Now.ToString("u"),
 				form.Id,
 				form.State);

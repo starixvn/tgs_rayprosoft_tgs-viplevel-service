@@ -2,6 +2,7 @@
 using Tgs.VipLevelService.Common.ViewModels;
 
 namespace Tgs.VipLevelService.Clients;
+
 internal partial class VipLevelServiceClient
 {
 	public async ValueTask<Guid> PlayerVipLevelBirthdayFormCreateAsync(string playerCode, DateOnly birthday, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
@@ -25,6 +26,7 @@ internal partial class VipLevelServiceClient
 			_SerializerOptions,
 			cancellationToken).ConfigureAwait(false);
 	}
+
 	public async ValueTask PlayerVipLevelBirthdayFormPendingAsync(Guid id, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var requestContent = JsonContent.Create(new { }, options: _SerializerOptions);
@@ -37,6 +39,7 @@ internal partial class VipLevelServiceClient
 
 		_ = response.EnsureSuccessStatusCode();
 	}
+
 	public async ValueTask PlayerVipLevelBirthdayFormApprovedAsync(Guid id, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelBirthdayFormApprovedViewModel
@@ -54,6 +57,7 @@ internal partial class VipLevelServiceClient
 
 		_ = response.EnsureSuccessStatusCode();
 	}
+
 	public async ValueTask PlayerVipLevelBirthdayFormRejectAsync(Guid id, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelBirthdayFormRejectViewModel
@@ -70,6 +74,7 @@ internal partial class VipLevelServiceClient
 
 		_ = response.EnsureSuccessStatusCode();
 	}
+
 	public async ValueTask<bool> PlayerVipLevelBirthdayFormExistAsync(string playerCode, DateOnly birthday, CancellationToken cancellationToken = default)
 		=> await _httpClient.GetAsync($"/birthday-form/exist/{playerCode}/{birthday:yyyy-MM-dd}", cancellationToken)
 		.ToAsyncEnumerable()
@@ -80,6 +85,7 @@ internal partial class VipLevelServiceClient
 			.ToAsyncEnumerable())
 		.FirstOrDefaultAsync(cancellationToken: cancellationToken)
 		.ConfigureAwait(false);
+
 	public async ValueTask<PlayerVipLevelBirthdayFormViewModel?> PlayerVipLevelBirthdayFormGetAsync(Guid id, CancellationToken cancellationToken = default)
 		=> await _httpClient.GetAsync($"/birthday-form/{id}", cancellationToken)
 		.ToAsyncEnumerable()

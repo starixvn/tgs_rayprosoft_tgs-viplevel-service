@@ -1,4 +1,5 @@
 ﻿namespace Tgs.VipLevelService.Common;
+
 public enum PlayerVipLevelBirthdayFormState
 {
 	None = 0,

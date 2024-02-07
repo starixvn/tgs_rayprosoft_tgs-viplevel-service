@@ -3,24 +3,27 @@ using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Clients;
-using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.IntegrationTests;
-public class PlayerVipLevelBirthdayFormUnitTest
+
+public class PlayerVipLevelCycleFormUnitTests
 {
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Get()
+	public async Task PlayerVipLevelCycleForm_Get()
 	{
 		var id = Guid.NewGuid();
 
-		var result = new PlayerVipLevelBirthdayFormInfo(
+		var result = new PlayerVipLevelCycleFormInfo(
 			Id: id,
 			BrandId: Guid.NewGuid(),
 			PlayerCode: "test",
 			VipLevel: 1,
-			Birthday: DateOnly.Parse("2024-02-06"),
-			State: Core.Protos.PlayerVipLevelBirthdayFormState.Pending,
+			CycleType: Core.Protos.PlayerVipLevelCycleFormCycleType.Season,
+			CycleOn: DateOnly.Parse("2024-01-01"),
+			FromOn: DateOnly.Parse("2023-10-01"),
+			ToOn: DateOnly.Parse("2024-01-01"),
+			State: Core.Protos.PlayerVipLevelCycleFormState.Pending,
 			Amount: 10m,
 			ActualAmount: 0.0m,
 			Remark: string.Empty,
@@ -33,7 +36,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.GetAsync(
 				id: Arg.Is(id),
@@ -46,14 +49,16 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.PlayerVipLevelBirthdayFormGetAsync(id: id);
+		var actual = await client.PlayerVipLevelCycleFormGetAsync(id: id);
 
 		Assert.NotNull(actual);
 		Assert.Equal(result.Id, actual.Id);
 		Assert.Equal(result.BrandId, actual.BrandId);
 		Assert.Equal(result.PlayerCode, actual.PlayerCode);
 		Assert.Equal(result.VipLevel, actual.VipLevel);
-		Assert.Equal(result.Birthday, actual.Birthday);
+		Assert.Equal(result.CycleOn, actual.CycleOn);
+		Assert.Equal(result.FromOn, actual.FromOn);
+		Assert.Equal(result.ToOn, actual.ToOn);
 		Assert.Equal((int)result.State, (int)actual.State);
 		Assert.Equal(result.Amount, actual.Amount);
 		Assert.Equal(result.ActualAmount, actual.ActualAmount);
@@ -68,18 +73,18 @@ public class PlayerVipLevelBirthdayFormUnitTest
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Get_Is_Null()
+	public async Task PlayerVipLevelCycleForm_Get_Is_Null()
 	{
 		var id = Guid.NewGuid();
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.GetAsync(
 				id: Arg.Is(id),
 				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns((PlayerVipLevelBirthdayFormInfo?)null);
+			.Returns((PlayerVipLevelCycleFormInfo?)null);
 
 			_ = services.AddTransient(_ => fakeRepository);
 		}));
@@ -87,18 +92,21 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.PlayerVipLevelBirthdayFormGetAsync(id: id);
+		var actual = await client.PlayerVipLevelCycleFormGetAsync(id: id);
 
 		Assert.Null(actual);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Create()
+	public async Task PlayerVipLevelCycleForm_Create()
 	{
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
 		var playerCode = "test";
-		var birthday = DateOnly.Parse("2024-02-06");
+		var cycleType = Common.PlayerVipLevelCycleFormCycleType.Season;
+		var cycleOn = DateOnly.Parse("2024-01-01");
+		var fromOn = DateOnly.Parse("2023-10-01");
+		var toOn = DateOnly.Parse("2024-01-01");
 		var id = Guid.NewGuid();
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
@@ -106,7 +114,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 			var fakePlayerService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>>();
 			var fakeSnapshotService = Substitute.For<IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid>>();
 			var fakeSnapshotQueryService = Substitute.For<IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo>>();
-			var fakeFormService = Substitute.For<IGetService<PlayerVipLevelBirthdayFormCreateCommand, Guid>>();
+			var fakeFormService = Substitute.For<IGetService<PlayerVipLevelCycleFormCreateCommand, Guid>>();
 
 			var playerVipLevelPlayerCodeResult = new PlayerVipLevelPlayerCodeResult(
 				ResellerId: Guid.NewGuid(),
@@ -119,7 +127,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 				Username: "test",
 				VipLevelId: Guid.NewGuid(),
 				VipLevel: 1,
-				AutoState: PlayerVipLevelAutoState.Enable,
+				AutoState: Core.Protos.PlayerVipLevelAutoState.Enable,
 				AccumDepositId: Guid.NewGuid(),
 				AccumDeposit: 99m,
 				AccumTurnoverId: Guid.NewGuid(),
@@ -163,15 +171,18 @@ public class PlayerVipLevelBirthdayFormUnitTest
 			.Returns(vipLevelInfos.ToAsyncEnumerable());
 
 			_ = fakeFormService.GetAsync(
-				query: new PlayerVipLevelBirthdayFormCreateCommand(
-					playerVipLevelPlayerCodeResult.BrandId,
-					playerVipLevelPlayerCodeResult.PlayerCode,
-					playerVipLevelPlayerCodeResult.VipLevel,
-					birthday,
-					vipLevelInfos.FirstOrDefault()!.BirthBenefit,
-					operatorUserId,
-					operatorUsername,
-					vipLevelInfos.FirstOrDefault()!),
+				query: new PlayerVipLevelCycleFormCreateCommand(
+					BrandId: playerVipLevelPlayerCodeResult.BrandId,
+					PlayerCode: playerVipLevelPlayerCodeResult.PlayerCode,
+					VipLevel: playerVipLevelPlayerCodeResult.VipLevel,
+					CycleType: (Core.Protos.PlayerVipLevelCycleFormCycleType)cycleType,
+					CycleOn: cycleOn,
+					FromOn: fromOn,
+					ToOn: toOn,
+					Amount: vipLevelInfos.FirstOrDefault()!.BirthBenefit,
+					OperatorUserId: operatorUserId,
+					OperatorUsername: operatorUsername,
+					VipLevelInfo: vipLevelInfos.FirstOrDefault()!),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(id);
 
@@ -184,13 +195,13 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actual = await client.PlayerVipLevelBirthdayFormCreateAsync(playerCode, birthday, operatorUserId, operatorUsername);
+		var actual = await client.PlayerVipLevelCycleFormCreateAsync(playerCode, cycleType, cycleOn, fromOn, toOn, operatorUserId, operatorUsername);
 
 		Assert.Equal(id, actual);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Pending()
+	public async Task PlayerVipLevelCycleForm_Pending()
 	{
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
@@ -198,7 +209,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.PendingAsync(
 				id: Arg.Is(id),
@@ -212,11 +223,11 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelBirthdayFormPendingAsync(id, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelCycleFormPendingAsync(id, operatorUserId, operatorUsername);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Reject()
+	public async Task PlayerVipLevelCycleForm_Reject()
 	{
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
@@ -225,7 +236,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.RejectAsync(
 				id: Arg.Is(id),
@@ -240,11 +251,11 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelBirthdayFormRejectAsync(id, remark, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelCycleFormRejectAsync(id, remark, operatorUserId, operatorUsername);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Approved()
+	public async Task PlayerVipLevelCycleForm_Approved()
 	{
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
@@ -254,10 +265,10 @@ public class PlayerVipLevelBirthdayFormUnitTest
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeService = Substitute.For<ICommandService<PlayerVipLevelBirthdayFormApprovedCommand>>();
+			var fakeService = Substitute.For<ICommandService<PlayerVipLevelCycleFormApprovedCommand>>();
 
 			_ = fakeService.ExecuteAsync(
-				command: Arg.Is(new PlayerVipLevelBirthdayFormApprovedCommand(
+				command: Arg.Is(new PlayerVipLevelCycleFormApprovedCommand(
 					Id: id,
 					Amount: amount,
 					Remark: remark,
@@ -271,22 +282,24 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelBirthdayFormApprovedAsync(id, amount, remark, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelCycleFormApprovedAsync(id, amount, remark, operatorUserId, operatorUsername);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Exist_Is_True()
+	public async Task PlayerVipLevelCycleForm_Exist_Is_True()
 	{
 		var playerCode = "test";
-		var birthday = DateOnly.Parse("2024-02-06");
+		var cycleType = Common.PlayerVipLevelCycleFormCycleType.Season;
+		var cycleOn = DateOnly.Parse("2024-01-01");
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.ExistAsync(
 				Arg.Is(playerCode),
-				Arg.Is(birthday),
+				Arg.Is(Core.Protos.PlayerVipLevelCycleFormCycleType.Season),
+				Arg.Is(cycleOn),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(true);
 
@@ -296,24 +309,26 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actuala = await client.PlayerVipLevelBirthdayFormExistAsync(playerCode, birthday);
+		var actuala = await client.PlayerVipLevelCycleFormExistAsync(playerCode, cycleType, cycleOn);
 
 		Assert.True(actuala);
 	}
 
 	[Fact]
-	public async Task PlayerVipLevelBirthdayForm_Exist_Is_False()
+	public async Task PlayerVipLevelCycleForm_Exist_Is_False()
 	{
 		var playerCode = "test";
-		var birthday = DateOnly.Parse("2024-02-06");
+		var cycleType = Common.PlayerVipLevelCycleFormCycleType.Season;
+		var cycleOn = DateOnly.Parse("2024-01-01");
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+			var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
 
 			_ = fakeRepository.ExistAsync(
 				Arg.Is(playerCode),
-				Arg.Is(birthday),
+				Arg.Is(Core.Protos.PlayerVipLevelCycleFormCycleType.Season),
+				Arg.Is(cycleOn),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(false);
 
@@ -323,7 +338,7 @@ public class PlayerVipLevelBirthdayFormUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		var actuala = await client.PlayerVipLevelBirthdayFormExistAsync(playerCode, birthday);
+		var actuala = await client.PlayerVipLevelCycleFormExistAsync(playerCode, cycleType, cycleOn);
 
 		Assert.False(actuala);
 	}

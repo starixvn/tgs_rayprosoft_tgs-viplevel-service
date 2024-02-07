@@ -5,6 +5,7 @@ using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
+
 internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlayerVipLevelBirthdayFormRepository
 {
 	public async ValueTask ApprovedAsync(Guid id, decimal amount, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
@@ -26,6 +27,7 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, DateOnly birthday, decimal amount, PlayerVipLevelBirthdaySnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
 		var form = new PlayerVipLevelBirthdayForm
@@ -39,9 +41,9 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 			Amount = amount,
 			ActualAmount = 0,
 			SnapshotVipLevel = JsonSerializer.Serialize(snapshotVipLevel),
+			CreatedOn = DateTime.UtcNow,
 			CreatedUserId = createdUserId,
 			CreatedUsername = createdUsername,
-			UpdatedOn = DateTime.UtcNow,
 			UpdatedUserId = createdUserId,
 			UpdatedUsername = createdUsername,
 			Remark = string.Empty
@@ -56,11 +58,13 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public async ValueTask<bool> ExistAsync(string playerCode, DateOnly birthday, CancellationToken cancellationToken = default)
 		=> await context.PlayerVipLevelBirthdayForms
 		.Where(predicate: f => f.PlayerCode == playerCode && f.Birthday.Year == birthday.Year)
 		.AnyAsync(cancellationToken: cancellationToken)
 		.ConfigureAwait(false);
+
 	public async ValueTask<PlayerVipLevelBirthdayFormInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
 		=> await context.PlayerVipLevelBirthdayForms
 		.Where(predicate: f => f.Id == id)
@@ -101,6 +105,7 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public async ValueTask RejectAsync(Guid id, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 	{
 		var form = await context.PlayerVipLevelBirthdayForms

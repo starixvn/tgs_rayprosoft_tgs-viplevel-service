@@ -5,6 +5,7 @@ using Tgs.VipLevelService.Common.ViewModels;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Controllers;
+
 [Route("birthday-form")]
 [ApiController]
 public class PlayerVipLevelBirthdayFormController : ControllerBase
@@ -116,5 +117,4 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 		string playerCode,
 		DateOnly birthday)
 		=> repository.ExistAsync(playerCode, birthday, HttpContext.RequestAborted);
-
 }

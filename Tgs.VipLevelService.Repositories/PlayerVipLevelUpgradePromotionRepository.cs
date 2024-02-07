@@ -2,6 +2,7 @@
 using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
+
 internal class PlayerVipLevelUpgradePromotionRepository(TgsContext context) : IPlayerVipLevelUpgradePromotionRepository
 {
 	public async ValueTask AddAsync(Guid id, Guid snapshotId, Guid vipLevelId, string playerCode, decimal amount, CancellationToken cancellationToken = default)
@@ -25,6 +26,7 @@ internal class PlayerVipLevelUpgradePromotionRepository(TgsContext context) : IP
 			.SaveChangesAsync(
 			cancellationToken: cancellationToken).ConfigureAwait(false);
 	}
+
 	public async ValueTask<bool> ExistAsync(Guid vipLevelId, string playerCode, CancellationToken cancellationToken = default)
 	=> await context.PlayerVipLevelUpgradePromotions
 		.Where(predicate: vlp => vlp.VipId == vipLevelId && vlp.PlayerCode == playerCode)
