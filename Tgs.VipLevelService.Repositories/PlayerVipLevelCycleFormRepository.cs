@@ -22,7 +22,7 @@ internal class PlayerVipLevelCycleFormRepository(
 		form.Remark = remark;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername;
+		form.UpdatedUsername = updatedUsername.Trim();
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
@@ -47,9 +47,9 @@ internal class PlayerVipLevelCycleFormRepository(
 			SnapshotVipLevel = JsonSerializer.Serialize(snapshotVipLevel),
 			CreatedOn = DateTime.UtcNow,
 			CreatedUserId = createdUserId,
-			CreatedUsername = createdUsername,
+			CreatedUsername = createdUsername.Trim(),
 			UpdatedUserId = createdUserId,
-			UpdatedUsername = createdUsername,
+			UpdatedUsername = createdUsername.Trim(),
 			Remark = string.Empty
 		};
 
@@ -106,7 +106,7 @@ internal class PlayerVipLevelCycleFormRepository(
 		form.State = (int)PlayerVipLevelCycleFormState.Pending;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername;
+		form.UpdatedUsername = updatedUsername.Trim();
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
@@ -127,7 +127,7 @@ internal class PlayerVipLevelCycleFormRepository(
 		form.Remark = remark;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername;
+		form.UpdatedUsername = updatedUsername.Trim();
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
