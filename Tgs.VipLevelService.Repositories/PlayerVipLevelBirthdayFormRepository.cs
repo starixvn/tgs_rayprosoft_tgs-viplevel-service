@@ -21,7 +21,7 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 		form.Remark = remark;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername.Trim();
+		form.UpdatedUsername = updatedUsername;
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
@@ -43,9 +43,9 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 			SnapshotVipLevel = JsonSerializer.Serialize(snapshotVipLevel),
 			CreatedOn = DateTime.UtcNow,
 			CreatedUserId = createdUserId,
-			CreatedUsername = createdUsername.Trim(),
+			CreatedUsername = createdUsername,
 			UpdatedUserId = createdUserId,
-			UpdatedUsername = createdUsername.Trim(),
+			UpdatedUsername = createdUsername,
 			Remark = string.Empty
 		};
 
@@ -99,7 +99,7 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 		form.State = (int)PlayerVipLevelBirthdayFormState.Pending;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername.Trim();
+		form.UpdatedUsername = updatedUsername;
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
@@ -119,7 +119,7 @@ internal class PlayerVipLevelBirthdayFormRepository(TgsContext context) : IPlaye
 		form.Remark = remark;
 		form.UpdatedOn = DateTime.UtcNow;
 		form.UpdatedUserId = updatedUserId;
-		form.UpdatedUsername = updatedUsername.Trim();
+		form.UpdatedUsername = updatedUsername;
 
 		await context.SaveChangesAsync(
 			cancellationToken: cancellationToken)
