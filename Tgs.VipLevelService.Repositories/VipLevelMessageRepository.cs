@@ -10,6 +10,7 @@ using Tgs.VipLevelService.Models;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.Repositories;
+
 internal class VipLevelMessageRepository(
 	IVipLevelRepository repository,
 	IMessageSender messageSender) : IVipLevelRepository
@@ -36,14 +37,19 @@ internal class VipLevelMessageRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public ValueTask<VipLevelInfo?> GetAsync(Guid brandId, Guid id, CancellationToken cancellationToken = default)
 		=> repository.GetAsync(brandId, id, cancellationToken);
+
 	public ValueTask<VipLevelInfo?> GetAsync(Guid brandId, int level, CancellationToken cancellationToken = default)
 		=> repository.GetAsync(brandId, level, cancellationToken);
+
 	public ValueTask<VipLevelInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
 		=> repository.GetAsync(id, cancellationToken);
+
 	public IAsyncEnumerable<VipLevelInfo> QueryAsync(Guid brandId, CancellationToken cancellationToken = default)
 		=> repository.QueryAsync(brandId, cancellationToken);
+
 	public async ValueTask UpdateAsync(Guid id, Guid brandId, VipLevelUpdate update, string modifier, CancellationToken cancellationToken = default)
 	{
 		await repository.UpdateAsync(

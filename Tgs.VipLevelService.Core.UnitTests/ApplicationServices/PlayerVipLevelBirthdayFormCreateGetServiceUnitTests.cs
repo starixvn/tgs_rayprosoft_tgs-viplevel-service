@@ -15,6 +15,7 @@ using NSubstitute.Core;
 using System.Threading;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
+
 public class PlayerVipLevelBirthdayFormCreateGetServiceUnitTest
 {
 	[Fact]

@@ -4,6 +4,7 @@ using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
+
 public class VipLevelUpdateGetServiceUnitTests
 {
 	[Fact]
