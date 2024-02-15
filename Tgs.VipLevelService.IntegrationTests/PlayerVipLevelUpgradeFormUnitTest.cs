@@ -166,7 +166,7 @@ public class PlayerVipLevelUpgradeFormUnitTest
 					playerVipLevelPlayerCodeResult.BrandId,
 					playerVipLevelPlayerCodeResult.PlayerCode,
 					playerVipLevelPlayerCodeResult.VipLevel,
-					vipLevelInfos.FirstOrDefault()!.BirthBenefit,
+					vipLevelInfos.FirstOrDefault()!.PromotionBenefit,
 					operatorUserId,
 					operatorUsername,
 					vipLevelInfos.FirstOrDefault()!),

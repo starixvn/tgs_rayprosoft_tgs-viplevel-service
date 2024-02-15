@@ -41,7 +41,7 @@ public class PlayerVipLevelUpgradeFormController : ControllerBase
 				BrandId: playerVipLevelPlayerCodeResult.BrandId,
 				PlayerCode: playerVipLevelPlayerCodeResult.PlayerCode,
 				VipLevel: playerVipLevelPlayerCodeResult.VipLevel,
-				Amount: vipLevelInfo.BirthBenefit,
+				Amount: vipLevelInfo.PromotionBenefit,
 				OperatorUserId: operatorUserId,
 				OperatorUsername: operatorUsername,
 				VipLevelInfo: vipLevelInfo),

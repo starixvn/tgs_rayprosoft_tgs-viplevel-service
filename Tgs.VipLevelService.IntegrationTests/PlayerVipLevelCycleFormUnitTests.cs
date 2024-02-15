@@ -179,7 +179,7 @@ public class PlayerVipLevelCycleFormUnitTests
 					CycleOn: cycleOn,
 					FromOn: fromOn,
 					ToOn: toOn,
-					Amount: vipLevelInfos.FirstOrDefault()!.BirthBenefit,
+					Amount: vipLevelInfos.FirstOrDefault()!.QuarterlyBenefit,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername,
 					VipLevelInfo: vipLevelInfos.FirstOrDefault()!),

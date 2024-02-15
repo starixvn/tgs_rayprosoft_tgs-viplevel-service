@@ -45,7 +45,7 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 				CycleOn: source.CycleOn,
 				FromOn: source.FromOn,
 				ToOn: source.ToOn,
-				Amount: vipLevelInfo.BirthBenefit,
+				Amount: vipLevelInfo.QuarterlyBenefit,
 				OperatorUserId: operatorUserId,
 				OperatorUsername: operatorUsername,
 				VipLevelInfo: vipLevelInfo),
