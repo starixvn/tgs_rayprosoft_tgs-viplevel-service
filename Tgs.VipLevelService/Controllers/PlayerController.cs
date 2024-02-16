@@ -38,7 +38,12 @@ public class PlayerController : ControllerBase
 			AccumDepositId: playerVipLevelInfo.AccumDepositId,
 			AccumDeposit: playerVipLevelInfo.AccumDeposit,
 			AccumTurnoverId: playerVipLevelInfo.AccumTurnoverId,
-			AccumTurnover: playerVipLevelInfo.AccumTurnover);
+			AccumTurnover: playerVipLevelInfo.AccumTurnover,
+			LevelUpAccumulateBetAmount: playerVipLevelInfo.LevelUpAccumulateBetAmount,
+			LevelUpAccumulateDeposit: playerVipLevelInfo.LevelUpAccumulateDeposit,
+			FullLevel: playerVipLevelInfo.FullLevel,
+			NextVipLevelId: playerVipLevelInfo.NextVipLevelId,
+			NextVipLevel: playerVipLevelInfo.NextVipLevel);
 	}
 
 	[HttpPost("{playerCode}/viplevel/register", Name = "PlayerVipLevel_Register")]
@@ -143,17 +148,4 @@ public class PlayerController : ControllerBase
 			TotalCount = count
 		};
 	}
-
-	[HttpPost("{playerCode}/upgrade/promotion", Name = "PlayerVipLevel_Upgrade_Promotion")]
-	public ValueTask PlayerVipLevelSystemAsync(
-		[FromServices] ICommandService<PlayerVipLevelUpgradePromotionCommand> service,
-		string playerCode,
-		[FromBody] PlayerVipLevelUpgradePromotionViewModel source)
-		=> service.ExecuteAsync(
-			command: new PlayerVipLevelUpgradePromotionCommand(
-				PlayerCode: playerCode,
-				VipLevelId: source.VipLevelId,
-				SnapshotId: source.SnapshotId,
-				Amount: source.Amount),
-			cancellationToken: HttpContext.RequestAborted);
 }

@@ -14,4 +14,9 @@ public record PlayerVipLevelInfoViewModel(
 	Guid AccumDepositId,
 	decimal AccumDeposit,
 	Guid AccumTurnoverId,
-	decimal AccumTurnover);
+	decimal AccumTurnover,
+	decimal LevelUpAccumulateBetAmount,
+	decimal LevelUpAccumulateDeposit,
+	bool FullLevel,
+	Guid NextVipLevelId,
+	int NextVipLevel);

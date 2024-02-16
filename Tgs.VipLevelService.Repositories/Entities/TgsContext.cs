@@ -34,8 +34,6 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<PlayerVipLevelUpgradeForm> PlayerVipLevelUpgradeForms { get; set; }
 
-    public virtual DbSet<PlayerVipLevelUpgradePromotion> PlayerVipLevelUpgradePromotions { get; set; }
-
     public virtual DbSet<Reseller> Resellers { get; set; }
 
     public virtual DbSet<VipLevel> VipLevels { get; set; }
@@ -61,7 +59,6 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelUpgradeFormConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelUpgradePromotionConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.VipLevelSnapshotConfiguration());

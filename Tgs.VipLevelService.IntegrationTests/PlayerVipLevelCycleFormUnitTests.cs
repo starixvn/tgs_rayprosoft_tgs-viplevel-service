@@ -131,7 +131,12 @@ public class PlayerVipLevelCycleFormUnitTests
 				AccumDepositId: Guid.NewGuid(),
 				AccumDeposit: 99m,
 				AccumTurnoverId: Guid.NewGuid(),
-				AccumTurnover: 88m);
+				AccumTurnover: 88m,
+				LevelUpAccumulateBetAmount: 299,
+				LevelUpAccumulateDeposit: 199,
+				FullLevel: false,
+				NextVipLevelId: Guid.NewGuid(),
+				NextVipLevel: 2);
 			_ = fakePlayerService.GetAsync(
 				query: Arg.Is(new PlayerVipLevelPlayerCodeQuery(playerCode)),
 				cancellationToken: Arg.Any<CancellationToken>())

@@ -29,7 +29,12 @@ public class PlayerVipLevelUnitTests
 			AccumDepositId: Guid.NewGuid(),
 			AccumDeposit: 100,
 			AccumTurnoverId: Guid.NewGuid(),
-			AccumTurnover: 200);
+			AccumTurnover: 200,
+			LevelUpAccumulateBetAmount: 299,
+			LevelUpAccumulateDeposit: 199,
+			FullLevel: false,
+			NextVipLevelId: Guid.NewGuid(),
+			NextVipLevel: 2);
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 			{
@@ -309,36 +314,5 @@ public class PlayerVipLevelUnitTests
 
 		Assert.NotNull(actual);
 		Assert.Equal(1, actual.TotalCount);
-	}
-
-	[Fact]
-	public async Task PlayerVipLevel_Upgrade_Promotion()
-	{
-		var playerCode = "4ucmqplxb029";
-		var vipLevelId = Guid.NewGuid();
-		var snapshotId = Guid.NewGuid();
-		var amount = 100m;
-
-		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
-		{
-			var fakeService = Substitute.For<ICommandService<PlayerVipLevelUpgradePromotionCommand>>();
-
-			var command = new PlayerVipLevelUpgradePromotionCommand(
-				PlayerCode: playerCode,
-				VipLevelId: vipLevelId,
-				SnapshotId: snapshotId,
-				Amount: amount);
-
-			_ = fakeService.ExecuteAsync(
-				command: Arg.Is(command),
-				cancellationToken: Arg.Any<CancellationToken>());
-
-			_ = services.AddTransient(_ => fakeService);
-		}));
-
-		var httpClient = web.CreateDefaultClient();
-		var client = new VipLevelServiceClient(httpClient);
-
-		await client.PlayerVipLevelUpgradePromotionAsync(playerCode: playerCode, vipLevelId, snapshotId, amount);
 	}
 }

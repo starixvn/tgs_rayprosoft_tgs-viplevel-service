@@ -7,6 +7,7 @@ internal class PlayerVipLevelPlayerCodeGetService(
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
 	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
+	IVipLevelRepository vipLevelRepository,
 	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> playerVipLevelFixesService,
 	ICommandService<PlayerVipLevelExpFixesCommand> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>
 {
@@ -41,21 +42,47 @@ internal class PlayerVipLevelPlayerCodeGetService(
 		   .ConfigureAwait(false);
 		}
 
-		return new PlayerVipLevelPlayerCodeResult(
-			playerInfo.ResellerId,
-			playerInfo.ResellerCode,
-			playerInfo.LicenseeId,
-			playerInfo.LicenseeCode,
+		var currentLevel = await vipLevelRepository.GetAsync(
 			playerInfo.BrandId,
-			playerInfo.BrandCode,
-			playerInfo.PlayerCode,
-			playerInfo.Username,
-			playerVipLevelInfo.VipLevelId,
 			playerVipLevelInfo.VipLevel,
-			playerVipLevelInfo.AutoState,
-			playerVipLevelExpInfo?.AccumDepositId ?? Guid.Empty,
-			playerVipLevelExpInfo?.AccumDeposit ?? 0.0m,
-			playerVipLevelExpInfo?.AccumTurnoverId ?? Guid.Empty,
-			playerVipLevelExpInfo?.AccumTurnover ?? 0.0m);
+			cancellationToken).ConfigureAwait(false)
+			?? throw new NullReferenceException($"This brand({playerInfo.BrandCode}) VIP level({playerVipLevelInfo.VipLevel}) does not exist.");
+
+		var nextLevel = await vipLevelRepository.GetAsync(
+			playerInfo.BrandId,
+			playerVipLevelInfo.VipLevel + 1,
+			cancellationToken).ConfigureAwait(false);
+
+		var nextVipLevelId = playerVipLevelInfo.VipLevelId;
+		var nextVipLevel = playerVipLevelInfo.VipLevel;
+		var fullLevel = true;
+		if (nextLevel is not null)
+		{
+			nextVipLevelId = nextLevel.Id;
+			nextVipLevel = nextLevel.Level;
+			fullLevel = false;
+		}
+
+		return new PlayerVipLevelPlayerCodeResult(
+			ResellerId: playerInfo.ResellerId,
+			ResellerCode: playerInfo.ResellerCode,
+			LicenseeId: playerInfo.LicenseeId,
+			LicenseeCode: playerInfo.LicenseeCode,
+			BrandId: playerInfo.BrandId,
+			BrandCode: playerInfo.BrandCode,
+			PlayerCode: playerInfo.PlayerCode,
+			Username: playerInfo.Username,
+			VipLevelId: playerVipLevelInfo.VipLevelId,
+			VipLevel: playerVipLevelInfo.VipLevel,
+			AutoState: playerVipLevelInfo.AutoState,
+			AccumDepositId: playerVipLevelExpInfo?.AccumDepositId ?? Guid.Empty,
+			AccumDeposit: playerVipLevelExpInfo?.AccumDeposit ?? 0.0m,
+			AccumTurnoverId: playerVipLevelExpInfo?.AccumTurnoverId ?? Guid.Empty,
+			AccumTurnover: playerVipLevelExpInfo?.AccumTurnover ?? 0.0m,
+			LevelUpAccumulateBetAmount: currentLevel.LevelUpAccumulateBetAmount,
+			LevelUpAccumulateDeposit: currentLevel.LevelUpAccumulateDeposit,
+			FullLevel: fullLevel,
+			NextVipLevelId: nextVipLevelId,
+			NextVipLevel: nextVipLevel);
 	}
 }

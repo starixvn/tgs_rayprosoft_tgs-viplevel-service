@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tgs.VipLevelService.Core.Protos;
+﻿using Tgs.VipLevelService.Core.Protos;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 public record PlayerVipLevelPlayerCodeResult(
@@ -21,4 +16,9 @@ public record PlayerVipLevelPlayerCodeResult(
 	Guid AccumDepositId,
 	decimal AccumDeposit,
 	Guid AccumTurnoverId,
-	decimal AccumTurnover);
+	decimal AccumTurnover,
+	decimal LevelUpAccumulateBetAmount,
+	decimal LevelUpAccumulateDeposit,
+	bool FullLevel,
+	Guid NextVipLevelId,
+	int NextVipLevel);
