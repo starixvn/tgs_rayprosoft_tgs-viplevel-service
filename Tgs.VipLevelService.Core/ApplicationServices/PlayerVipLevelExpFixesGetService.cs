@@ -36,7 +36,7 @@ internal class PlayerVipLevelExpFixesGetService(
 		try
 		{
 			await calculateClient.CreateCalculateAsync(playerVipLevelExp.AccumDepositId, cancellationToken).ConfigureAwait(false);
-			await calculateClient.ExchangeAsync(playerVipLevelExp.AccumDepositId, playerVipLevelExp.AccumTurnover, cancellationToken).ConfigureAwait(false);
+			await calculateClient.ExchangeAsync(playerVipLevelExp.AccumDepositId, playerVipLevelExp.AccumDeposit, cancellationToken).ConfigureAwait(false);
 		}
 		catch (HttpRequestException ex)
 		{

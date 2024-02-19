@@ -1,5 +1,7 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Net;
+using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Tgs.Calculate.Clients;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
@@ -40,32 +42,36 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 			return;
 		}
 
-		decimal balance;
-		try
-		{
-			var exchange = await calculateClient.ExchangeAsync(
+		var retryPolicy = Policy.Handle<HttpRequestException>()
+			.WaitAndRetryAsync(
+			retryCount: 1,
+			retryAttempt => TimeSpan.FromSeconds(5),
+			onRetry: async (ex, retryTime, retryCount, context) =>
+			{
+				logger.LogWarning(ex, "LogOn:{logOn} RetryCount:{retryCount} Delay:{retryTime}",
+					DateTime.Now.ToString("o"),
+					retryCount,
+					retryTime);
+				_ = await playerVipLevelExpFixesService.GetAsync(
+					query: new PlayerVipLevelExpFixesQuery(
+					PlayerCode: command.PlayerCode),
+					cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+			});
+
+		var exchange = await retryPolicy.ExecuteAsync(
+			async () => await calculateClient.ExchangeAsync(
 				calculateId: playerVipLevelExpInfo.AccumDepositId,
 				change: command.Amount,
 				cancellationToken: cancellationToken)
-				.ConfigureAwait(false);
+			.ConfigureAwait(false))
+			.ConfigureAwait(false);
 
-			await playerVipLevelExpRepository.UpdateDepositAsync(
-				playerCode: command.PlayerCode,
-				accumDeposit: exchange.PostBalance,
-				cancellationToken: cancellationToken)
-			   .ConfigureAwait(false);
-
-			balance = exchange.PostBalance;
-		}
-		catch (HttpRequestException ex)
-		{
-			logger.LogError(ex, "LogOn:{logOn}  Mesaage:This player calls the calculator service abnormally.({playerCode}|{playerVipLevelExpInfo.AccumDepositId})", DateTime.Now.ToString("o"), playerVipLevelExpInfo.PlayerCode, playerVipLevelExpInfo.AccumDepositId);
-			throw;
-		}
-		catch (Exception)
-		{
-			throw;
-		}
+		await playerVipLevelExpRepository.UpdateDepositAsync(
+			playerCode: command.PlayerCode,
+			accumDeposit: exchange.PostBalance,
+			cancellationToken: cancellationToken)
+		   .ConfigureAwait(false);
 
 		await playerVipLevelExpDepositRecordRepository.AddAsync(
 			 hash: hash,
@@ -73,7 +79,7 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 			 type: PlayerVipLevelExpDepositRecordType.Normal,
 			 sign: command.Amount >= 0 ? 1 : -1,
 			 amount: Math.Abs(command.Amount),
-			 balance: balance,
+			 balance: exchange.PostBalance,
 			 additionalData: new JsonObject
 			 {
 				 ["Form"] = command.FormId,

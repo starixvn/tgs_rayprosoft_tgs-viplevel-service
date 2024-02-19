@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Polly;
 using Tgs.Calculate.Clients;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
@@ -49,32 +50,36 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			return;
 		}
 
-		decimal balance;
-		try
-		{
-			var exchange = await calculateClient.ExchangeAsync(
-				calculateId: playerVipLevelExpInfo.AccumTurnoverId,
+		var retryPolicy = Policy.Handle<HttpRequestException>()
+			.WaitAndRetryAsync(
+			retryCount: 1,
+			retryAttempt => TimeSpan.FromSeconds(5),
+			onRetry: async (ex, retryTime, retryCount, context) =>
+			{
+				logger.LogWarning(ex, "LogOn:{logOn} RetryCount:{retryCount} Delay:{retryTime}",
+					DateTime.Now.ToString("o"),
+					retryCount,
+					retryTime);
+				_ = await playerVipLevelExpFixesService.GetAsync(
+					query: new PlayerVipLevelExpFixesQuery(
+						PlayerCode: command.PlayerCode),
+					cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+			});
+
+		var exchange = await retryPolicy.ExecuteAsync(
+			async () => await calculateClient.ExchangeAsync(
+				calculateId: playerVipLevelExpInfo.AccumDepositId,
 				change: command.Amount,
 				cancellationToken: cancellationToken)
-				.ConfigureAwait(false);
+			.ConfigureAwait(false))
+			.ConfigureAwait(false);
 
-			await playerVipLevelExpRepository.UpdateTurnoverAsync(
+		await playerVipLevelExpRepository.UpdateTurnoverAsync(
 				playerCode: command.PlayerCode,
 				accumTurnover: exchange.PostBalance,
 				cancellationToken: cancellationToken)
 			   .ConfigureAwait(false);
-
-			balance = exchange.PostBalance;
-		}
-		catch (HttpRequestException ex)
-		{
-			logger.LogError(ex, "LogOn:{logOn}  Mesaage:This player calls the calculator service abnormally.({playerCode}|{playerVipLevelExpInfo.AccumDepositId})", DateTime.Now.ToString("o"), playerVipLevelExpInfo.PlayerCode, playerVipLevelExpInfo.AccumDepositId);
-			throw;
-		}
-		catch (Exception)
-		{
-			throw;
-		}
 
 		await playerVipLevelExpTurnoverRecordRepository.AddAsync(
 			hash: hash,
@@ -82,7 +87,7 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			 type: PlayerVipLevelExpTurnoverRecordType.Normal,
 			 sign: command.Amount >= 0 ? 1 : -1,
 			 amount: Math.Abs(command.Amount),
-			 balance: balance,
+			 balance: exchange.PostBalance,
 			 additionalData: new JsonObject
 			 {
 				 ["GameProviderId"] = command.GameProviderId,

@@ -67,7 +67,7 @@ public class PlayerVipLevelExpFixesCommandServiceUnitTests
 			.Received(1)
 			.ExchangeAsync(
 			calculateId: Arg.Is(playerVipLevelExp.AccumDepositId),
-			change: Arg.Is(playerVipLevelExp.AccumTurnover),
+			change: Arg.Is(playerVipLevelExp.AccumDeposit),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 
