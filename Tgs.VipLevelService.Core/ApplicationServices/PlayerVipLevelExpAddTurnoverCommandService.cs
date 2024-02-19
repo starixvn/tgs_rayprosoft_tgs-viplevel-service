@@ -68,11 +68,11 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			});
 
 		var exchange = await retryPolicy.ExecuteAsync(
-			async () => await calculateClient.ExchangeAsync(
-				calculateId: playerVipLevelExpInfo.AccumDepositId,
+			 () => calculateClient.ExchangeAsync(
+				calculateId: playerVipLevelExpInfo.AccumTurnoverId,
 				change: command.Amount,
 				cancellationToken: cancellationToken)
-			.ConfigureAwait(false))
+			 .AsTask())
 			.ConfigureAwait(false);
 
 		await playerVipLevelExpRepository.UpdateTurnoverAsync(

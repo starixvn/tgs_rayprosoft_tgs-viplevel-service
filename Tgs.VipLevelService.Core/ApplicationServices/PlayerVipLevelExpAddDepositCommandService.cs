@@ -60,11 +60,11 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 			});
 
 		var exchange = await retryPolicy.ExecuteAsync(
-			async () => await calculateClient.ExchangeAsync(
+			() => calculateClient.ExchangeAsync(
 				calculateId: playerVipLevelExpInfo.AccumDepositId,
 				change: command.Amount,
 				cancellationToken: cancellationToken)
-			.ConfigureAwait(false))
+			.AsTask())
 			.ConfigureAwait(false);
 
 		await playerVipLevelExpRepository.UpdateDepositAsync(
