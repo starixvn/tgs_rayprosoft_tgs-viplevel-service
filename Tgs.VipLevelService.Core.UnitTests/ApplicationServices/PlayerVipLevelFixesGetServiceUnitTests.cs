@@ -17,6 +17,18 @@ public class PlayerVipLevelFixesGetServiceUnitTests
 		var query = new PlayerVipLevelFixesQuery(
 			PlayerCode: "4ucmqplxb029");
 
+		var vipLevelId = Guid.NewGuid();
+
+		var playerVipLevelInfo = new PlayerVipLevelInfo(
+			PlayerCode: query.PlayerCode,
+			VipLevelId: vipLevelId,
+			VipLevel: 1,
+			AutoState: PlayerVipLevelAutoState.Enable);
+		_ = fakePlayerVipLevelRepository.GetAsync(
+			playerCode: Arg.Is(query.PlayerCode),
+			cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(null, playerVipLevelInfo);
+
 		var playerVipIdInfo = new PlayerVipIdInfo(
 			ResellerId: Guid.NewGuid(),
 			ResellerCode: "TGS",
@@ -26,14 +38,14 @@ public class PlayerVipLevelFixesGetServiceUnitTests
 			BrandCode: "GPI",
 			PlayerCode: "4ucmqplxb029",
 			Username: "4ucmqplxb029",
-			VipId: Guid.NewGuid());
+			VipId: vipLevelId);
 		_ = fakePlayerRepository.GetVipIdAsync(
 			playerCode: Arg.Is(query.PlayerCode),
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipIdInfo);
 
 		var vipLevelInfo = new VipLevelInfo(
-			Id: playerVipIdInfo.VipId,
+			Id: vipLevelId,
 			Level: 1,
 			BrandId: playerVipIdInfo.BrandId,
 			LevelUpAccumulateBetAmount: 100,
@@ -58,26 +70,21 @@ public class PlayerVipLevelFixesGetServiceUnitTests
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(vipLevelInfo);
 
-		var beforePlayerVipLevelInfo = new PlayerVipLevelInfo(
-			PlayerCode: playerVipIdInfo.PlayerCode,
-			VipLevelId: playerVipIdInfo.VipId,
-			VipLevel: 1,
-			AutoState: PlayerVipLevelAutoState.Enable);
-		_ = fakePlayerVipLevelRepository.GetAsync(
-			playerCode: Arg.Is(playerVipIdInfo.PlayerCode),
-			cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(beforePlayerVipLevelInfo);
-
 		var service = new PlayerVipLevelFixesGetService(
 			fakeVipLevelRepository,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository);
 
-		_ = await service.GetAsync(query);
+		var actual = await service.GetAsync(query);
+
+		Assert.Equal(playerVipLevelInfo.PlayerCode, actual.PlayerCode);
+		Assert.Equal(playerVipLevelInfo.VipLevelId, actual.VipLevelId);
+		Assert.Equal(playerVipLevelInfo.VipLevel, actual.VipLevel);
+		Assert.Equal(playerVipLevelInfo.AutoState, actual.AutoState);
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.CreateAsync(
 			playerCode: Arg.Is(playerVipIdInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),

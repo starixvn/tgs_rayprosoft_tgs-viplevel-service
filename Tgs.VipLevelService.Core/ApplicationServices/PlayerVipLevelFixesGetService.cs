@@ -11,30 +11,40 @@ internal class PlayerVipLevelFixesGetService(
 {
 	public async ValueTask<PlayerVipLevelInfo> GetAsync(PlayerVipLevelFixesQuery query, CancellationToken cancellationToken = default)
 	{
-		var playerVipIdInfo = await playerRepository.GetVipIdAsync(
+		var playerVipLevelInfo = await playerVipLevelRepository.GetAsync(
 			playerCode: query.PlayerCode,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		var vipLevelInfo = await vipLevelRepository.GetAsync(
-			brandId: playerVipIdInfo.BrandId,
-			id: playerVipIdInfo.VipId,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(false)
-			?? throw new NullReferenceException();
+		if (playerVipLevelInfo is null)
+		{
+			var playerVipIdInfo = await playerRepository.GetVipIdAsync(
+				playerCode: query.PlayerCode,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
 
-		await playerVipLevelRepository.MergeAsync(
-			playerCode: playerVipIdInfo.PlayerCode,
-			vipLevelId: vipLevelInfo.Id,
-			vipLevel: vipLevelInfo.Level,
-			autoState: PlayerVipLevelAutoState.Enable,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(true);
+			var vipLevelInfo = await vipLevelRepository.GetAsync(
+				brandId: playerVipIdInfo.BrandId,
+				id: playerVipIdInfo.VipId,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false)
+				?? throw new NullReferenceException();
 
-		return await playerVipLevelRepository.GetAsync(
-			playerVipIdInfo.PlayerCode,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(false)
-			?? throw new NullReferenceException();
+			await playerVipLevelRepository.CreateAsync(
+				playerCode: playerVipIdInfo.PlayerCode,
+				vipLevelId: vipLevelInfo.Id,
+				vipLevel: vipLevelInfo.Level,
+				autoState: PlayerVipLevelAutoState.Enable,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false);
+
+			playerVipLevelInfo = await playerVipLevelRepository.GetAsync(
+				playerCode: query.PlayerCode,
+				cancellationToken: cancellationToken)
+				.ConfigureAwait(false)
+				?? throw new NullReferenceException($"This player's VipLevel does not exist.({query.PlayerCode})");
+		}
+
+		return playerVipLevelInfo;
 	}
 }

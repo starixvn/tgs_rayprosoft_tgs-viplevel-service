@@ -62,7 +62,25 @@ builder.Services.AddVipLevelServices(
 	{
 		var configuration = sp.GetRequiredService<IConfiguration>();
 		options.ConnectionString = configuration.GetConnectionString("Redis")!;
-	});
+	})
+	.AddPlayerBucketClient((httpClientBuilder) =>
+		httpClientBuilder.ConfigureHttpClient((sp, http) =>
+		{
+			var configuration = sp.GetRequiredService<IConfiguration>();
+			http.BaseAddress = configuration.GetValue<Uri>("VipLevelConnectionStrings:PlayerBucketClientBaseUrl")!;
+		}))
+	.AddCashServiceClient((options, sp) =>
+	{
+		var configuration = sp.GetRequiredService<IConfiguration>();
+		options.BaseUrl = configuration.GetValue<Uri>("VipLevelConnectionStrings:CashServiceClientBaseUrl")!;
+	})
+	.AddCalculateClient((httpClientBuilder) =>
+		httpClientBuilder.ConfigureHttpClient((sp, http) =>
+		{
+			var configuration = sp.GetRequiredService<IConfiguration>();
+			http.BaseAddress = configuration.GetValue<Uri>("VipLevelConnectionStrings:CalculateClientBaseUrl")!;
+		}));
+;
 
 builder.Services
 	.AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with

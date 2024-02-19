@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Entities;
@@ -11,7 +6,8 @@ using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
 
-internal class PlayerVipLevelUpgradeFormRepository(TgsContext context) : IPlayerVipLevelUpgradeFormRepository
+internal class PlayerVipLevelUpgradeFormRepository(
+	TgsContext context) : IPlayerVipLevelUpgradeFormRepository
 {
 	public async ValueTask ApprovedAsync(Guid id, decimal amount, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 	{

@@ -3,15 +3,15 @@ using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class PlayerVipLevelPlayerCodeGetService(
+internal class PlayerVipLevelSingleGetService(
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
 	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
 	IVipLevelRepository vipLevelRepository,
 	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> playerVipLevelFixesService,
-	ICommandService<PlayerVipLevelExpFixesCommand> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>
+	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>
 {
-	public async ValueTask<PlayerVipLevelPlayerCodeResult> GetAsync(PlayerVipLevelPlayerCodeQuery query, CancellationToken cancellationToken = default)
+	public async ValueTask<PlayerVipLevelSingleResult> GetAsync(PlayerVipLevelSingleQuery query, CancellationToken cancellationToken = default)
 	{
 		var playerInfo = await playerRepository.GetAsync(
 			playerCode: query.PlayerCode,
@@ -31,16 +31,12 @@ internal class PlayerVipLevelPlayerCodeGetService(
 		var playerVipLevelExpInfo = await playerVipLevelExpRepository.GetAsync(
 			playerCode: playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
+			.ConfigureAwait(false)
+			?? await playerVipLevelExpFixesService.GetAsync(
+				query: new PlayerVipLevelExpFixesQuery(
+					PlayerCode: query.PlayerCode),
+				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
-
-		if (playerVipLevelExpInfo is null)
-		{
-			await playerVipLevelExpFixesService.ExecuteAsync(
-			   command: new PlayerVipLevelExpFixesCommand(
-				   PlayerCode: query.PlayerCode),
-			   cancellationToken: cancellationToken)
-		   .ConfigureAwait(false);
-		}
 
 		var currentLevel = await vipLevelRepository.GetAsync(
 			playerInfo.BrandId,
@@ -63,7 +59,7 @@ internal class PlayerVipLevelPlayerCodeGetService(
 			fullLevel = false;
 		}
 
-		return new PlayerVipLevelPlayerCodeResult(
+		return new PlayerVipLevelSingleResult(
 			ResellerId: playerInfo.ResellerId,
 			ResellerCode: playerInfo.ResellerCode,
 			LicenseeId: playerInfo.LicenseeId,

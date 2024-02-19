@@ -1,7 +1,7 @@
 ﻿using Tgs.VipLevelService.Core.Protos;
 
 namespace Tgs.VipLevelService.ApplicationServices;
-public record PlayerVipLevelPlayerCodeResult(
+public record PlayerVipLevelSingleResult(
 	Guid ResellerId,
 	string ResellerCode,
 	Guid LicenseeId,

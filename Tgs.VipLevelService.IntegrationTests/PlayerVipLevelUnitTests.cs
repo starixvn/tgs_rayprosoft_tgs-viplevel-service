@@ -14,7 +14,7 @@ public class PlayerVipLevelUnitTests
 	{
 		var playerCode = "4ucmqplxb029";
 
-		var result = new PlayerVipLevelPlayerCodeResult(
+		var result = new PlayerVipLevelSingleResult(
 			ResellerId: Guid.NewGuid(),
 			ResellerCode: "Demo",
 			LicenseeId: Guid.NewGuid(),
@@ -38,9 +38,9 @@ public class PlayerVipLevelUnitTests
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 			{
-				var fakeService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>>();
+				var fakeService = Substitute.For<IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>>();
 
-				var query = new PlayerVipLevelPlayerCodeQuery(playerCode);
+				var query = new PlayerVipLevelSingleQuery(playerCode);
 
 				_ = fakeService.GetAsync(
 					query: Arg.Is(query),

@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
-using NSubstitute;
-using Tgs.VipLevels.Exp.Worker.Common.Protos;
-using Tgs.VipLevels.Exp.Worker.Common;
-using Tgs.VipLevelService.ApplicationServices;
-using Valhalla.MessageQueue;
-using Tgs.VipLevelService.Models;
+﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
-using NSubstitute.Core;
-using System.Threading;
+
+using Tgs.VipLevelService.ApplicationServices;
+using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 

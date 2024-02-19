@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 

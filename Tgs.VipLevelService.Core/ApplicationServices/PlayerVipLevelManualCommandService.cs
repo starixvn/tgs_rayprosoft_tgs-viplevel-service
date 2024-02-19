@@ -47,7 +47,7 @@ internal class PlayerVipLevelManualCommandService(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		await playerVipLevelRepository.MergeAsync(
+		await playerVipLevelRepository.UpdateManualAsync(
 			playerCode: playerInfo.PlayerCode,
 			vipLevelId: vipLevelInfo.Id,
 			vipLevel: vipLevelInfo.Level,

@@ -102,12 +102,12 @@ public class PlayerVipLevelUpgradeFormUnitTest
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakePlayerService = Substitute.For<IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult>>();
+			var fakePlayerService = Substitute.For<IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>>();
 			var fakeSnapshotService = Substitute.For<IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid>>();
 			var fakeSnapshotQueryService = Substitute.For<IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo>>();
 			var fakeFormService = Substitute.For<IGetService<PlayerVipLevelUpgradeFormCreateCommand, Guid>>();
 
-			var playerVipLevelPlayerCodeResult = new PlayerVipLevelPlayerCodeResult(
+			var playerVipLevelPlayerCodeResult = new PlayerVipLevelSingleResult(
 				ResellerId: Guid.NewGuid(),
 				ResellerCode: "Demo",
 				LicenseeId: Guid.NewGuid(),
@@ -129,7 +129,7 @@ public class PlayerVipLevelUpgradeFormUnitTest
 				NextVipLevelId: Guid.NewGuid(),
 				NextVipLevel: 2);
 			_ = fakePlayerService.GetAsync(
-				query: Arg.Is(new PlayerVipLevelPlayerCodeQuery(playerCode)),
+				query: Arg.Is(new PlayerVipLevelSingleQuery(playerCode)),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelPlayerCodeResult);
 

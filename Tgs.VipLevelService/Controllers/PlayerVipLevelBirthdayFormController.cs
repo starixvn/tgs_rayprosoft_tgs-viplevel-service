@@ -12,7 +12,7 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 {
 	[HttpPost(Name = "PlayerVipLevelBirthday_Form_Create")]
 	public async ValueTask<Guid> CreateAsync(
-		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult> playerService,
+		[FromServices] IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult> playerService,
 		[FromServices] IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid> snapshotService,
 		[FromServices] IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo> snapshotQueryService,
 		[FromServices] IGetService<PlayerVipLevelBirthdayFormCreateCommand, Guid> formService,
@@ -21,7 +21,7 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 		[FromBody] PlayerVipLevelBirthdayFormCreateViewModel source)
 	{
 		var playerVipLevelPlayerCodeResult = await playerService.GetAsync(
-			query: new PlayerVipLevelPlayerCodeQuery(source.PlayerCode),
+			query: new PlayerVipLevelSingleQuery(source.PlayerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var snapshotId = await snapshotService.GetAsync(

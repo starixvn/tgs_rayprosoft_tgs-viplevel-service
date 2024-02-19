@@ -12,7 +12,7 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 {
 	[HttpPost(Name = "PlayerVipLevelCycle_Form_Create")]
 	public async ValueTask<Guid> CreateAsync(
-		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult> playerService,
+		[FromServices] IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult> playerService,
 		[FromServices] IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid> snapshotService,
 		[FromServices] IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo> snapshotQueryService,
 		[FromServices] IGetService<PlayerVipLevelCycleFormCreateCommand, Guid> formService,
@@ -21,7 +21,7 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 		[FromBody] PlayerVipLevelCycleFormCreateViewModel source)
 	{
 		var playerVipLevelPlayerCodeResult = await playerService.GetAsync(
-			query: new PlayerVipLevelPlayerCodeQuery(source.PlayerCode),
+			query: new PlayerVipLevelSingleQuery(source.PlayerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var snapshotId = await snapshotService.GetAsync(

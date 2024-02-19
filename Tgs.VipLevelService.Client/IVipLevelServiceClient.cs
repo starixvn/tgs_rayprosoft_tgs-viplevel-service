@@ -15,12 +15,7 @@ public interface IVipLevelServiceClient
 
 	ValueTask VipLevelUpdateAsync(Guid vipId, VipLevelUpdateViewModel source, string modifier, CancellationToken cancellationToken = default);
 
-	[Obsolete("已過時,請改使用PlayerVipLevelLogQueryAsync")]
-	ValueTask<PagingResponseViewModel<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging paging, CancellationToken cancellationToken = default);
-
 	ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(string playerCode, CancellationToken cancellationToken = default);
-
-	ValueTask<PlayerVipLevelExpInfoViewModel> PlayerVipLevelExpGetAsync(string playerCode, CancellationToken cancellationToken = default);
 
 	ValueTask PlayerVipLevelRegisterAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default);
 
@@ -69,4 +64,8 @@ public interface IVipLevelServiceClient
 	ValueTask<bool> PlayerVipLevelUpgradeFormExistAsync(string playerCode, int vipLevel, CancellationToken cancellationToken = default);
 
 	ValueTask<PlayerVipLevelUpgradeFormViewModel?> PlayerVipLevelUpgradeFormGetAsync(Guid id, CancellationToken cancellationToken = default);
+
+	public ValueTask PlayerVipLevelExpAddTurnoverAsync(string playerCode, Guid gameProviderId, int gameId, Guid walletId, string externalWagerId, long wagerId, decimal amount, CancellationToken cancellationToken = default);
+
+	public ValueTask PlayerVipLevelExpAddDepositAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default);
 }

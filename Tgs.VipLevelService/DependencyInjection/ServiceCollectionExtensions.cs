@@ -14,17 +14,6 @@ public static class ServiceCollectionExtensions
 		.Configure(redisOptions)
 		.Services
 		.AddSingleton<RedisConnectionManager>()
-		.AddPlayerBucketClient((httpClientBuilder) =>
-		httpClientBuilder.ConfigureHttpClient((sp, http) =>
-			{
-				var configuration = sp.GetRequiredService<IConfiguration>();
-				http.BaseAddress = configuration.GetValue<Uri>("VipLevelConnectionStrings:PlayerBucketClientBaseUrl")!;
-			}))
-		.AddCashServiceClient((options, sp) =>
-		{
-			var configuration = sp.GetRequiredService<IConfiguration>();
-			options.BaseUrl = configuration.GetValue<Uri>("VipLevelConnectionStrings:CashServiceClientBaseUrl")!;
-		})
 		.AddVipLevelCore()
 		.AddVipLevelRepositories(
 			dbContextOptions: dbContextOptions,

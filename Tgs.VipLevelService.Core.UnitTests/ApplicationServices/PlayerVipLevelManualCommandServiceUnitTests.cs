@@ -95,7 +95,7 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateManualAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
@@ -206,7 +206,7 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateManualAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
@@ -324,7 +324,7 @@ public class PlayerVipLevelManualCommandServiceUnitTests
 
 		_ = fakePlayerVipLevelRepository
 			.Received(1)
-			.MergeAsync(
+			.UpdateManualAsync(
 			playerCode: Arg.Is(playerInfo.PlayerCode),
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),

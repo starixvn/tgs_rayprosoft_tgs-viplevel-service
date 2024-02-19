@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
-using Tgs.VipLevelService.Entities;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Controllers;
@@ -14,11 +13,11 @@ public class PlayerController : ControllerBase
 {
 	[HttpGet("{playerCode}/viplevel", Name = "PlayerVipLevel_Get")]
 	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(
-		[FromServices] IGetService<PlayerVipLevelPlayerCodeQuery, PlayerVipLevelPlayerCodeResult> service,
+		[FromServices] IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult> service,
 		string playerCode)
 	{
 		var playerVipLevelInfo = await service.GetAsync(
-			query: new PlayerVipLevelPlayerCodeQuery(
+			query: new PlayerVipLevelSingleQuery(
 				PlayerCode: playerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(true);

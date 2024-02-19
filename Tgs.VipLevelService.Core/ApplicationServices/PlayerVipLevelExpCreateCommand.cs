@@ -1,3 +1,3 @@
 ﻿namespace Tgs.VipLevelService.ApplicationServices;
-public record PlayerVipLevelPlayerCodeQuery(
+public record PlayerVipLevelExpCreateCommand(
 	string PlayerCode);

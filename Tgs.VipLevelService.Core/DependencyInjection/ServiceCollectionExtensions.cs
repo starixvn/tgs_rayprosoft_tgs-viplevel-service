@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Tgs.VipLevelService;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -10,5 +11,6 @@ public static class ServiceCollectionExtensions
 		.RegisterAllServiceUtilityTypes(
 			Assembly.GetExecutingAssembly(),
 			ServiceLifetime.Transient)
-		.AddSerialNumberGenerator();
+		.AddSerialNumberGenerator()
+		.AddSingleton<ICryptographyUtensil, CryptographyUtensil>();
 }

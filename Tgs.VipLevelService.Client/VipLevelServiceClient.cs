@@ -95,51 +95,6 @@ internal partial class VipLevelServiceClient : IVipLevelServiceClient
 		_ = response.EnsureSuccessStatusCode();
 	}
 
-	public async ValueTask<PagingResponseViewModel<PlayerVipAdjustInfo>> QueryPlayerVipAdjustInfosAsync(PlayerVipAdjustQueryConditions conditions, Paging paging, CancellationToken cancellationToken = default)
-	{
-		var queryStrings = HttpUtility.ParseQueryString(string.Empty);
-
-		queryStrings.Add("brand_id", conditions.BrandId.ToString());
-		queryStrings.Add("player_code", conditions.PlayerCode);
-
-		if (conditions.CreateOnRange != null)
-		{
-			queryStrings.Add("bc", conditions.CreateOnRange.Value.Begin.ToString("o"));
-			queryStrings.Add("ec", conditions.CreateOnRange.Value.End.ToString("o"));
-		}
-
-		if (paging.ShowAll == true)
-			queryStrings.Add("all", "true");
-		else
-		{
-			if (paging.Page != null)
-				queryStrings.Add("page", paging.Page.ToString());
-
-			if (paging.Rows != null)
-				queryStrings.Add("rows", paging.Rows.ToString());
-		}
-
-		if (!string.IsNullOrWhiteSpace(paging.SortBy))
-		{
-			queryStrings.Add("sort", paging.SortBy);
-
-			if (paging.IsDesc == true)
-				queryStrings.Add("desc", "true");
-		}
-
-		var response = await _httpClient
-			.GetAsync($"/vip/playerAdjustInfo?{queryStrings}", cancellationToken)
-			.ConfigureAwait(false);
-
-		_ = response.EnsureSuccessStatusCode();
-
-		var contentJson = await response.Content
-			.ReadAsStringAsync(cancellationToken)
-			.ConfigureAwait(false);
-
-		return JsonSerializer.Deserialize<PagingResponseViewModel<PlayerVipAdjustInfo>>(contentJson, _SerializerOptions)!;
-	}
-
 	public async ValueTask<PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(string playerCode, CancellationToken cancellationToken = default)
 		=> await _httpClient.GetAsync($"/player/{playerCode}/viplevel", cancellationToken)
 		.ToAsyncEnumerable()
@@ -237,18 +192,6 @@ internal partial class VipLevelServiceClient : IVipLevelServiceClient
 			.ConfigureAwait(false)
 			?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 	}
-
-	public async ValueTask<PlayerVipLevelExpInfoViewModel> PlayerVipLevelExpGetAsync(string playerCode, CancellationToken cancellationToken = default)
-		=> await _httpClient.GetAsync($"/player/{playerCode}/viplevel/exp", cancellationToken)
-		.ToAsyncEnumerable()
-		.Do(response => response.EnsureSuccessStatusCode())
-		.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
-		.SelectMany(response => response.Content
-			.ReadFromJsonAsync<PlayerVipLevelExpInfoViewModel>(_SerializerOptions, cancellationToken)
-			.ToAsyncEnumerable())
-		.FirstOrDefaultAsync(cancellationToken: cancellationToken)
-		.ConfigureAwait(false)
-		?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 
 	public IAsyncEnumerable<VipLevelInfoViewModel> VipLevelSnapshotQueryVipLevelAsync(Guid id, CancellationToken cancellationToken = default)
 		=> _httpClient

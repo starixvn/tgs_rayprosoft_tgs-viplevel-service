@@ -28,15 +28,19 @@
          "ObjectType": 0
       },
       {
-         "Name": "dbo.player_vip_level_adjust_records",
-         "ObjectType": 0
-      },
-      {
          "Name": "dbo.player_vip_level_birthday_forms",
          "ObjectType": 0
       },
       {
          "Name": "dbo.player_vip_level_cycle_forms",
+         "ObjectType": 0
+      },
+      {
+         "Name": "dbo.player_vip_level_exp_deposit_records",
+         "ObjectType": 0
+      },
+      {
+         "Name": "dbo.player_vip_level_exp_turnover_records",
          "ObjectType": 0
       },
       {

@@ -34,21 +34,6 @@ internal class PlayerVipLevelCacheRepository(
 		return info;
 	}
 
-	public async ValueTask MergeAsync(string playerCode, Guid vipLevelId, int vipLevel, PlayerVipLevelAutoState autoState, CancellationToken cancellationToken = default)
-	{
-		await repository.MergeAsync(
-			playerCode: playerCode,
-			vipLevelId: vipLevelId,
-			vipLevel: vipLevel,
-			autoState: autoState,
-			cancellationToken: cancellationToken)
-			 .ConfigureAwait(false);
-
-		_ = await DeleteAsync(
-			playerCode: playerCode)
-			.ConfigureAwait(false);
-	}
-
 	public async ValueTask UpdateSystemAsync(string playerCode, Guid vipLevelId, int vipLevel, CancellationToken cancellationToken = default)
 	{
 		await repository.UpdateSystemAsync(
@@ -63,8 +48,38 @@ internal class PlayerVipLevelCacheRepository(
 			.ConfigureAwait(false);
 	}
 
+	public async ValueTask CreateAsync(string playerCode, Guid vipLevelId, int vipLevel, PlayerVipLevelAutoState autoState, CancellationToken cancellationToken = default)
+	{
+		await repository.CreateAsync(
+			playerCode: playerCode,
+			vipLevelId: vipLevelId,
+			vipLevel: vipLevel,
+			autoState: autoState,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		_ = await DeleteAsync(
+			playerCode: playerCode)
+			.ConfigureAwait(false);
+	}
+
+	public async ValueTask UpdateManualAsync(string playerCode, Guid vipLevelId, int vipLevel, PlayerVipLevelAutoState autoState, CancellationToken cancellationToken = default)
+	{
+		await repository.UpdateManualAsync(
+			playerCode: playerCode,
+			vipLevelId: vipLevelId,
+			vipLevel: vipLevel,
+			autoState: autoState,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		_ = await DeleteAsync(
+			playerCode: playerCode)
+			.ConfigureAwait(false);
+	}
+
 	private static string GetKey(string playerCode)
-		=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
+				=> string.Concat(typeof(PlayerVipLevelCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCacheRepository).Name!.ToLower(), ":", playerCode);
 
 	private async ValueTask<PlayerVipLevelInfo?> GetAsync(string playerCode)
 	{
