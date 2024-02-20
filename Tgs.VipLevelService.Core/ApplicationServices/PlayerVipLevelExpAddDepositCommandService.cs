@@ -1,20 +1,24 @@
-﻿using System.Net;
-using System.Text.Json.Nodes;
+﻿using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Polly;
 using Tgs.Calculate.Clients;
 using Tgs.ServiceUtility;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 internal class PlayerVipLevelExpAddDepositCommandService(
 	ILogger<PlayerVipLevelExpAddDepositCommandService> logger,
+	IOptions<VipLevelPolicySettingsOptions> options,
 	ICryptographyUtensil utensil,
 	ICalculateClient calculateClient,
 	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
 	IPlayerVipLevelExpDepositRecordRepository playerVipLevelExpDepositRecordRepository,
-	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService) : ICommandService<PlayerVipLevelExpAddDepositCommand>
+	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService,
+	ICommandService<PlayerVipLevelCheckCommand> playerVipLevelCheckService) : ICommandService<PlayerVipLevelExpAddDepositCommand>
 {
+	private readonly VipLevelPolicySettingsOptions _vipLevelPolicySettings = options.Value;
 	public async ValueTask ExecuteAsync(PlayerVipLevelExpAddDepositCommand command, CancellationToken cancellationToken = default)
 	{
 		var playerVipLevelExpInfo = await playerVipLevelExpRepository.GetAsync(
@@ -27,7 +31,10 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		var data = string.Concat("Form", "=", command.FormId);
+		var data = string.Concat(
+			"Type", "=", PlayerVipLevelExpDepositRecordType.Normal, "&",
+			  "PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
+			  "Form", "=", command.FormId);
 		var hash = utensil.Sha512(data);
 
 		if (await playerVipLevelExpDepositRecordRepository.ExistAsync(
@@ -44,8 +51,8 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 
 		var retryPolicy = Policy.Handle<HttpRequestException>()
 			.WaitAndRetryAsync(
-			retryCount: 1,
-			retryAttempt => TimeSpan.FromSeconds(5),
+			retryCount: _vipLevelPolicySettings.PlayerVipLevelExpDepositRetryCount,
+			retryAttempt => TimeSpan.FromSeconds(_vipLevelPolicySettings.PlayerVipLevelExpDepositRetryAttemptSec),
 			onRetry: async (ex, retryTime, retryCount, context) =>
 			{
 				logger.LogWarning(ex, "LogOn:{logOn} RetryCount:{retryCount} Delay:{retryTime}",
@@ -54,7 +61,7 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 					retryTime);
 				_ = await playerVipLevelExpFixesService.GetAsync(
 					query: new PlayerVipLevelExpFixesQuery(
-					PlayerCode: command.PlayerCode),
+					PlayerCode: playerVipLevelExpInfo.PlayerCode),
 					cancellationToken: cancellationToken)
 				.ConfigureAwait(false);
 			});
@@ -68,20 +75,21 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 			.ConfigureAwait(false);
 
 		await playerVipLevelExpRepository.UpdateDepositAsync(
-			playerCode: command.PlayerCode,
+			playerCode: playerVipLevelExpInfo.PlayerCode,
 			accumDeposit: exchange.PostBalance,
 			cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 
 		await playerVipLevelExpDepositRecordRepository.AddAsync(
 			 hash: hash,
-			 playerCode: command.PlayerCode,
+			 playerCode: playerVipLevelExpInfo.PlayerCode,
 			 type: PlayerVipLevelExpDepositRecordType.Normal,
 			 sign: command.Amount >= 0 ? 1 : -1,
 			 amount: Math.Abs(command.Amount),
 			 balance: exchange.PostBalance,
 			 additionalData: new JsonObject
 			 {
+				 ["PlayerCode"] = playerVipLevelExpInfo.PlayerCode,
 				 ["Form"] = command.FormId,
 				 ["Data"] = data
 			 },
@@ -91,6 +99,12 @@ internal class PlayerVipLevelExpAddDepositCommandService(
 			 createdUsername: string.Empty,
 			 cancellationToken: cancellationToken)
 			 .ConfigureAwait(false);
+
+		await playerVipLevelCheckService.ExecuteAsync(
+			command: new PlayerVipLevelCheckCommand(
+				PlayerCode: playerVipLevelExpInfo.PlayerCode),
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
 	}
 }
 

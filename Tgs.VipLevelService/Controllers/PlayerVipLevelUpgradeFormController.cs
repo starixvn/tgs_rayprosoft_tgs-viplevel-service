@@ -20,12 +20,12 @@ public class PlayerVipLevelUpgradeFormController : ControllerBase
 		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		[FromBody] PlayerVipLevelUpgradeFormCreateViewModel source)
 	{
-		var playerVipLevelPlayerCodeResult = await playerService.GetAsync(
+		var playerVipLevel = await playerService.GetAsync(
 			query: new PlayerVipLevelSingleQuery(source.PlayerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var snapshotId = await snapshotService.GetAsync(
-			query: new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevelPlayerCodeResult.BrandId),
+			query: new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevel.BrandId),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var vipLevelInfos = await snapshotQueryService.QueryAsync(
@@ -34,13 +34,13 @@ public class PlayerVipLevelUpgradeFormController : ControllerBase
 			.ToArrayAsync()
 			.ConfigureAwait(false)
 			?? Enumerable.Empty<VipLevelInfo>();
-		var vipLevelInfo = vipLevelInfos.Single(predicate: vl => vl.Level == playerVipLevelPlayerCodeResult.VipLevel);
+		var vipLevelInfo = vipLevelInfos.Single(predicate: vl => vl.Level == playerVipLevel.VipLevel);
 
 		return await formService.GetAsync(
 			query: new PlayerVipLevelUpgradeFormCreateCommand(
-				BrandId: playerVipLevelPlayerCodeResult.BrandId,
-				PlayerCode: playerVipLevelPlayerCodeResult.PlayerCode,
-				VipLevel: playerVipLevelPlayerCodeResult.VipLevel,
+				BrandId: playerVipLevel.BrandId,
+				PlayerCode: playerVipLevel.PlayerCode,
+				VipLevel: playerVipLevel.VipLevel,
 				Amount: vipLevelInfo.PromotionBenefit,
 				OperatorUserId: operatorUserId,
 				OperatorUsername: operatorUsername,

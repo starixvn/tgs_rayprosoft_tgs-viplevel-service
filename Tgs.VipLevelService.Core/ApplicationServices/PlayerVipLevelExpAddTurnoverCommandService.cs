@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Nodes;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Polly;
 using Tgs.Calculate.Clients;
 using Tgs.ServiceUtility;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 internal class PlayerVipLevelExpAddTurnoverCommandService(
 	ILogger<PlayerVipLevelExpAddTurnoverCommandService> logger,
+	IOptions<VipLevelPolicySettingsOptions> options,
 	ICryptographyUtensil utensil,
 	ICalculateClient calculateClient,
 	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
 	IPlayerVipLevelExpTurnoverRecordRepository playerVipLevelExpTurnoverRecordRepository,
-	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService) : ICommandService<PlayerVipLevelExpAddTurnoverCommand>
+	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService,
+	ICommandService<PlayerVipLevelCheckCommand> playerVipLevelCheckService) : ICommandService<PlayerVipLevelExpAddTurnoverCommand>
 {
+	private readonly VipLevelPolicySettingsOptions _vipLevelPolicySettings = options.Value;
 	public async ValueTask ExecuteAsync(PlayerVipLevelExpAddTurnoverCommand command, CancellationToken cancellationToken = default)
 	{
 		var playerVipLevelExpInfo = await playerVipLevelExpRepository.GetAsync(
@@ -32,6 +32,8 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			.ConfigureAwait(false);
 
 		var data = string.Concat(
+			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Normal, "&",
+			"PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
 			"GameProviderId", "=", command.GameProviderId, "&",
 			"GameId", "=", command.GameId, "&",
 			"WalletId", "=", command.WalletId, "&",
@@ -52,8 +54,8 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 
 		var retryPolicy = Policy.Handle<HttpRequestException>()
 			.WaitAndRetryAsync(
-			retryCount: 1,
-			retryAttempt => TimeSpan.FromSeconds(5),
+			retryCount: _vipLevelPolicySettings.PlayerVipLevelExpTurnoverRetryCount,
+			retryAttempt => TimeSpan.FromSeconds(_vipLevelPolicySettings.PlayerVipLevelExpTurnoverRetryAttemptSec),
 			onRetry: async (ex, retryTime, retryCount, context) =>
 			{
 				logger.LogWarning(ex, "LogOn:{logOn} RetryCount:{retryCount} Delay:{retryTime}",
@@ -62,7 +64,7 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 					retryTime);
 				_ = await playerVipLevelExpFixesService.GetAsync(
 					query: new PlayerVipLevelExpFixesQuery(
-						PlayerCode: command.PlayerCode),
+						PlayerCode: playerVipLevelExpInfo.PlayerCode),
 					cancellationToken: cancellationToken)
 				.ConfigureAwait(false);
 			});
@@ -76,20 +78,21 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			.ConfigureAwait(false);
 
 		await playerVipLevelExpRepository.UpdateTurnoverAsync(
-				playerCode: command.PlayerCode,
+				playerCode: playerVipLevelExpInfo.PlayerCode,
 				accumTurnover: exchange.PostBalance,
 				cancellationToken: cancellationToken)
 			   .ConfigureAwait(false);
 
 		await playerVipLevelExpTurnoverRecordRepository.AddAsync(
 			hash: hash,
-			 playerCode: command.PlayerCode,
+			 playerCode: playerVipLevelExpInfo.PlayerCode,
 			 type: PlayerVipLevelExpTurnoverRecordType.Normal,
 			 sign: command.Amount >= 0 ? 1 : -1,
 			 amount: Math.Abs(command.Amount),
 			 balance: exchange.PostBalance,
 			 additionalData: new JsonObject
 			 {
+				 ["PlayerCode"] = playerVipLevelExpInfo.PlayerCode,
 				 ["GameProviderId"] = command.GameProviderId,
 				 ["GameId"] = command.GameId,
 				 ["WalletId"] = command.WalletId,
@@ -102,6 +105,12 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 			 createdUserId: Guid.Empty,
 			 createdUsername: string.Empty,
 			 cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		await playerVipLevelCheckService.ExecuteAsync(
+			command: new PlayerVipLevelCheckCommand(
+				PlayerCode: playerVipLevelExpInfo.PlayerCode),
+			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
 }

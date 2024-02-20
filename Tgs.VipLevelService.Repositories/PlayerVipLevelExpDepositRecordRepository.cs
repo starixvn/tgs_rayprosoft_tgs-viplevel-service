@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;

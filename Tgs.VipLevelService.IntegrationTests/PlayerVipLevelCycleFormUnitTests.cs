@@ -116,7 +116,7 @@ public class PlayerVipLevelCycleFormUnitTests
 			var fakeSnapshotQueryService = Substitute.For<IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo>>();
 			var fakeFormService = Substitute.For<IGetService<PlayerVipLevelCycleFormCreateCommand, Guid>>();
 
-			var playerVipLevelPlayerCodeResult = new PlayerVipLevelSingleResult(
+			var playerVipLevel = new PlayerVipLevelSingleResult(
 				ResellerId: Guid.NewGuid(),
 				ResellerCode: "Demo",
 				LicenseeId: Guid.NewGuid(),
@@ -140,19 +140,19 @@ public class PlayerVipLevelCycleFormUnitTests
 			_ = fakePlayerService.GetAsync(
 				query: Arg.Is(new PlayerVipLevelSingleQuery(playerCode)),
 				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(playerVipLevelPlayerCodeResult);
+			.Returns(playerVipLevel);
 
 			var snapshotId = Guid.NewGuid();
 			_ = fakeSnapshotService.GetAsync(
-				query: Arg.Is(new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevelPlayerCodeResult.BrandId)),
+				query: Arg.Is(new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevel.BrandId)),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(snapshotId);
 
 			var vipLevelInfos = new VipLevelInfo[]{
 				new (
-					Id: playerVipLevelPlayerCodeResult.VipLevelId,
-					Level: playerVipLevelPlayerCodeResult.VipLevel,
-					BrandId: playerVipLevelPlayerCodeResult.BrandId,
+					Id: playerVipLevel.VipLevelId,
+					Level: playerVipLevel.VipLevel,
+					BrandId: playerVipLevel.BrandId,
 					LevelUpAccumulateBetAmount: 0,
 					LevelUpAccumulateDeposit: 0,
 					LevelKeepAccumulateBetAmount: 0,
@@ -177,9 +177,9 @@ public class PlayerVipLevelCycleFormUnitTests
 
 			_ = fakeFormService.GetAsync(
 				query: new PlayerVipLevelCycleFormCreateCommand(
-					BrandId: playerVipLevelPlayerCodeResult.BrandId,
-					PlayerCode: playerVipLevelPlayerCodeResult.PlayerCode,
-					VipLevel: playerVipLevelPlayerCodeResult.VipLevel,
+					BrandId: playerVipLevel.BrandId,
+					PlayerCode: playerVipLevel.PlayerCode,
+					VipLevel: playerVipLevel.VipLevel,
 					CycleType: (Core.Protos.PlayerVipLevelCycleFormCycleType)cycleType,
 					CycleOn: cycleOn,
 					FromOn: fromOn,

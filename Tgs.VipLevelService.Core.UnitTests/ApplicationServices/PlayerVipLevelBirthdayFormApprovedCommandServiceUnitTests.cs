@@ -13,6 +13,7 @@ using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
+
 public class PlayerVipLevelBirthdayFormApprovedCommandServiceUnitTests
 {
 	[Fact]

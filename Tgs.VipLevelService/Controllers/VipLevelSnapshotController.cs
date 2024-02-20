@@ -7,7 +7,7 @@ using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
 
-[Route("vip/snapshot")]
+[Route("vip-snap")]
 [ApiController]
 public class VipLevelSnapshotController : ControllerBase
 {

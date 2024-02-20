@@ -52,6 +52,7 @@ internal class PlayerVipLevelExpRepository(
 		.ToAsyncEnumerable()
 		.FirstOrDefaultAsync(
 			cancellationToken: cancellationToken);
+
 	public async ValueTask UpdateDepositAsync(string playerCode, decimal accumDeposit, CancellationToken cancellationToken = default)
 	{
 		var exp = await context.PlayerVipLevelExps.SingleAsync(
@@ -65,6 +66,7 @@ internal class PlayerVipLevelExpRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public async ValueTask UpdateTurnoverAsync(string playerCode, decimal accumTurnover, CancellationToken cancellationToken = default)
 	{
 		var exp = await context.PlayerVipLevelExps.SingleAsync(

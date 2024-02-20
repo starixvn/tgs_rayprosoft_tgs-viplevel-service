@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Nodes;
 using StackExchange.Redis;
+using Tgs.VipLevelService.Core.Protos;
 
 namespace Tgs.VipLevelService.Repositories;
 

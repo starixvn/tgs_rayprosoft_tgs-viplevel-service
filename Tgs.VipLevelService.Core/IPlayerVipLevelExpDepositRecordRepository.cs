@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Nodes;
+using Tgs.VipLevelService.Core.Protos;
 
 namespace Tgs.VipLevelService;
 

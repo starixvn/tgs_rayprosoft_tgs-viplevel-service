@@ -20,12 +20,12 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		[FromBody] PlayerVipLevelBirthdayFormCreateViewModel source)
 	{
-		var playerVipLevelPlayerCodeResult = await playerService.GetAsync(
+		var playerVipLevel = await playerService.GetAsync(
 			query: new PlayerVipLevelSingleQuery(source.PlayerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var snapshotId = await snapshotService.GetAsync(
-			query: new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevelPlayerCodeResult.BrandId),
+			query: new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevel.BrandId),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
 		var vipLevelInfos = await snapshotQueryService.QueryAsync(
@@ -34,13 +34,13 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 			.ToArrayAsync()
 			.ConfigureAwait(false)
 			?? Enumerable.Empty<VipLevelInfo>();
-		var vipLevelInfo = vipLevelInfos.Single(predicate: vl => vl.Level == playerVipLevelPlayerCodeResult.VipLevel);
+		var vipLevelInfo = vipLevelInfos.Single(predicate: vl => vl.Level == playerVipLevel.VipLevel);
 
 		return await formService.GetAsync(
 			query: new PlayerVipLevelBirthdayFormCreateCommand(
-				BrandId: playerVipLevelPlayerCodeResult.BrandId,
-				PlayerCode: playerVipLevelPlayerCodeResult.PlayerCode,
-				VipLevel: playerVipLevelPlayerCodeResult.VipLevel,
+				BrandId: playerVipLevel.BrandId,
+				PlayerCode: playerVipLevel.PlayerCode,
+				VipLevel: playerVipLevel.VipLevel,
 				Birthday: source.Birthday,
 				Amount: vipLevelInfo.BirthBenefit,
 				OperatorUserId: operatorUserId,

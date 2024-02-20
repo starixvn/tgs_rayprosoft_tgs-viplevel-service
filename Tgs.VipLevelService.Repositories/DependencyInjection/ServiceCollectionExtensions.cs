@@ -33,5 +33,6 @@ public static class ServiceCollectionExtensions
 		.AddTransient<IPlayerVipLevelExpDepositRecordRepository, PlayerVipLevelExpDepositRecordRepository>()
 		.Decorate<IPlayerVipLevelExpDepositRecordRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelExpDepositRecordCachRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)))
 		.AddTransient<IPlayerVipLevelExpTurnoverRecordRepository, PlayerVipLevelExpTurnoverRecordRepository>()
-		.Decorate<IPlayerVipLevelExpTurnoverRecordRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelExpTurnoverRecordCachRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)));
+		.Decorate<IPlayerVipLevelExpTurnoverRecordRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelExpTurnoverRecordCachRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)))
+		.AddTransient<IPlayerVipLevelExpFormRepository, PlayerVipLevelExpFormRepository>();
 }

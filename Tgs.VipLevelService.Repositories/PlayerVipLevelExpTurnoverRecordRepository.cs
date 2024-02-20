@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Nodes;
 using Microsoft.EntityFrameworkCore;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Entities;
 
 namespace Tgs.VipLevelService.Repositories;
+
 internal class PlayerVipLevelExpTurnoverRecordRepository(
 	TgsContext context) : IPlayerVipLevelExpTurnoverRecordRepository
 {
@@ -32,6 +34,7 @@ internal class PlayerVipLevelExpTurnoverRecordRepository(
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 	}
+
 	public async ValueTask<bool> ExistAsync(string hash, CancellationToken cancellationToken = default)
 		=> await context.PlayerVipLevelExpTurnoverRecords
 		.AnyAsync(
