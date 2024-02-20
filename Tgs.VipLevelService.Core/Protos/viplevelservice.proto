@@ -48,6 +48,11 @@ message VipLevelSnapshotRequest
 	string snapshot_username = 4;
 }
 
+message VipLevelFormRequest
+{
+	phoenix.protobuf.GuidValue form_id = 1;
+}
+
 
 // 玩家貴賓等級自動狀態
 enum PlayerVipLevelAutoState{

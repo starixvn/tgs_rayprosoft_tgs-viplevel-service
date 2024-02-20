@@ -1,11 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
+using Tgs.VipLevels.Exp.Worker.Common;
+using Tgs.VipLevels.Exp.Worker.Common.Protos;
+using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
 internal class PlayerVipLevelExpFormApprovedCommandService(
 	ILogger<PlayerVipLevelExpFormApprovedCommandService> logger,
-	IPlayerVipLevelExpFormRepository playerVipLevelExpFormRepository) : ICommandService<PlayerVipLevelExpFormApprovedCommand>
+	IPlayerVipLevelExpFormRepository playerVipLevelExpFormRepository,
+	IMessageSender messageSender) : ICommandService<PlayerVipLevelExpFormApprovedCommand>
 {
 	public async ValueTask ExecuteAsync(PlayerVipLevelExpFormApprovedCommand command, CancellationToken cancellationToken = default)
 	{
@@ -36,5 +40,13 @@ internal class PlayerVipLevelExpFormApprovedCommandService(
 		/*
 		 * 發送通知
 		 */
+		await messageSender.PublishAsync(
+			subject: VipLevelsExpWorkerNatsConst.ExpFormId,
+			data: new VipLevelsExpFormMessage
+			{
+				FormId = form.Id,
+			},
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
 	}
 }

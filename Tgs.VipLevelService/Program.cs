@@ -91,10 +91,11 @@ builder.Services
 	.AddMessageQueue()
 	.AddNatsMessageQueue(config => config
 	.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
-	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(PlayerVipLevelLogNatsConsts.Register, PlayerVipLevelLogNatsConsts.Register)
-	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(PlayerVipLevelLogNatsConsts.System, PlayerVipLevelLogNatsConsts.System)
-	.AddHandler<PlayerVipLevelLogManualMessageHandler>(PlayerVipLevelLogNatsConsts.Manual, PlayerVipLevelLogNatsConsts.Manual)
-	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelSnapshotNatsConsts.Create, VipLevelSnapshotNatsConsts.Create))
+	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogRegister, typeof(PlayerVipLevelLogRegisterMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogSystem, typeof(PlayerVipLevelLogSystemMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelLogManualMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogManual, typeof(PlayerVipLevelLogManualMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelExpFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelExpFormAuto, typeof(PlayerVipLevelExpFormAutoMessageHandler).FullName!)
+	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelServiceNatsConsts.VipLevelSnapshotCreate, typeof(VipLevelSnapshotMessageHandler).FullName!))
 	.AddNatsGlobPatternExchange("*");
 
 builder.Services

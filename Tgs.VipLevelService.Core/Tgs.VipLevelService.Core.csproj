@@ -27,6 +27,7 @@
     <PackageReference Include="Tgs.SerialNumberGenerator" Version="1.0.1" />
     <PackageReference Include="TGS.ServiceUtility" Version="0.2.0" />
 	<PackageReference Include="PagingUtility.AsyncEnumerable" Version="1.1.0" />
+	<PackageReference Include="Tgs.VipLevels.Exp.Worker.Client" Version="1.0.3" />
 	<PackageReference Include="Tgs.VipLevels.Level.Client" Version="1.0.0" />
   </ItemGroup>
 

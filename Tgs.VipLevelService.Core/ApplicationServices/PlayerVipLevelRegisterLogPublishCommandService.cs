@@ -21,14 +21,14 @@ internal class PlayerVipLevelRegisterLogPublishCommandService(
 		};
 
 		await messageSender.PublishAsync(
-			subject: PlayerVipLevelLogNatsConsts.Register,
+			subject: VipLevelServiceNatsConsts.PlayerVipLevelLogRegister,
 			data: request.ToByteArray(),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		logger.LogInformation("LogOn:{logOn} Subject:{subject} Message:This message has been published.({message})",
 			DateTime.Now.ToString("u"),
-			PlayerVipLevelLogNatsConsts.Register,
+			VipLevelServiceNatsConsts.PlayerVipLevelLogRegister,
 			request);
 	}
 }

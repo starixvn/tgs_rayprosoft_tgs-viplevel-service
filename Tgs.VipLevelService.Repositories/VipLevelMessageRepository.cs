@@ -26,7 +26,7 @@ internal class VipLevelMessageRepository(
 			.ConfigureAwait(false);
 
 		await messageSender.PublishAsync(
-			subject: VipLevelSnapshotNatsConsts.Create,
+			subject: VipLevelServiceNatsConsts.VipLevelSnapshotCreate,
 			data: new VipLevelSnapshotRequest
 			{
 				BrandId = brandId,
@@ -61,7 +61,7 @@ internal class VipLevelMessageRepository(
 			.ConfigureAwait(false);
 
 		await messageSender.PublishAsync(
-			subject: VipLevelSnapshotNatsConsts.Create,
+			subject: VipLevelServiceNatsConsts.VipLevelSnapshotCreate,
 			data: new VipLevelSnapshotRequest
 			{
 				BrandId = brandId,

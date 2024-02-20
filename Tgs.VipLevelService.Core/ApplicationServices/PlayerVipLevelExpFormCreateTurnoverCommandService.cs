@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tgs.SerialNumberGenerator;
+﻿using Tgs.SerialNumberGenerator;
 using Tgs.ServiceUtility;
+using Tgs.VipLevels.Exp.Worker.Common.Protos;
 using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
+using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 internal class PlayerVipLevelExpFormCreateTurnoverCommandService(
 	ISerialNumberGenerator serialNumberGenerator,
-	IPlayerVipLevelExpFormRepository repository) : IGetService<PlayerVipLevelExpFormCreateTurnoverCommand, Guid>
+	IPlayerVipLevelExpFormRepository repository,
+	IMessageSender messageSender) : IGetService<PlayerVipLevelExpFormCreateTurnoverCommand, Guid>
 {
 	public async ValueTask<Guid> GetAsync(PlayerVipLevelExpFormCreateTurnoverCommand query, CancellationToken cancellationToken = default)
 	{
@@ -40,6 +38,18 @@ internal class PlayerVipLevelExpFormCreateTurnoverCommandService(
 			remark: query.Remark,
 			createdUserId: query.OperatorUserId,
 			createdUsername: query.OperatorUsername,
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		/*
+		 * 發送通知
+		 */
+		await messageSender.PublishAsync(
+			subject: VipLevelServiceNatsConsts.PlayerVipLevelExpFormAuto,
+			data: new VipLevelsExpFormMessage
+			{
+				FormId = id,
+			},
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
