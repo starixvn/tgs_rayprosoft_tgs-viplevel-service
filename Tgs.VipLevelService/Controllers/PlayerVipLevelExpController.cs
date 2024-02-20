@@ -51,6 +51,8 @@ public class PlayerVipLevelExpController : ControllerBase
 	/// Players the vip level exp add turnover credit asynchronous.
 	/// </summary>
 	/// <param name="service">The service.</param>
+	/// <param name="operatorUserId">The operator user identifier.</param>
+	/// <param name="operatorUsername">The operator username.</param>
 	/// <param name="playerCode">The player code.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
@@ -67,20 +69,26 @@ public class PlayerVipLevelExpController : ControllerBase
 	[HttpPost("{playerCode}/turnover/credit", Name = "PlayerVipLevelExp_Add_Turnover_Credit")]
 	public ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(
 		[FromServices] ICommandService<PlayerVipLevelExpAddTurnoverManualCommand> service,
+		[FromHeader(Name = "OperatorUserId")] Guid operatorUserId,
+		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		string playerCode,
-		PlayerVipLevelExpAddTurnoverManualViewModel source)
+		[FromBody] PlayerVipLevelExpAddTurnoverManualViewModel source)
 			=> service.ExecuteAsync(
 				command: new PlayerVipLevelExpAddTurnoverManualCommand(
 					PlayerCode: playerCode,
 					FormId: source.FormId,
 					Sign: 1,
-					Amount: source.Amount),
+					Amount: source.Amount,
+					OperatorUserId: operatorUserId,
+					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Players the vip level exp add turnover debit asynchronous.
 	/// </summary>
 	/// <param name="service">The service.</param>
+	/// <param name="operatorUserId">The operator user identifier.</param>
+	/// <param name="operatorUsername">The operator username.</param>
 	/// <param name="playerCode">The player code.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
@@ -97,14 +105,18 @@ public class PlayerVipLevelExpController : ControllerBase
 	[HttpPost("{playerCode}/turnover/debit", Name = "PlayerVipLevelExp_Add_Turnover_Debit")]
 	public ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(
 		[FromServices] ICommandService<PlayerVipLevelExpAddTurnoverManualCommand> service,
+		[FromHeader(Name = "OperatorUserId")] Guid operatorUserId,
+		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		string playerCode,
-		PlayerVipLevelExpAddTurnoverManualViewModel source)
+		[FromBody] PlayerVipLevelExpAddTurnoverManualViewModel source)
 			=> service.ExecuteAsync(
 				command: new PlayerVipLevelExpAddTurnoverManualCommand(
 					PlayerCode: playerCode,
 					FormId: source.FormId,
 					Sign: -1,
-					Amount: source.Amount),
+					Amount: source.Amount,
+					OperatorUserId: operatorUserId,
+					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -140,6 +152,8 @@ public class PlayerVipLevelExpController : ControllerBase
 	/// Players the vip level exp add deposit credit asynchronous.
 	/// </summary>
 	/// <param name="service">The service.</param>
+	/// <param name="operatorUserId">The operator user identifier.</param>
+	/// <param name="operatorUsername">The operator username.</param>
 	/// <param name="playerCode">The player code.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
@@ -156,20 +170,26 @@ public class PlayerVipLevelExpController : ControllerBase
 	[HttpPost("{playerCode}/deposit/credit", Name = "PlayerVipLevelExp_Add_Deposit_Credit")]
 	public ValueTask PlayerVipLevelExpAddDepositCreditAsync(
 		[FromServices] ICommandService<PlayerVipLevelExpAddDepositManualCommand> service,
+		[FromHeader(Name = "OperatorUserId")] Guid operatorUserId,
+		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		string playerCode,
-		PlayerVipLevelExpAddDepositManualViewModel source)
+		[FromBody] PlayerVipLevelExpAddDepositManualViewModel source)
 			=> service.ExecuteAsync(
 				command: new PlayerVipLevelExpAddDepositManualCommand(
 					PlayerCode: playerCode,
 					FormId: source.FormId,
 					Sign: 1,
-					Amount: source.Amount),
+					Amount: source.Amount,
+					OperatorUserId: operatorUserId,
+					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
 	/// Players the vip level exp add deposit debit asynchronous.
 	/// </summary>
 	/// <param name="service">The service.</param>
+	/// <param name="operatorUserId">The operator user identifier.</param>
+	/// <param name="operatorUsername">The operator username.</param>
 	/// <param name="playerCode">The player code.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
@@ -186,13 +206,17 @@ public class PlayerVipLevelExpController : ControllerBase
 	[HttpPost("{playerCode}/deposit/debit", Name = "PlayerVipLevelExp_Add_Deposit_Debit")]
 	public ValueTask PlayerVipLevelExpAddDepositDebitAsync(
 		[FromServices] ICommandService<PlayerVipLevelExpAddDepositManualCommand> service,
+		[FromHeader(Name = "OperatorUserId")] Guid operatorUserId,
+		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
 		string playerCode,
-		PlayerVipLevelExpAddDepositManualViewModel source)
+		[FromBody] PlayerVipLevelExpAddDepositManualViewModel source)
 			=> service.ExecuteAsync(
 				command: new PlayerVipLevelExpAddDepositManualCommand(
 					PlayerCode: playerCode,
 					FormId: source.FormId,
 					Sign: -1,
-					Amount: source.Amount),
+					Amount: source.Amount,
+					OperatorUserId: operatorUserId,
+					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
 }

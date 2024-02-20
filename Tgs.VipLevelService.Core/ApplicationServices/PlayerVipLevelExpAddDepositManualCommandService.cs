@@ -96,8 +96,8 @@ internal class PlayerVipLevelExpAddDepositManualCommandService(
 			 },
 			 remark: "System addition",
 			 createdOn: DateTimeOffset.Now,
-			 createdUserId: Guid.Empty,
-			 createdUsername: string.Empty,
+			 createdUserId: command.OperatorUserId,
+			 createdUsername: command.OperatorUsername,
 			 cancellationToken: cancellationToken)
 			 .ConfigureAwait(false);
 

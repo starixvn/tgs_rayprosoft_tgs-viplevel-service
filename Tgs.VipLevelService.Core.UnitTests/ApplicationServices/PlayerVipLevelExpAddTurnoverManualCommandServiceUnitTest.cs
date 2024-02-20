@@ -33,9 +33,11 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: "4ucmqplxb029",
-			FormId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+			FormId: Guid.NewGuid(),
 			Sign: 1,
-			Amount: 100m);
+			Amount: 100m,
+			OperatorUserId: Guid.NewGuid(),
+			OperatorUsername: "admin.enabled");
 
 		var playerVipLevelExpInfo = new PlayerVipLevelExpInfo(
 			PlayerCode: command.PlayerCode,
@@ -107,8 +109,8 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			 additionalData: Arg.Any<JsonNode>(),
 			 remark: Arg.Any<string>(),
 			 createdOn: Arg.Any<DateTimeOffset>(),
-			 createdUserId: Arg.Any<Guid>(),
-			 createdUsername: Arg.Any<string>(),
+			 createdUserId: Arg.Is(command.OperatorUserId),
+			 createdUsername: Arg.Is(command.OperatorUsername),
 			 cancellationToken: Arg.Any<CancellationToken>());
 
 		_ = fakePlayerVipLevelCheckService
@@ -139,9 +141,11 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: "4ucmqplxb029",
-			FormId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+			FormId: Guid.NewGuid(),
 			Sign: -1,
-			Amount: 100m);
+			Amount: 100m,
+			OperatorUserId: Guid.NewGuid(),
+			OperatorUsername: "admin.enabled");
 
 		var playerVipLevelExpInfo = new PlayerVipLevelExpInfo(
 			PlayerCode: command.PlayerCode,
@@ -213,8 +217,8 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			 additionalData: Arg.Any<JsonNode>(),
 			 remark: Arg.Any<string>(),
 			 createdOn: Arg.Any<DateTimeOffset>(),
-			 createdUserId: Arg.Any<Guid>(),
-			 createdUsername: Arg.Any<string>(),
+			 createdUserId: Arg.Is(command.OperatorUserId),
+			 createdUsername: Arg.Is(command.OperatorUsername),
 			 cancellationToken: Arg.Any<CancellationToken>());
 
 		_ = fakePlayerVipLevelCheckService
@@ -245,9 +249,11 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: "4ucmqplxb029",
-			FormId: DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString(),
+			FormId: Guid.NewGuid(),
 			Sign: -1,
-			Amount: 100m);
+			Amount: 100m,
+			OperatorUserId: Guid.NewGuid(),
+			OperatorUsername: "admin.enabled");
 
 		var playerVipLevelExpInfo = new PlayerVipLevelExpInfo(
 			PlayerCode: command.PlayerCode,
@@ -319,8 +325,8 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			 additionalData: Arg.Any<JsonNode>(),
 			 remark: Arg.Any<string>(),
 			 createdOn: Arg.Any<DateTimeOffset>(),
-			 createdUserId: Arg.Any<Guid>(),
-			 createdUsername: Arg.Any<string>(),
+			 createdUserId: Arg.Is(command.OperatorUserId),
+			 createdUsername: Arg.Is(command.OperatorUsername),
 			 cancellationToken: Arg.Any<CancellationToken>());
 
 		_ = fakePlayerVipLevelCheckService

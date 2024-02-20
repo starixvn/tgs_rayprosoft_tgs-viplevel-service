@@ -48,8 +48,10 @@ public class PlayerVipLevelExpUnitTest
 	public async Task PlayerVipLevelExp_Add_Turnover_Credit()
 	{
 		var playerCode = "4ucmqplxb029";
-		var formId = Guid.NewGuid().ToString();
+		var formId = Guid.NewGuid();
 		var amount = 1;
+		var operatorUserId = Guid.NewGuid();
+		var operatorUsername = "admin.enabled";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelExpAddTurnoverManualCommand>>();
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -57,13 +59,15 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddTurnoverCreditAsync(playerCode: playerCode, formId: formId, amount: amount);
+		await client.PlayerVipLevelExpAddTurnoverCreditAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: 1,
-			Amount: amount);
+			Amount: amount,
+			OperatorUserId: operatorUserId,
+			OperatorUsername: operatorUsername);
 
 		_ = fakeService
 			.Received(1)
@@ -76,8 +80,10 @@ public class PlayerVipLevelExpUnitTest
 	public async Task PlayerVipLevelExp_Add_Turnover_Debit()
 	{
 		var playerCode = "4ucmqplxb029";
-		var formId = Guid.NewGuid().ToString();
+		var formId = Guid.NewGuid();
 		var amount = 1;
+		var operatorUserId = Guid.NewGuid();
+		var operatorUsername = "admin.enabled";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelExpAddTurnoverManualCommand>>();
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -85,13 +91,15 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddTurnoverDebitAsync(playerCode: playerCode, formId: formId, amount: amount);
+		await client.PlayerVipLevelExpAddTurnoverDebitAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: -1,
-			Amount: amount);
+			Amount: amount,
+			OperatorUserId: operatorUserId,
+			OperatorUsername: operatorUsername);
 
 		_ = fakeService
 			.Received(1)
@@ -131,8 +139,10 @@ public class PlayerVipLevelExpUnitTest
 	public async Task PlayerVipLevelExp_Add_Deposit_Credit()
 	{
 		var playerCode = "4ucmqplxb029";
-		var formId = Guid.NewGuid().ToString();
+		var formId = Guid.NewGuid();
 		var amount = 1;
+		var operatorUserId = Guid.NewGuid();
+		var operatorUsername = "admin.enabled";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelExpAddDepositManualCommand>>();
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -140,13 +150,15 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddDepositCreditAsync(playerCode: playerCode, formId: formId, amount: amount);
+		await client.PlayerVipLevelExpAddDepositCreditAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
 
 		var command = new PlayerVipLevelExpAddDepositManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: 1,
-			Amount: amount);
+			Amount: amount,
+			OperatorUserId: operatorUserId,
+			OperatorUsername: operatorUsername);
 
 		_ = fakeService
 			.Received(1)
@@ -159,8 +171,10 @@ public class PlayerVipLevelExpUnitTest
 	public async Task PlayerVipLevelExp_Add_Deposit_Debit()
 	{
 		var playerCode = "4ucmqplxb029";
-		var formId = Guid.NewGuid().ToString();
+		var formId = Guid.NewGuid();
 		var amount = 1;
+		var operatorUserId = Guid.NewGuid();
+		var operatorUsername = "admin.enabled";
 
 		var fakeService = Substitute.For<ICommandService<PlayerVipLevelExpAddDepositManualCommand>>();
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services => _ = services.AddTransient(_ => fakeService)));
@@ -168,13 +182,15 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddDepositDebitAsync(playerCode: playerCode, formId: formId, amount: amount);
+		await client.PlayerVipLevelExpAddDepositDebitAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
 
 		var command = new PlayerVipLevelExpAddDepositManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: -1,
-			Amount: amount);
+			Amount: amount,
+			OperatorUserId: operatorUserId,
+			OperatorUsername: operatorUsername);
 
 		_ = fakeService
 			.Received(1)

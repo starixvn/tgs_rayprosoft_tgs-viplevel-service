@@ -29,7 +29,7 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddTurnoverManualViewModel
 		{
@@ -40,6 +40,8 @@ internal partial class VipLevelServiceClient
 		var builder = new UriBuilder(path);
 		string url = builder.ToString();
 		var jsonContent = JsonContent.Create(source, options: _SerializerOptions);
+		jsonContent.Headers.Add("OperatorUserId", operatorUserId.ToString());
+		jsonContent.Headers.Add("OperatorUsername", operatorUsername);
 
 		_ = await _httpClient.PostAsync(url, jsonContent, cancellationToken)
 			.ToAsyncEnumerable()
@@ -47,7 +49,7 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddTurnoverManualViewModel
 		{
@@ -58,6 +60,8 @@ internal partial class VipLevelServiceClient
 		var builder = new UriBuilder(path);
 		string url = builder.ToString();
 		var jsonContent = JsonContent.Create(source, options: _SerializerOptions);
+		jsonContent.Headers.Add("OperatorUserId", operatorUserId.ToString());
+		jsonContent.Headers.Add("OperatorUsername", operatorUsername);
 
 		_ = await _httpClient.PostAsync(url, jsonContent, cancellationToken)
 			.ToAsyncEnumerable()
@@ -83,7 +87,7 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddDepositManualViewModel
 		{
@@ -94,6 +98,8 @@ internal partial class VipLevelServiceClient
 		var builder = new UriBuilder(path);
 		string url = builder.ToString();
 		var jsonContent = JsonContent.Create(source, options: _SerializerOptions);
+		jsonContent.Headers.Add("OperatorUserId", operatorUserId.ToString());
+		jsonContent.Headers.Add("OperatorUsername", operatorUsername);
 
 		_ = await _httpClient.PostAsync(url, jsonContent, cancellationToken)
 			.ToAsyncEnumerable()
@@ -101,7 +107,7 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddDepositManualViewModel
 		{
@@ -112,6 +118,8 @@ internal partial class VipLevelServiceClient
 		var builder = new UriBuilder(path);
 		string url = builder.ToString();
 		var jsonContent = JsonContent.Create(source, options: _SerializerOptions);
+		jsonContent.Headers.Add("OperatorUserId", operatorUserId.ToString());
+		jsonContent.Headers.Add("OperatorUsername", operatorUsername);
 
 		_ = await _httpClient.PostAsync(url, jsonContent, cancellationToken)
 			.ToAsyncEnumerable()

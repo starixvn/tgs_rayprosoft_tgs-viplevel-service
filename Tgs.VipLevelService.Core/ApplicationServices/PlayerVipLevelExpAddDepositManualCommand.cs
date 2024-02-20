@@ -1,6 +1,8 @@
 ﻿namespace Tgs.VipLevelService.ApplicationServices;
 public record PlayerVipLevelExpAddDepositManualCommand(
 	string PlayerCode,
-	string FormId,
+	Guid FormId,
 	int Sign,
-	decimal Amount);
+	decimal Amount,
+	Guid OperatorUserId,
+	string OperatorUsername);
