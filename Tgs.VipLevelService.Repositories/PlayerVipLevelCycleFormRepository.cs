@@ -29,7 +29,7 @@ internal class PlayerVipLevelCycleFormRepository(
 			.ConfigureAwait(false);
 	}
 
-	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn, DateOnly fromOn, DateOnly toOn, decimal amount, PlayerVipLevelCycleFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn, DateOnly fromOn, DateOnly toOn, bool autoState, decimal amount, PlayerVipLevelCycleFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
 		var form = new PlayerVipLevelCycleForm
 		{
@@ -41,6 +41,7 @@ internal class PlayerVipLevelCycleFormRepository(
 			CycleOn = cycleOn,
 			FromOn = fromOn,
 			ToOn = toOn,
+			AutoState = autoState,
 			State = (int)PlayerVipLevelCycleFormState.Create,
 			Amount = amount,
 			ActualAmount = 0,
@@ -71,26 +72,27 @@ internal class PlayerVipLevelCycleFormRepository(
 
 	public async ValueTask<PlayerVipLevelCycleFormInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
 		=> await context.PlayerVipLevelCycleForms
-		.Where(predicate: f => f.Id == id)
-		.Select(selector: f => new PlayerVipLevelCycleFormInfo(
-			f.Id,
-			f.BrandId,
-			f.PlayerCode,
-			f.VipLevel,
-			(PlayerVipLevelCycleFormCycleType)f.CycleType,
-			f.CycleOn,
-			f.FromOn,
-			f.ToOn,
-			(PlayerVipLevelCycleFormState)f.State,
-			f.Amount,
-			f.ActualAmount,
-			f.Remark,
-			f.CreatedOn,
-			f.CreatedUserId,
-			f.CreatedUsername,
-			f.UpdatedOn,
-			f.UpdatedUserId,
-			f.UpdatedUsername))
+		.Where(predicate: form => form.Id == id)
+		.Select(selector: form => new PlayerVipLevelCycleFormInfo(
+			form.Id,
+			form.BrandId,
+			form.PlayerCode,
+			form.VipLevel,
+			(PlayerVipLevelCycleFormCycleType)form.CycleType,
+			form.CycleOn,
+			form.FromOn,
+			form.ToOn,
+			form.AutoState,
+			(PlayerVipLevelCycleFormState)form.State,
+			form.Amount,
+			form.ActualAmount,
+			form.Remark,
+			form.CreatedOn,
+			form.CreatedUserId,
+			form.CreatedUsername,
+			form.UpdatedOn,
+			form.UpdatedUserId,
+			form.UpdatedUsername))
 		.FirstOrDefaultAsync(
 			cancellationToken: cancellationToken)
 		.ConfigureAwait(false);

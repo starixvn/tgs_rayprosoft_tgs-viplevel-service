@@ -29,7 +29,7 @@ internal class PlayerVipLevelUpgradeFormRepository(
 			.ConfigureAwait(false);
 	}
 
-	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, decimal amount, PlayerVipLevelUpgradeFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, bool autoState, decimal amount, PlayerVipLevelUpgradeFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
 		var form = new PlayerVipLevelUpgradeForm
 		{
@@ -37,6 +37,7 @@ internal class PlayerVipLevelUpgradeFormRepository(
 			BrandId = brandId,
 			PlayerCode = playerCode,
 			VipLevel = vipLevel,
+			AutoState = autoState,
 			State = (int)PlayerVipLevelUpgradeFormState.Create,
 			Amount = amount,
 			ActualAmount = 0,
@@ -67,22 +68,23 @@ internal class PlayerVipLevelUpgradeFormRepository(
 
 	public async ValueTask<PlayerVipLevelUpgradeFormInfo?> GetAsync(Guid id, CancellationToken cancellationToken = default)
 		=> await context.PlayerVipLevelUpgradeForms
-		.Where(predicate: f => f.Id == id)
-		.Select(selector: f => new PlayerVipLevelUpgradeFormInfo(
-			f.Id,
-			f.BrandId,
-			f.PlayerCode,
-			f.VipLevel,
-			(PlayerVipLevelUpgradeFormState)f.State,
-			f.Amount,
-			f.ActualAmount,
-			f.Remark,
-			f.CreatedOn,
-			f.CreatedUserId,
-			f.CreatedUsername,
-			f.UpdatedOn,
-			f.UpdatedUserId,
-			f.UpdatedUsername))
+		.Where(predicate: form => form.Id == id)
+		.Select(selector: form => new PlayerVipLevelUpgradeFormInfo(
+			form.Id,
+			form.BrandId,
+			form.PlayerCode,
+			form.VipLevel,
+			form.AutoState,
+			(PlayerVipLevelUpgradeFormState)form.State,
+			form.Amount,
+			form.ActualAmount,
+			form.Remark,
+			form.CreatedOn,
+			form.CreatedUserId,
+			form.CreatedUsername,
+			form.UpdatedOn,
+			form.UpdatedUserId,
+			form.UpdatedUsername))
 		.FirstOrDefaultAsync(
 			cancellationToken: cancellationToken)
 		.ConfigureAwait(false);

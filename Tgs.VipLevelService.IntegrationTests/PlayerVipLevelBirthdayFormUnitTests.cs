@@ -21,6 +21,7 @@ public class PlayerVipLevelBirthdayFormUnitTests
 			PlayerCode: "test",
 			VipLevel: 1,
 			Birthday: DateOnly.Parse("2024-02-06"),
+			AutoState: true,
 			State: Core.Protos.PlayerVipLevelBirthdayFormState.Pending,
 			Amount: 10m,
 			ActualAmount: 0.0m,

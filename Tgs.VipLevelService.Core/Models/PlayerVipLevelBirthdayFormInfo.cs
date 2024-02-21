@@ -7,6 +7,7 @@ public record PlayerVipLevelBirthdayFormInfo(
  string PlayerCode,
  int VipLevel,
  DateOnly Birthday,
+ bool AutoState,
  PlayerVipLevelBirthdayFormState State,
  decimal Amount,
  decimal ActualAmount,

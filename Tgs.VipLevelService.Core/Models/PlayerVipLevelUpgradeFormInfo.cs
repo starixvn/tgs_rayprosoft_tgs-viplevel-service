@@ -6,6 +6,7 @@ public record PlayerVipLevelUpgradeFormInfo(
  Guid BrandId,
  string PlayerCode,
  int VipLevel,
+ bool AutoState,
  PlayerVipLevelUpgradeFormState State,
  decimal Amount,
  decimal ActualAmount,

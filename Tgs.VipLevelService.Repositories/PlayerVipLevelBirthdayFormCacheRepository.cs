@@ -12,10 +12,10 @@ internal class PlayerVipLevelBirthdayFormCacheRepository(
 	public ValueTask ApprovedAsync(Guid id, decimal amount, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 		=> repository.ApprovedAsync(id, amount, remark, updatedUserId, updatedUsername, cancellationToken);
 
-	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, DateOnly birthday, decimal amount, PlayerVipLevelBirthdaySnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, DateOnly birthday, bool autoState, decimal amount, PlayerVipLevelBirthdaySnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
 		await repository.CreateAsync(
-			id, brandId, playerCode, vipLevel, birthday, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
+			id, brandId, playerCode, vipLevel, birthday, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
 		await SetAsync(playerCode, birthday).ConfigureAwait(false);
 	}

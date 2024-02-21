@@ -30,6 +30,7 @@ namespace Tgs.VipLevelService.Entities.Configurations
             .HasComment("金額")
             .HasColumnName("amount");
             entity.Property(e => e.AutoState)
+            .HasDefaultValue(true)
             .HasComment("自動狀態(True:自動;False:手動)")
             .HasColumnName("auto_state");
             entity.Property(e => e.BrandId)

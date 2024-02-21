@@ -20,6 +20,7 @@ public class PlayerVipLevelUpgradeFormUnitTest
 			BrandId: Guid.NewGuid(),
 			PlayerCode: "test",
 			VipLevel: 1,
+			AutoState: true,
 			State: Core.Protos.PlayerVipLevelUpgradeFormState.Pending,
 			Amount: 10m,
 			ActualAmount: 0.0m,

@@ -1,9 +1,11 @@
 ﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
+using Tgs.VipLevels.Exp.Worker.Common.Protos;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Core.Protos;
 
 using Tgs.VipLevelService.Models;
+using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 
@@ -14,6 +16,7 @@ public class PlayerVipLevelCycleFormCreateGetServiceUnitTest
 	{
 		var fakeSerialNumberGenerator = Substitute.For<ISerialNumberGenerator>();
 		var fakeRepository = Substitute.For<IPlayerVipLevelCycleFormRepository>();
+		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var brandId = Guid.NewGuid();
 		var command = new PlayerVipLevelCycleFormCreateCommand(
@@ -55,7 +58,8 @@ public class PlayerVipLevelCycleFormCreateGetServiceUnitTest
 
 		var service = new PlayerVipLevelCycleFormCreateGetService(
 			fakeSerialNumberGenerator,
-			fakeRepository);
+			fakeRepository,
+			fakeMessageSender);
 
 		var actual = await service.GetAsync(command);
 
@@ -70,6 +74,7 @@ public class PlayerVipLevelCycleFormCreateGetServiceUnitTest
 			cycleOn: Arg.Is(command.CycleOn),
 			fromOn: Arg.Is(command.FromOn),
 			toOn: Arg.Is(command.ToOn),
+			autoState: Arg.Is(true),
 			amount: Arg.Is(command.Amount),
 			snapshotVipLevel: Arg.Is(new PlayerVipLevelCycleFormSnapshotVipLevelInfo(
 				VipLevelId: command.VipLevelInfo.Id,
@@ -78,6 +83,16 @@ public class PlayerVipLevelCycleFormCreateGetServiceUnitTest
 				QuarterlyBenefit: command.VipLevelInfo.QuarterlyBenefit)),
 			createdUserId: Arg.Is(command.OperatorUserId),
 			createdUsername: Arg.Is(command.OperatorUsername),
+			cancellationToken: Arg.Any<CancellationToken>());
+
+		_ = fakeMessageSender
+			.Received(1)
+			.PublishAsync(
+			subject: Arg.Is(VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto),
+			data: Arg.Is(new VipLevelsExpFormMessage
+			{
+				FormId = id,
+			}),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }

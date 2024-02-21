@@ -1,8 +1,9 @@
 ﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
-
+using Tgs.VipLevels.Exp.Worker.Common.Protos;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Models;
+using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 
@@ -13,6 +14,7 @@ public class PlayerVipLevelBirthdayFormCreateGetServiceUnitTest
 	{
 		var fakeSerialNumberGenerator = Substitute.For<ISerialNumberGenerator>();
 		var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+		var fakeMessageSender = Substitute.For<IMessageSender>();
 
 		var brandId = Guid.NewGuid();
 		var command = new PlayerVipLevelBirthdayFormCreateCommand(
@@ -51,7 +53,8 @@ public class PlayerVipLevelBirthdayFormCreateGetServiceUnitTest
 
 		var service = new PlayerVipLevelBirthdayFormCreateGetService(
 			fakeSerialNumberGenerator,
-			fakeRepository);
+			fakeRepository,
+			fakeMessageSender);
 
 		var actual = await service.GetAsync(command);
 
@@ -63,6 +66,7 @@ public class PlayerVipLevelBirthdayFormCreateGetServiceUnitTest
 			playerCode: Arg.Is(command.PlayerCode),
 			vipLevel: Arg.Is(command.VipLevel),
 			birthday: Arg.Is(command.Birthday),
+			autoState: Arg.Is(true),
 			amount: Arg.Is(command.Amount),
 			snapshotVipLevel: Arg.Is(new PlayerVipLevelBirthdaySnapshotVipLevelInfo(
 				VipLevelId: command.VipLevelInfo.Id,
@@ -71,6 +75,16 @@ public class PlayerVipLevelBirthdayFormCreateGetServiceUnitTest
 				BirthBenefit: command.VipLevelInfo.BirthBenefit)),
 			createdUserId: Arg.Is(command.OperatorUserId),
 			createdUsername: Arg.Is(command.OperatorUsername),
+			cancellationToken: Arg.Any<CancellationToken>());
+
+		_ = fakeMessageSender
+			.Received(1)
+			.PublishAsync(
+			subject: Arg.Is(VipLevelServiceNatsConsts.PlayerVipLevelBirthdayFormAuto),
+			data: Arg.Is(new VipLevelsExpFormMessage
+			{
+				FormId = id,
+			}),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }

@@ -94,7 +94,10 @@ builder.Services
 	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogRegister, typeof(PlayerVipLevelLogRegisterMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogSystem, typeof(PlayerVipLevelLogSystemMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelLogManualMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogManual, typeof(PlayerVipLevelLogManualMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelBirthdayFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelBirthdayFormAuto, typeof(PlayerVipLevelBirthdayFormAutoMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelCycleFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto, typeof(PlayerVipLevelCycleFormAutoMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelExpFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelExpFormAuto, typeof(PlayerVipLevelExpFormAutoMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelUpgradeFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelUpgradeFormAuto, typeof(PlayerVipLevelUpgradeFormAutoMessageHandler).FullName!)
 	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelServiceNatsConsts.VipLevelSnapshotCreate, typeof(VipLevelSnapshotMessageHandler).FullName!))
 	.AddNatsGlobPatternExchange("*");
 

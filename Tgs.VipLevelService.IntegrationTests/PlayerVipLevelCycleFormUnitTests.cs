@@ -23,6 +23,7 @@ public class PlayerVipLevelCycleFormUnitTests
 			CycleOn: DateOnly.Parse("2024-01-01"),
 			FromOn: DateOnly.Parse("2023-10-01"),
 			ToOn: DateOnly.Parse("2024-01-01"),
+			AutoState: true,
 			State: Core.Protos.PlayerVipLevelCycleFormState.Pending,
 			Amount: 10m,
 			ActualAmount: 0.0m,

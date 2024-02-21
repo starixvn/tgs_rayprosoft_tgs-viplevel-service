@@ -101,4 +101,9 @@ public partial class PlayerVipLevelCycleForm
     /// 更新使用者名稱
     /// </summary>
     public string UpdatedUsername { get; set; } = null!;
+
+    /// <summary>
+    /// 自動狀態(True:自動;False:手動)
+    /// </summary>
+    public bool AutoState { get; set; }
 }

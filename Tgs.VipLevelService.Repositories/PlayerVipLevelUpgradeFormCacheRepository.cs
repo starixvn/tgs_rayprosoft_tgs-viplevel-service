@@ -16,10 +16,10 @@ internal class PlayerVipLevelUpgradeFormCacheRepository(
 	public ValueTask ApprovedAsync(Guid id, decimal amount, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 		=> repository.ApprovedAsync(id, amount, remark, updatedUserId, updatedUsername, cancellationToken);
 
-	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, decimal amount, PlayerVipLevelUpgradeFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
+	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, bool autoState, decimal amount, PlayerVipLevelUpgradeFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
 		await repository.CreateAsync(
-			id, brandId, playerCode, vipLevel, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
+			id, brandId, playerCode, vipLevel, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
 		await SetAsync(playerCode, vipLevel).ConfigureAwait(false);
 	}

@@ -33,6 +33,10 @@ namespace Tgs.VipLevelService.Entities.Configurations
             .HasPrecision(18, 6)
             .HasComment("金額")
             .HasColumnName("amount");
+            entity.Property(e => e.AutoState)
+            .HasDefaultValue(true)
+            .HasComment("自動狀態(True:自動;False:手動)")
+            .HasColumnName("auto_state");
             entity.Property(e => e.Birthday)
             .HasComment("生日")
             .HasColumnName("birthday");

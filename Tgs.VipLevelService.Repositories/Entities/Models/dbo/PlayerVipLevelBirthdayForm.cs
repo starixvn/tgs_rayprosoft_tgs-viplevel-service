@@ -86,4 +86,9 @@ public partial class PlayerVipLevelBirthdayForm
     /// Vip等級
     /// </summary>
     public int VipLevel { get; set; }
+
+    /// <summary>
+    /// 自動狀態(True:自動;False:手動)
+    /// </summary>
+    public bool AutoState { get; set; }
 }
