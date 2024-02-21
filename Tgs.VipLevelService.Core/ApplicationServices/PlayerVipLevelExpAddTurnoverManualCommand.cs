@@ -4,5 +4,6 @@ public record PlayerVipLevelExpAddTurnoverManualCommand(
 	Guid FormId,
 	int Sign,
 	decimal Amount,
+	string Remark,
 	Guid OperatorUserId,
 	string OperatorUsername);

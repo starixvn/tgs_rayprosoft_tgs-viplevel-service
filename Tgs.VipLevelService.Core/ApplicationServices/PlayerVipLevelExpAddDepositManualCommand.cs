@@ -4,5 +4,6 @@ public record PlayerVipLevelExpAddDepositManualCommand(
 	Guid FormId,
 	int Sign,
 	decimal Amount,
+	string Remark,
 	Guid OperatorUserId,
 	string OperatorUsername);

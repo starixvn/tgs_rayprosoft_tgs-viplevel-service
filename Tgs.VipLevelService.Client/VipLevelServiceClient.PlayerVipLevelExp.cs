@@ -29,12 +29,13 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddTurnoverManualViewModel
 		{
 			FormId = formId,
-			Amount = amount
+			Amount = amount,
+			Remark = remark
 		};
 		var path = new Uri(_httpClient.BaseAddress!, $"exp/{playerCode}/turnover/credit");
 		var builder = new UriBuilder(path);
@@ -49,12 +50,13 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddTurnoverManualViewModel
 		{
 			FormId = formId,
-			Amount = amount
+			Amount = amount,
+			Remark = remark
 		};
 		var path = new Uri(_httpClient.BaseAddress!, $"exp/{playerCode}/turnover/debit");
 		var builder = new UriBuilder(path);
@@ -87,12 +89,13 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddDepositManualViewModel
 		{
 			FormId = formId,
-			Amount = amount
+			Amount = amount,
+			Remark = remark
 		};
 		var path = new Uri(_httpClient.BaseAddress!, $"exp/{playerCode}/deposit/credit");
 		var builder = new UriBuilder(path);
@@ -107,12 +110,13 @@ internal partial class VipLevelServiceClient
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
 	}
-	public async ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
+	public async ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelExpAddDepositManualViewModel
 		{
 			FormId = formId,
-			Amount = amount
+			Amount = amount,
+			Remark = remark
 		};
 		var path = new Uri(_httpClient.BaseAddress!, $"exp/{playerCode}/deposit/debit");
 		var builder = new UriBuilder(path);

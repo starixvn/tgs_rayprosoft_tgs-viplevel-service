@@ -35,6 +35,7 @@ public class PlayerVipLevelExpAddDepositManualCommandServiceUnitTest
 			FormId: Guid.NewGuid(),
 			Sign: 1,
 			Amount: 100m,
+			Remark: "test",
 			OperatorUserId: Guid.NewGuid(),
 			OperatorUsername: "admin.enabled");
 
@@ -146,6 +147,7 @@ public class PlayerVipLevelExpAddDepositManualCommandServiceUnitTest
 			FormId: Guid.NewGuid(),
 			Sign: -1,
 			Amount: 100m,
+			Remark: "test",
 			OperatorUserId: Guid.NewGuid(),
 			OperatorUsername: "admin.enabled");
 
@@ -257,6 +259,7 @@ public class PlayerVipLevelExpAddDepositManualCommandServiceUnitTest
 			FormId: Guid.NewGuid(),
 			Sign: 1,
 			Amount: 100m,
+			Remark: "test",
 			OperatorUserId: Guid.NewGuid(),
 			OperatorUsername: "admin.enabled");
 

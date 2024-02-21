@@ -67,15 +67,15 @@ public interface IVipLevelServiceClient
 
 	public ValueTask PlayerVipLevelExpAddTurnoverAsync(string playerCode, Guid gameProviderId, int gameId, Guid walletId, string externalWagerId, long wagerId, decimal amount, CancellationToken cancellationToken = default);
 
-	public ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
+	public ValueTask PlayerVipLevelExpAddTurnoverCreditAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
 
-	public ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
+	public ValueTask PlayerVipLevelExpAddTurnoverDebitAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
 
 	public ValueTask PlayerVipLevelExpAddDepositAsync(string playerCode, string formId, decimal amount, CancellationToken cancellationToken = default);
 
-	public ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
+	public ValueTask PlayerVipLevelExpAddDepositCreditAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
 
-	public ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, Guid formId, decimal amount, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
+	public ValueTask PlayerVipLevelExpAddDepositDebitAsync(string playerCode, Guid formId, decimal amount, string remark, Guid operatorUserId, string operatorUsername, CancellationToken cancellationToken = default);
 
 	ValueTask<PlayerVipLevelExpFormViewModel?> PlayerVipLevelExpFormGetAsync(Guid id, CancellationToken cancellationToken = default);
 

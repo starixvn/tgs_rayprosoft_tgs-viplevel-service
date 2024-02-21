@@ -50,6 +50,7 @@ public class PlayerVipLevelExpUnitTest
 		var playerCode = "4ucmqplxb029";
 		var formId = Guid.NewGuid();
 		var amount = 1;
+		var remark = "test";
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
 
@@ -59,13 +60,20 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddTurnoverCreditAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelExpAddTurnoverCreditAsync(
+			playerCode: playerCode,
+			formId: formId,
+			amount: amount,
+			remark: remark,
+			operatorUserId: operatorUserId,
+			operatorUsername: operatorUsername);
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: 1,
 			Amount: amount,
+			Remark: remark,
 			OperatorUserId: operatorUserId,
 			OperatorUsername: operatorUsername);
 
@@ -82,6 +90,7 @@ public class PlayerVipLevelExpUnitTest
 		var playerCode = "4ucmqplxb029";
 		var formId = Guid.NewGuid();
 		var amount = 1;
+		var remark = "test";
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
 
@@ -91,13 +100,20 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddTurnoverDebitAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelExpAddTurnoverDebitAsync(
+			playerCode: playerCode,
+			formId: formId,
+			amount: amount,
+			remark: remark,
+			operatorUserId: operatorUserId,
+			operatorUsername: operatorUsername);
 
 		var command = new PlayerVipLevelExpAddTurnoverManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: -1,
 			Amount: amount,
+			Remark: remark,
 			OperatorUserId: operatorUserId,
 			OperatorUsername: operatorUsername);
 
@@ -141,6 +157,7 @@ public class PlayerVipLevelExpUnitTest
 		var playerCode = "4ucmqplxb029";
 		var formId = Guid.NewGuid();
 		var amount = 1;
+		var remark = "test";
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
 
@@ -150,13 +167,20 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddDepositCreditAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelExpAddDepositCreditAsync(
+			playerCode: playerCode,
+			formId: formId,
+			amount: amount,
+			remark: remark,
+			operatorUserId: operatorUserId,
+			operatorUsername: operatorUsername);
 
 		var command = new PlayerVipLevelExpAddDepositManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: 1,
 			Amount: amount,
+			Remark: remark,
 			OperatorUserId: operatorUserId,
 			OperatorUsername: operatorUsername);
 
@@ -173,6 +197,7 @@ public class PlayerVipLevelExpUnitTest
 		var playerCode = "4ucmqplxb029";
 		var formId = Guid.NewGuid();
 		var amount = 1;
+		var remark = "test";
 		var operatorUserId = Guid.NewGuid();
 		var operatorUsername = "admin.enabled";
 
@@ -182,13 +207,20 @@ public class PlayerVipLevelExpUnitTest
 		var httpClient = web.CreateDefaultClient();
 		var client = new VipLevelServiceClient(httpClient);
 
-		await client.PlayerVipLevelExpAddDepositDebitAsync(playerCode: playerCode, formId: formId, amount: amount, operatorUserId, operatorUsername);
+		await client.PlayerVipLevelExpAddDepositDebitAsync(
+			playerCode: playerCode,
+			formId: formId,
+			amount: amount,
+			remark: remark,
+			operatorUserId: operatorUserId,
+			operatorUsername: operatorUsername);
 
 		var command = new PlayerVipLevelExpAddDepositManualCommand(
 			PlayerCode: playerCode,
 			FormId: formId,
 			Sign: -1,
 			Amount: amount,
+			Remark: remark,
 			OperatorUserId: operatorUserId,
 			OperatorUsername: operatorUsername);
 

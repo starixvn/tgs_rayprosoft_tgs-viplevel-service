@@ -96,7 +96,7 @@ internal class PlayerVipLevelExpAddTurnoverManualCommandService(
 				 ["Form"] = command.FormId,
 				 ["Data"] = data
 			 },
-			 remark: "System addition",
+			 remark: command.Remark,
 			 createdOn: DateTimeOffset.Now,
 			 createdUserId: command.OperatorUserId,
 			 createdUsername: command.OperatorUsername,

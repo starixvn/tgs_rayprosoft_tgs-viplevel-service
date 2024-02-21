@@ -8,4 +8,5 @@ public record PlayerVipLevelExpAddDepositManualViewModel
 	[Required]
 	[Range(minimum: 0, maximum: int.MaxValue)]
 	public decimal Amount { get; init; }
+	public string Remark { get; init; } = default!;
 }

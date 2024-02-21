@@ -79,6 +79,7 @@ public class PlayerVipLevelExpController : ControllerBase
 					FormId: source.FormId,
 					Sign: 1,
 					Amount: source.Amount,
+					Remark: source.Remark,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
@@ -115,6 +116,7 @@ public class PlayerVipLevelExpController : ControllerBase
 					FormId: source.FormId,
 					Sign: -1,
 					Amount: source.Amount,
+					Remark: source.Remark,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
@@ -180,6 +182,7 @@ public class PlayerVipLevelExpController : ControllerBase
 					FormId: source.FormId,
 					Sign: 1,
 					Amount: source.Amount,
+					Remark: source.Remark,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
@@ -216,6 +219,7 @@ public class PlayerVipLevelExpController : ControllerBase
 					FormId: source.FormId,
 					Sign: -1,
 					Amount: source.Amount,
+					Remark: source.Remark,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername),
 				cancellationToken: HttpContext.RequestAborted);
