@@ -50,10 +50,13 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelExpInfo);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Manual, "&",
-			  "PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			  "Form", "=", command.FormId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Manual.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "Form",command.FormId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = Guid.NewGuid().ToString("N");
 		_ = fakeCryptographyUtensil.Sha512(
 			source: Arg.Is(data))
@@ -158,10 +161,13 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelExpInfo);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Manual, "&",
-			  "PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			  "Form", "=", command.FormId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Manual.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "Form",command.FormId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = Guid.NewGuid().ToString("N");
 		_ = fakeCryptographyUtensil.Sha512(
 			source: Arg.Is(data))
@@ -266,10 +272,13 @@ public class PlayerVipLevelExpAddTurnoverManualCommandServiceUnitTest
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelExpInfo);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Manual, "&",
-			  "PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			  "Form", "=", command.FormId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Manual.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "Form",command.FormId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = Guid.NewGuid().ToString("N");
 		_ = fakeCryptographyUtensil.Sha512(
 			source: Arg.Is(data))

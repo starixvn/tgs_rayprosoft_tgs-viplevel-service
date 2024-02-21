@@ -31,10 +31,13 @@ internal class PlayerVipLevelExpAddTurnoverManualCommandService(
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		var data = string.Concat(
-			  "Type", "=", PlayerVipLevelExpTurnoverRecordType.Manual, "&",
-			  "PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			  "Form", "=", command.FormId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Manual.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "Form",command.FormId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = utensil.Sha512(data);
 
 		if (await playerVipLevelExpTurnoverRecordRepository.ExistAsync(

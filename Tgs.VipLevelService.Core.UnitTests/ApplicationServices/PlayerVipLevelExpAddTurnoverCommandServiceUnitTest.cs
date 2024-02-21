@@ -50,13 +50,16 @@ public class PlayerVipLevelExpAddTurnoverCommandServiceUnitTest
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelExpInfo);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Normal, "&",
-			"PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			"GameProviderId", "=", command.GameProviderId, "&",
-			"GameId", "=", command.GameId, "&",
-			"WalletId", "=", command.WalletId, "&",
-			"ExternalWagerId", "=", command.ExternalWagerId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Normal.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "GameProviderId",command.GameProviderId.ToString() },
+			{ "GameId",command.GameId.ToString() },
+			{ "WalletId",command.WalletId.ToString() },
+			{ "ExternalWagerId",command.ExternalWagerId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = Guid.NewGuid().ToString("N");
 		_ = fakeCryptographyUtensil.Sha512(
 			source: Arg.Is(data))
@@ -162,13 +165,16 @@ public class PlayerVipLevelExpAddTurnoverCommandServiceUnitTest
 			cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevelExpInfo);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Normal, "&",
-			"PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			"GameProviderId", "=", command.GameProviderId, "&",
-			"GameId", "=", command.GameId, "&",
-			"WalletId", "=", command.WalletId, "&",
-			"ExternalWagerId", "=", command.ExternalWagerId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Normal.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "GameProviderId",command.GameProviderId.ToString() },
+			{ "GameId",command.GameId.ToString() },
+			{ "WalletId",command.WalletId.ToString() },
+			{ "ExternalWagerId",command.ExternalWagerId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = Guid.NewGuid().ToString("N");
 		_ = fakeCryptographyUtensil.Sha512(
 			source: Arg.Is(data))

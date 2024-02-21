@@ -31,13 +31,16 @@ internal class PlayerVipLevelExpAddTurnoverCommandService(
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		var data = string.Concat(
-			"Type", "=", PlayerVipLevelExpTurnoverRecordType.Normal, "&",
-			"PlayerCode", "=", playerVipLevelExpInfo.PlayerCode, "&",
-			"GameProviderId", "=", command.GameProviderId, "&",
-			"GameId", "=", command.GameId, "&",
-			"WalletId", "=", command.WalletId, "&",
-			"ExternalWagerId", "=", command.ExternalWagerId);
+		var parameters = new Dictionary<string, string>
+		{
+			{ "Type", PlayerVipLevelExpTurnoverRecordType.Normal.ToString() },
+			{ "PlayerCode", playerVipLevelExpInfo.PlayerCode },
+			{ "GameProviderId",command.GameProviderId.ToString() },
+			{ "GameId",command.GameId.ToString() },
+			{ "WalletId",command.WalletId.ToString() },
+			{ "ExternalWagerId",command.ExternalWagerId.ToString() },
+		};
+		var data = string.Join("&", parameters.Select(kvp => string.Format("{0}={1}", kvp.Key, kvp.Value)));
 		var hash = utensil.Sha512(data);
 
 		if (await playerVipLevelExpTurnoverRecordRepository.ExistAsync(
