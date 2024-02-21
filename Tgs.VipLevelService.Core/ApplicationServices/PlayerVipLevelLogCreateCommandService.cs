@@ -42,7 +42,7 @@ internal class PlayerVipLevelLogCreateCommandService(
 			PlayerCode: command.PlayerCode,
 			VipLevelId: afterVipLevelInfoInfo.Id,
 			VipLevel: afterVipLevelInfoInfo.Level,
-			AutoState: command.BeforeAutoState ?? PlayerVipLevelAutoState.Enable);
+			AutoState: command.AfterAutoState);
 
 		var id = await serialNumberGenerator.GenerateAsync(
 			cancellationToken: cancellationToken)
