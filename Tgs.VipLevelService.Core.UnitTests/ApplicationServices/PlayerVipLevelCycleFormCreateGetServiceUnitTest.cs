@@ -1,6 +1,5 @@
 ﻿using NSubstitute;
 using Tgs.SerialNumberGenerator;
-using Tgs.VipLevels.Exp.Worker.Common.Protos;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Core.Protos;
 
@@ -89,7 +88,7 @@ public class PlayerVipLevelCycleFormCreateGetServiceUnitTest
 			.Received(1)
 			.PublishAsync(
 			subject: Arg.Is(VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto),
-			data: Arg.Is(new VipLevelsExpFormMessage
+			data: Arg.Is(new VipLevelFormRequest
 			{
 				FormId = id,
 			}),

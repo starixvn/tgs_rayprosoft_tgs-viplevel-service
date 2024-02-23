@@ -1,6 +1,6 @@
 ﻿using Tgs.SerialNumberGenerator;
 using Tgs.ServiceUtility;
-using Tgs.VipLevels.Exp.Worker.Common.Protos;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 using Valhalla.MessageQueue;
 
@@ -42,7 +42,7 @@ internal class PlayerVipLevelUpgradeFormCreateGetService(
 		 */
 		await messageSender.PublishAsync(
 			subject: VipLevelServiceNatsConsts.PlayerVipLevelUpgradeFormAuto,
-			data: new VipLevelsExpFormMessage
+			data: new VipLevelFormRequest
 			{
 				FormId = id,
 			},

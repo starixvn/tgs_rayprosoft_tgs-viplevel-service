@@ -2,6 +2,7 @@
 using Tgs.ServiceUtility;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class PlayerVipLevelUpgradeFormAutoCommandService(
 	ILogger<PlayerVipLevelUpgradeFormAutoCommandService> logger,
 	IPlayerVipLevelUpgradeFormRepository repository,

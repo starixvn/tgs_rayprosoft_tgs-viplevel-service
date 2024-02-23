@@ -1,4 +1,6 @@
-﻿using Tgs.ServiceUtility;
+﻿using Tgs.GameWagers.Client;
+using Tgs.Payment.Clients;
+using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
@@ -6,10 +8,10 @@ namespace Tgs.VipLevelService.ApplicationServices;
 internal class PlayerVipLevelSingleGetService(
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
-	IPlayerVipLevelExpRepository playerVipLevelExpRepository,
 	IVipLevelRepository vipLevelRepository,
-	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> playerVipLevelFixesService,
-	IGetService<PlayerVipLevelExpFixesQuery, PlayerVipLevelExpInfo> playerVipLevelExpFixesService) : IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>
+	IPaymentServiceClient paymentServiceClient,
+	IGameWagersClient gameWagersClient,
+	IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> playerVipLevelFixesService) : IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>
 {
 	public async ValueTask<PlayerVipLevelSingleResult> GetAsync(PlayerVipLevelSingleQuery query, CancellationToken cancellationToken = default)
 	{
@@ -28,14 +30,14 @@ internal class PlayerVipLevelSingleGetService(
 				cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
-		var playerVipLevelExpInfo = await playerVipLevelExpRepository.GetAsync(
-			playerCode: playerInfo.PlayerCode,
+		var payment = await paymentServiceClient.GetPlayerPaymentOverviewAsync(
+			playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
-			.ConfigureAwait(false)
-			?? await playerVipLevelExpFixesService.GetAsync(
-				query: new PlayerVipLevelExpFixesQuery(
-					PlayerCode: query.PlayerCode),
-				cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+
+		var playerAccumInfo = await gameWagersClient.GameWagerStatGetPlayerAccumAsync(
+			playerInfo.PlayerCode,
+			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 
 		var currentLevel = await vipLevelRepository.GetAsync(
@@ -71,10 +73,8 @@ internal class PlayerVipLevelSingleGetService(
 			VipLevelId: playerVipLevelInfo.VipLevelId,
 			VipLevel: playerVipLevelInfo.VipLevel,
 			AutoState: playerVipLevelInfo.AutoState,
-			AccumDepositId: playerVipLevelExpInfo?.AccumDepositId ?? Guid.Empty,
-			AccumDeposit: playerVipLevelExpInfo?.AccumDeposit ?? 0.0m,
-			AccumTurnoverId: playerVipLevelExpInfo?.AccumTurnoverId ?? Guid.Empty,
-			AccumTurnover: playerVipLevelExpInfo?.AccumTurnover ?? 0.0m,
+			AccumDeposit: payment.TotalDepositAmount,
+			AccumTurnover: playerAccumInfo.Turnover,
 			LevelUpAccumulateBetAmount: currentLevel.LevelUpAccumulateBetAmount,
 			LevelUpAccumulateDeposit: currentLevel.LevelUpAccumulateDeposit,
 			FullLevel: fullLevel,

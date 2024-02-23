@@ -18,21 +18,15 @@ public static class ServiceCollectionExtensions
 		.Decorate<IVipLevelRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<VipLevelCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(5)))
 		.Decorate<IVipLevelRepository, VipLevelMessageRepository>()
 		.AddTransient<IPlayerRepository, PlayerRepository>()
-		.Decorate<IPlayerRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromDays(1)))
+		.Decorate<IPlayerRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromHours(1)))
 		.AddTransient<IPlayerVipLevelLogRepository, PlayerVipLevelLogRepository>()
 		.AddTransient<IPlayerVipLevelRepository, PlayerVipLevelRepository>()
 		.Decorate<IPlayerVipLevelRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)))
-		.AddTransient<IPlayerVipLevelExpRepository, PlayerVipLevelExpRepository>()
 		.AddTransient<IVipLevelSnapshotRepository, VipLevelSnapshotRepository>()
 		.AddTransient<IPlayerVipLevelBirthdayFormRepository, PlayerVipLevelBirthdayFormRepository>()
 		.Decorate<IPlayerVipLevelBirthdayFormRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelBirthdayFormCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)))
 		.AddTransient<IPlayerVipLevelCycleFormRepository, PlayerVipLevelCycleFormRepository>()
 		.Decorate<IPlayerVipLevelCycleFormRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelCycleFormCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)))
 		.AddTransient<IPlayerVipLevelUpgradeFormRepository, PlayerVipLevelUpgradeFormRepository>()
-		.Decorate<IPlayerVipLevelUpgradeFormRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelUpgradeFormCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)))
-		.AddTransient<IPlayerVipLevelExpDepositRecordRepository, PlayerVipLevelExpDepositRecordRepository>()
-		.Decorate<IPlayerVipLevelExpDepositRecordRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelExpDepositRecordCachRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)))
-		.AddTransient<IPlayerVipLevelExpTurnoverRecordRepository, PlayerVipLevelExpTurnoverRecordRepository>()
-		.Decorate<IPlayerVipLevelExpTurnoverRecordRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelExpTurnoverRecordCachRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(1)))
-		.AddTransient<IPlayerVipLevelExpFormRepository, PlayerVipLevelExpFormRepository>();
+		.Decorate<IPlayerVipLevelUpgradeFormRepository>((innerRepository, sp) => ActivatorUtilities.CreateInstance<PlayerVipLevelUpgradeFormCacheRepository>(sp, innerRepository, redisDatabaseResolver(sp), TimeSpan.FromMinutes(10)));
 }

@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
-using Tgs.VipLevels.Level.Common.Protos;
 using Tgs.VipLevels.Level.Common;
+using Tgs.VipLevels.Level.Common.Protos;
 using Valhalla.MessageQueue;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class PlayerVipLevelCheckCommandService(
 	ILogger<PlayerVipLevelCheckCommandService> logger,
 	IMessageSender messageSender) : ICommandService<PlayerVipLevelCheckCommand>

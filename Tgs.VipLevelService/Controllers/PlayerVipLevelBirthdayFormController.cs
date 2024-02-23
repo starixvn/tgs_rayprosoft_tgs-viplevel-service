@@ -3,6 +3,7 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
 using Tgs.VipLevelService.Models;
+using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
 
@@ -66,6 +67,7 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 			PlayerCode: form.PlayerCode,
 			VipLevel: form.VipLevel,
 			Birthday: form.Birthday,
+			AutoState: form.AutoState,
 			State: (Common.PlayerVipLevelBirthdayFormState)form.State,
 			Amount: form.Amount,
 			ActualAmount: form.ActualAmount,
@@ -117,4 +119,72 @@ public class PlayerVipLevelBirthdayFormController : ControllerBase
 		string playerCode,
 		DateOnly birthday)
 		=> repository.ExistAsync(playerCode, birthday, HttpContext.RequestAborted);
+
+	[HttpGet(Name = "PlayerVipLevelBirthday_Form_Query")]
+	public async IAsyncEnumerable<PlayerVipLevelBirthdayFormQueryViewModel> QueryAsync(
+		[FromServices] IPlayerVipLevelBirthdayFormRepository repository,
+		[FromQuery] PlayerVipLevelBirthdayFormFromQuery source)
+	{
+		var states = source.States?.Select(state => (Core.Protos.PlayerVipLevelBirthdayFormState)state).Distinct()
+			?? Enumerable.Empty<Core.Protos.PlayerVipLevelBirthdayFormState>();
+
+		var infos = await repository.QueryAsync(
+			brandId: source.BrandId,
+			updatedOnStart: source.UpdatedOnStart,
+			updatedOnEnd: source.UpdatedOnEnd,
+			playerCode: source.PlayerCode ?? string.Empty,
+			username: source.Username ?? string.Empty,
+			states: states,
+			offset: source.Page - 1,
+			limit: source.RowCount,
+			cancellationToken: HttpContext.RequestAborted)
+			.ToArrayAsync()
+			.ConfigureAwait(false)
+			?? Enumerable.Empty<PlayerVipLevelBirthdayFormQueryInfo>();
+
+		if (!infos.Any())
+		{
+			yield break;
+		}
+
+		foreach (var info in infos)
+		{
+			yield return new PlayerVipLevelBirthdayFormQueryViewModel(
+				Id: info.Id,
+				BrandId: info.BrandId,
+				PlayerCode: info.PlayerCode,
+				Username: info.Username,
+				VipLevel: info.VipLevel,
+				Birthday: info.Birthday,
+				AutoState: info.AutoState,
+				State: (Common.PlayerVipLevelBirthdayFormState)info.State,
+				Amount: info.Amount,
+				ActualAmount: info.ActualAmount,
+				Remark: info.Remark,
+				CreatedOn: info.CreatedOn,
+				CreatedUserId: info.CreatedUserId,
+				CreatedUsername: info.CreatedUsername,
+				UpdatedOn: info.UpdatedOn,
+				UpdatedUserId: info.UpdatedUserId,
+				UpdatedUsername: info.UpdatedUsername);
+		}
+	}
+
+	[HttpGet("count", Name = "PlayerVipLevelBirthday_Form_Count")]
+	public ValueTask<int> QueryCountAsync(
+		[FromServices] IPlayerVipLevelBirthdayFormRepository repository,
+		[FromQuery] PlayerVipLevelBirthdayFormFromQueryCount source)
+	{
+		var states = source.States?.Select(state => (Core.Protos.PlayerVipLevelBirthdayFormState)state).Distinct()
+			?? Enumerable.Empty<Core.Protos.PlayerVipLevelBirthdayFormState>();
+
+		return repository.QueryCountAsync(
+			brandId: source.BrandId,
+			updatedOnStart: source.UpdatedOnStart,
+			updatedOnEnd: source.UpdatedOnEnd,
+			playerCode: source.PlayerCode ?? string.Empty,
+			username: source.Username ?? string.Empty,
+			states: states.ToArray(),
+			cancellationToken: HttpContext.RequestAborted);
+	}
 }

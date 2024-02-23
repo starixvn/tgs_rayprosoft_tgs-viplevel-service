@@ -107,6 +107,87 @@ internal class PlayerVipLevelUpgradeFormRepository(
 			.ConfigureAwait(false);
 	}
 
+	public IAsyncEnumerable<PlayerVipLevelUpgradeFormQueryInfo> QueryAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelUpgradeFormState> states, int offset = 0, int limit = 20, CancellationToken cancellationToken = default)
+	{
+		var filters = context.PlayerVipLevelUpgradeForms
+			.Join(
+			inner: context.Players,
+			outerKeySelector: form => form.PlayerCode,
+			innerKeySelector: player => player.PlayerCode,
+			resultSelector: (form, player) => new { Form = form, Player = player })
+			.Where(predicate: combined => combined.Form.UpdatedOn >= updatedOnStart.UtcDateTime && combined.Form.UpdatedOn < updatedOnEnd.UtcDateTime)
+			.Where(predicate: combined => combined.Form.BrandId == brandId);
+
+		if (!string.IsNullOrWhiteSpace(username))
+		{
+			filters = filters.Where(predicate: combined => combined.Player.Username.StartsWith(username) || combined.Player.Username == username);
+		}
+
+		if (!string.IsNullOrWhiteSpace(playerCode))
+		{
+			filters = filters.Where(predicate: combined => combined.Form.PlayerCode == playerCode);
+		}
+
+		if (states.Any())
+		{
+			filters = filters.Where(predicate: combined => states.Contains((PlayerVipLevelUpgradeFormState)combined.Form.State));
+		}
+
+		return filters
+		 .OrderByDescending(keySelector: combined => combined.Form.UpdatedOn)
+		 .Skip(limit * offset)
+		 .Take(limit)
+		 .Select(selector: combined => new PlayerVipLevelUpgradeFormQueryInfo(
+			 combined.Form.Id,
+			 combined.Form.BrandId,
+			 combined.Form.PlayerCode,
+			 combined.Player.Username,
+			 combined.Form.VipLevel,
+			 combined.Form.AutoState,
+			 (PlayerVipLevelUpgradeFormState)combined.Form.State,
+			 combined.Form.Amount,
+			 combined.Form.ActualAmount,
+			 combined.Form.Remark,
+			 combined.Form.CreatedOn,
+			 combined.Form.CreatedUserId,
+			 combined.Form.CreatedUsername,
+			 combined.Form.UpdatedOn,
+			 combined.Form.UpdatedUserId,
+			 combined.Form.UpdatedUsername))
+		 .ToAsyncEnumerable();
+	}
+
+	public async ValueTask<int> QueryCountAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelUpgradeFormState> states, CancellationToken cancellationToken = default)
+	{
+		var filters = context.PlayerVipLevelUpgradeForms
+			.Join(
+			inner: context.Players,
+			outerKeySelector: form => form.PlayerCode,
+			innerKeySelector: player => player.PlayerCode,
+			resultSelector: (form, player) => new { Form = form, Player = player })
+			.Where(predicate: combined => combined.Form.UpdatedOn >= updatedOnStart.UtcDateTime && combined.Form.UpdatedOn < updatedOnEnd.UtcDateTime)
+			.Where(predicate: combined => combined.Form.BrandId == brandId);
+
+		if (!string.IsNullOrWhiteSpace(username))
+		{
+			filters = filters.Where(predicate: combined => combined.Player.Username.StartsWith(username) || combined.Player.Username == username);
+		}
+
+		if (!string.IsNullOrWhiteSpace(playerCode))
+		{
+			filters = filters.Where(predicate: combined => combined.Form.PlayerCode == playerCode);
+		}
+
+		if (states.Any())
+		{
+			filters = filters.Where(predicate: combined => states.Contains((PlayerVipLevelUpgradeFormState)combined.Form.State));
+		}
+
+		return await filters.CountAsync(
+			cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+	}
+
 	public async ValueTask RejectAsync(Guid id, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 	{
 		var form = await context.PlayerVipLevelUpgradeForms

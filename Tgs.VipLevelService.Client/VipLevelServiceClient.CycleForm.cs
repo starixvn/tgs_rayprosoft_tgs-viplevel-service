@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Web;
 using Tgs.VipLevelService.Common;
 using Tgs.VipLevelService.Common.ViewModels;
 
@@ -100,4 +101,90 @@ internal partial class VipLevelServiceClient
 			.ToAsyncEnumerable())
 		.FirstOrDefaultAsync(cancellationToken: cancellationToken)
 		.ConfigureAwait(false);
+
+	public IAsyncEnumerable<PlayerVipLevelCycleFormQueryViewModel?> PlayerVipLevelCycleFormQueryAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelCycleFormState> states, int page = 1, int rowCount = 20, CancellationToken cancellationToken = default)
+	{
+		var path = new Uri(_httpClient.BaseAddress!, "cycle-form");
+		var builder = new UriBuilder(path);
+		var query = HttpUtility.ParseQueryString(builder.Query);
+		query["brandId"] = brandId.ToString();
+		query["updatedOnStart"] = updatedOnStart.ToString("u");
+		query["updatedOnEnd"] = updatedOnEnd.ToString("u");
+
+		if (!string.IsNullOrWhiteSpace(playerCode))
+		{
+			query["playerCode"] = playerCode;
+		}
+
+		if (!string.IsNullOrWhiteSpace(username))
+		{
+			query["username"] = username;
+		}
+
+		if (states.Any())
+		{
+			foreach (var state in states)
+			{
+				query.Add("states", state.ToString());
+			}
+		}
+
+		query["page"] = page.ToString();
+		query["rowCount"] = rowCount.ToString();
+		builder.Query = query.ToString();
+		string url = builder.ToString();
+
+		return _httpClient.GetAsync(url, cancellationToken)
+			.ToAsyncEnumerable()
+			.Do(response => response.EnsureSuccessStatusCode())
+			.SelectMany(response => response.Content
+				.ReadFromJsonAsync<IEnumerable<PlayerVipLevelCycleFormQueryViewModel>>(_SerializerOptions, cancellationToken)
+				.ToAsyncEnumerable()
+				.SelectMany(arr => arr!.ToAsyncEnumerable()))
+			.Where(info => info is not null)
+			.Select(info => info!)
+			.ToEnumerable()
+			.ToAsyncEnumerable();
+	}
+
+	public async ValueTask<int> PlayerVipLevelCycleFormQueryCountAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelCycleFormState> states, CancellationToken cancellationToken = default)
+	{
+		var path = new Uri(_httpClient.BaseAddress!, $"/cycle-form/count");
+		var builder = new UriBuilder(path);
+		var query = HttpUtility.ParseQueryString(builder.Query);
+		query["brandId"] = brandId.ToString();
+		query["updatedOnStart"] = updatedOnStart.ToString("u");
+		query["updatedOnEnd"] = updatedOnEnd.ToString("u");
+
+		if (!string.IsNullOrWhiteSpace(playerCode))
+		{
+			query["PlayerCode"] = playerCode;
+		}
+
+		if (!string.IsNullOrWhiteSpace(username))
+		{
+			query["Username"] = username;
+		}
+
+		if (states.Any())
+		{
+			foreach (var state in states)
+			{
+				query.Add("status", state.ToString());
+			}
+		}
+
+		builder.Query = query.ToString();
+		string url = builder.ToString();
+
+		return await _httpClient.GetAsync(url, cancellationToken)
+			.ToAsyncEnumerable()
+			.Do(response => response.EnsureSuccessStatusCode())
+			.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
+			.SelectMany(response => response.Content
+				.ReadFromJsonAsync<int>(_SerializerOptions, cancellationToken)
+				.ToAsyncEnumerable())
+			.FirstOrDefaultAsync(cancellationToken: cancellationToken)
+			.ConfigureAwait(false);
+	}
 }

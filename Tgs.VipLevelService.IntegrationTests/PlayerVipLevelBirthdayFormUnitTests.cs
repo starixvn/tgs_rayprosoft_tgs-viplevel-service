@@ -3,7 +3,6 @@ using NSubstitute;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Clients;
-using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.IntegrationTests;
@@ -56,11 +55,11 @@ public class PlayerVipLevelBirthdayFormUnitTests
 		Assert.Equal(result.PlayerCode, actual.PlayerCode);
 		Assert.Equal(result.VipLevel, actual.VipLevel);
 		Assert.Equal(result.Birthday, actual.Birthday);
+		Assert.Equal(result.AutoState, actual.AutoState);
 		Assert.Equal((int)result.State, (int)actual.State);
 		Assert.Equal(result.Amount, actual.Amount);
 		Assert.Equal(result.ActualAmount, actual.ActualAmount);
 		Assert.Equal(result.Remark, actual.Remark);
-		Assert.Equal(result.VipLevel, actual.VipLevel);
 		Assert.Equal(result.CreatedOn, actual.CreatedOn);
 		Assert.Equal(result.CreatedUserId, actual.CreatedUserId);
 		Assert.Equal(result.CreatedUsername, actual.CreatedUsername);
@@ -121,10 +120,8 @@ public class PlayerVipLevelBirthdayFormUnitTests
 				Username: "test",
 				VipLevelId: Guid.NewGuid(),
 				VipLevel: 1,
-				AutoState: PlayerVipLevelAutoState.Enable,
-				AccumDepositId: Guid.NewGuid(),
+				AutoState: Core.Protos.PlayerVipLevelAutoState.Enable,
 				AccumDeposit: 99m,
-				AccumTurnoverId: Guid.NewGuid(),
 				AccumTurnover: 88m,
 				LevelUpAccumulateBetAmount: 299,
 				LevelUpAccumulateDeposit: 199,
@@ -333,5 +330,137 @@ public class PlayerVipLevelBirthdayFormUnitTests
 		var actuala = await client.PlayerVipLevelBirthdayFormExistAsync(playerCode, birthday);
 
 		Assert.False(actuala);
+	}
+
+	[Fact]
+	public async Task PlayerVipLevelBirthdayForm_Query()
+	{
+		var brandId = Guid.NewGuid();
+		var updatedOnStart = new DateTimeOffset(2024, 02, 06, 00, 00, 00, TimeSpan.Zero);
+		var updatedOnEnd = new DateTimeOffset(2024, 02, 07, 00, 00, 00, TimeSpan.Zero);
+		var username = "test";
+		var playerCode = "test";
+		var states = new Common.PlayerVipLevelBirthdayFormState[] {
+			Common.PlayerVipLevelBirthdayFormState.Create,
+			Common.PlayerVipLevelBirthdayFormState.Pending
+		};
+		var page = 1;
+		var rowCount = 20;
+
+		var result = new PlayerVipLevelBirthdayFormQueryInfo(
+			Id: Guid.NewGuid(),
+			BrandId: brandId,
+			PlayerCode: playerCode,
+			Username: username,
+			VipLevel: 1,
+			Birthday: DateOnly.Parse("2024-02-06"),
+			AutoState: true,
+			State: Core.Protos.PlayerVipLevelBirthdayFormState.Pending,
+			Amount: 10m,
+			ActualAmount: 0.0m,
+			Remark: string.Empty,
+			CreatedOn: DateTimeOffset.UtcNow,
+			CreatedUserId: Guid.NewGuid(),
+			CreatedUsername: "admin.enabled",
+			UpdatedOn: DateTimeOffset.UtcNow,
+			UpdatedUserId: Guid.NewGuid(),
+			UpdatedUsername: "admin");
+
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+
+			_ = fakeRepository.QueryAsync(
+				brandId: Arg.Is(brandId),
+				updatedOnStart: Arg.Is(updatedOnStart),
+				updatedOnEnd: Arg.Is(updatedOnEnd),
+				username: Arg.Is(username),
+				playerCode: Arg.Is(playerCode),
+				states: Arg.Any<IEnumerable<Core.Protos.PlayerVipLevelBirthdayFormState>>(),
+				offset: Arg.Is(page - 1),
+				limit: Arg.Is(rowCount),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(new PlayerVipLevelBirthdayFormQueryInfo[] { result }.ToAsyncEnumerable());
+
+			_ = services.AddTransient(_ => fakeRepository);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.PlayerVipLevelBirthdayFormQueryAsync(
+			brandId: brandId,
+			updatedOnStart: updatedOnStart,
+			updatedOnEnd: updatedOnEnd,
+			username: username,
+			playerCode: playerCode,
+			states: states,
+			page: page,
+			rowCount: rowCount)
+			.ToArrayAsync();
+
+		Assert.NotNull(actual);
+		Assert.NotNull(actual.FirstOrDefault());
+		Assert.Equal(result.Id, actual.FirstOrDefault()!.Id);
+		Assert.Equal(result.BrandId, actual.FirstOrDefault()!.BrandId);
+		Assert.Equal(result.PlayerCode, actual.FirstOrDefault()!.PlayerCode);
+		Assert.Equal(result.Username, actual.FirstOrDefault()!.Username);
+		Assert.Equal(result.VipLevel, actual.FirstOrDefault()!.VipLevel);
+		Assert.Equal(result.Birthday, actual.FirstOrDefault()!.Birthday);
+		Assert.Equal(result.AutoState, actual.FirstOrDefault()!.AutoState);
+		Assert.Equal((int)result.State, (int)actual.FirstOrDefault()!.State);
+		Assert.Equal(result.Amount, actual.FirstOrDefault()!.Amount);
+		Assert.Equal(result.ActualAmount, actual.FirstOrDefault()!.ActualAmount);
+		Assert.Equal(result.Remark, actual.FirstOrDefault()!.Remark);
+		Assert.Equal(result.CreatedOn, actual.FirstOrDefault()!.CreatedOn);
+		Assert.Equal(result.CreatedUserId, actual.FirstOrDefault()!.CreatedUserId);
+		Assert.Equal(result.CreatedUsername, actual.FirstOrDefault()!.CreatedUsername);
+		Assert.Equal(result.UpdatedOn, actual.FirstOrDefault()!.UpdatedOn);
+		Assert.Equal(result.UpdatedUserId, actual.FirstOrDefault()!.UpdatedUserId);
+		Assert.Equal(result.UpdatedUsername, actual.FirstOrDefault()!.UpdatedUsername);
+	}
+
+	[Fact]
+	public async Task PlayerVipLevelBirthdayForm_QueryCount()
+	{
+		var brandId = Guid.NewGuid();
+		var updatedOnStart = new DateTimeOffset(2024, 02, 06, 00, 00, 00, TimeSpan.Zero);
+		var updatedOnEnd = new DateTimeOffset(2024, 02, 07, 00, 00, 00, TimeSpan.Zero);
+		var username = "test";
+		var playerCode = "test";
+		var states = new Common.PlayerVipLevelBirthdayFormState[] {
+			Common.PlayerVipLevelBirthdayFormState.Create,
+			Common.PlayerVipLevelBirthdayFormState.Pending
+		};
+
+		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
+		{
+			var fakeRepository = Substitute.For<IPlayerVipLevelBirthdayFormRepository>();
+
+			_ = fakeRepository.QueryCountAsync(
+				brandId: Arg.Is(brandId),
+				updatedOnStart: Arg.Is(updatedOnStart),
+				updatedOnEnd: Arg.Is(updatedOnEnd),
+				username: Arg.Is(username),
+				playerCode: Arg.Is(playerCode),
+				states: Arg.Any<IEnumerable<Core.Protos.PlayerVipLevelBirthdayFormState>>(),
+				cancellationToken: Arg.Any<CancellationToken>())
+			.Returns(1);
+
+			_ = services.AddTransient(_ => fakeRepository);
+		}));
+
+		var httpClient = web.CreateDefaultClient();
+		var client = new VipLevelServiceClient(httpClient);
+
+		var actual = await client.PlayerVipLevelBirthdayFormQueryCountAsync(
+			brandId: brandId,
+			updatedOnStart: updatedOnStart,
+			updatedOnEnd: updatedOnEnd,
+			username: username,
+			playerCode: playerCode,
+			states: states);
+
+		Assert.Equal(1, actual);
 	}
 }

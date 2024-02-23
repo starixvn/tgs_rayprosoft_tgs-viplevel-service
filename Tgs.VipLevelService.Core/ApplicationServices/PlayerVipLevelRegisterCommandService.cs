@@ -7,7 +7,6 @@ internal class PlayerVipLevelRegisterCommandService(
 	IVipLevelRepository vipLevelRepository,
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
-	ICommandService<PlayerVipLevelExpCreateCommand> playerVipLevelExpService,
 	ICommandService<PlayerVipLevelRegisterLogPublishCommand> publishService) : ICommandService<PlayerVipLevelRegisterCommand>
 {
 	public async ValueTask ExecuteAsync(PlayerVipLevelRegisterCommand command, CancellationToken cancellationToken = default)
@@ -36,12 +35,6 @@ internal class PlayerVipLevelRegisterCommandService(
 			vipLevelId: vipLevelInfo.Id,
 			vipLevel: vipLevelInfo.Level,
 			autoState: command.AutoState,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(false);
-
-		await playerVipLevelExpService.ExecuteAsync(
-			command: new PlayerVipLevelExpCreateCommand(
-				PlayerCode: playerInfo.PlayerCode),
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
 

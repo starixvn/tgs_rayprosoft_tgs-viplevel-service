@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using Tgs.CashService.Client;
-using Tgs.SerialNumberGenerator;
 using Tgs.Service.PlayerBuckets;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Core.Protos;
@@ -37,7 +31,7 @@ public class PlayerVipLevelUpgradeFormApprovedCommandServiceUnitTests
 			BrandId: Guid.NewGuid(),
 			PlayerCode: "4ucmqplxb029",
 			VipLevel: 1,
-			AutoState:true,
+			AutoState: true,
 			State: PlayerVipLevelUpgradeFormState.Create,
 			Amount: 99m,
 			ActualAmount: 0.0m,

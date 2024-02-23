@@ -8,6 +8,7 @@ public record PlayerVipLevelCycleFormViewModel(
 	DateOnly CycleOn,
 	DateOnly FromOn,
 	DateOnly ToOn,
+	bool AutoState,
 	PlayerVipLevelCycleFormState State,
 	decimal Amount,
 	decimal ActualAmount,

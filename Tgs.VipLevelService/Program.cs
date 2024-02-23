@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NATS.Client.Core;
 using OpenTelemetry.Metrics;
@@ -74,12 +75,17 @@ builder.Services.AddVipLevelServices(
 		var configuration = sp.GetRequiredService<IConfiguration>();
 		options.BaseUrl = configuration.GetValue<Uri>("VipLevelConnectionStrings:CashServiceClientBaseUrl")!;
 	})
-	.AddCalculateClient((httpClientBuilder) =>
+	.AddPaymentServiceClient((httpClientBuilder) =>
 		httpClientBuilder.ConfigureHttpClient((sp, http) =>
 		{
 			var configuration = sp.GetRequiredService<IConfiguration>();
-			http.BaseAddress = configuration.GetValue<Uri>("VipLevelConnectionStrings:CalculateClientBaseUrl")!;
-		}));
+			http.BaseAddress = configuration.GetValue<Uri>("VipLevelConnectionStrings:PaymentServiceClientBaseUrl")!;
+		}))
+	.AddGameWagersClient((options, sp) =>
+	{
+		var configuration = sp.GetRequiredService<IConfiguration>();
+		options.BaseUrl = configuration.GetValue<Uri>("VipLevelConnectionStrings:GameWagersClientBaseUrl")!;
+	});
 ;
 
 builder.Services
@@ -96,7 +102,6 @@ builder.Services
 	.AddHandler<PlayerVipLevelLogManualMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogManual, typeof(PlayerVipLevelLogManualMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelBirthdayFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelBirthdayFormAuto, typeof(PlayerVipLevelBirthdayFormAutoMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelCycleFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto, typeof(PlayerVipLevelCycleFormAutoMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelExpFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelExpFormAuto, typeof(PlayerVipLevelExpFormAutoMessageHandler).FullName!)
 	.AddHandler<PlayerVipLevelUpgradeFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelUpgradeFormAuto, typeof(PlayerVipLevelUpgradeFormAutoMessageHandler).FullName!)
 	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelServiceNatsConsts.VipLevelSnapshotCreate, typeof(VipLevelSnapshotMessageHandler).FullName!))
 	.AddNatsGlobPatternExchange("*");

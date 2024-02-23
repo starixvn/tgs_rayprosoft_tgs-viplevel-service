@@ -3,6 +3,7 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Common.ViewModels;
 using Tgs.VipLevelService.Models;
+using Tgs.VipLevelService.ViewModels;
 
 namespace Tgs.VipLevelService.Controllers;
 
@@ -72,6 +73,7 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 			CycleOn: form.CycleOn,
 			FromOn: form.FromOn,
 			ToOn: form.ToOn,
+			AutoState: form.AutoState,
 			State: (Common.PlayerVipLevelCycleFormState)form.State,
 			Amount: form.Amount,
 			ActualAmount: form.ActualAmount,
@@ -124,4 +126,75 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 		Common.PlayerVipLevelCycleFormCycleType cycleType,
 		DateOnly cycleOn)
 		=> repository.ExistAsync(playerCode, (Core.Protos.PlayerVipLevelCycleFormCycleType)cycleType, cycleOn, HttpContext.RequestAborted);
+
+	[HttpGet(Name = "PlayerVipLevelCycle_Form_Query")]
+	public async IAsyncEnumerable<PlayerVipLevelCycleFormQueryViewModel> QueryAsync(
+		[FromServices] IPlayerVipLevelCycleFormRepository repository,
+		[FromQuery] PlayerVipLevelCycleFormFromQuery source)
+	{
+		var states = source.States?.Select(state => (Core.Protos.PlayerVipLevelCycleFormState)state).Distinct()
+			?? Enumerable.Empty<Core.Protos.PlayerVipLevelCycleFormState>();
+
+		var infos = await repository.QueryAsync(
+			brandId: source.BrandId,
+			updatedOnStart: source.UpdatedOnStart,
+			updatedOnEnd: source.UpdatedOnEnd,
+			playerCode: source.PlayerCode ?? string.Empty,
+			username: source.Username ?? string.Empty,
+			states: states,
+			offset: source.Page - 1,
+			limit: source.RowCount,
+			cancellationToken: HttpContext.RequestAborted)
+			.ToArrayAsync()
+			.ConfigureAwait(false)
+			?? Enumerable.Empty<PlayerVipLevelCycleFormQueryInfo>();
+
+		if (!infos.Any())
+		{
+			yield break;
+		}
+
+		foreach (var info in infos)
+		{
+			yield return new PlayerVipLevelCycleFormQueryViewModel(
+				Id: info.Id,
+				BrandId: info.BrandId,
+				PlayerCode: info.PlayerCode,
+				Username: info.Username,
+				VipLevel: info.VipLevel,
+				CycleType: (Common.PlayerVipLevelCycleFormCycleType)info.CycleType,
+				CycleOn: info.CycleOn,
+				FromOn: info.FromOn,
+				ToOn: info.ToOn,
+				AutoState: info.AutoState,
+				State: (Common.PlayerVipLevelCycleFormState)info.State,
+				Amount: info.Amount,
+				ActualAmount: info.ActualAmount,
+				Remark: info.Remark,
+				CreatedOn: info.CreatedOn,
+				CreatedUserId: info.CreatedUserId,
+				CreatedUsername: info.CreatedUsername,
+				UpdatedOn: info.UpdatedOn,
+				UpdatedUserId: info.UpdatedUserId,
+				UpdatedUsername: info.UpdatedUsername);
+		}
+	}
+
+	[HttpGet("count", Name = "PlayerVipLevelCycle_Form_Query_Count")]
+	public ValueTask<int> QueryCountAsync(
+		[FromServices] IPlayerVipLevelCycleFormRepository repository,
+		[FromQuery] PlayerVipLevelCycleFormFromQueryCount source)
+	{
+		var states = source.States?.Select(state => (Core.Protos.PlayerVipLevelCycleFormState)state).Distinct()
+			?? Enumerable.Empty<Core.Protos.PlayerVipLevelCycleFormState>();
+
+		return repository.QueryCountAsync(
+			brandId: source.BrandId,
+			updatedOnStart: source.UpdatedOnStart,
+			updatedOnEnd: source.UpdatedOnEnd,
+			playerCode: source.PlayerCode ?? string.Empty,
+			username: source.Username ?? string.Empty,
+			states: states,
+			cancellationToken: HttpContext.RequestAborted);
+	}
 }

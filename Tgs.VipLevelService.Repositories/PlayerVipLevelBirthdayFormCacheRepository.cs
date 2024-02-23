@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using StackExchange.Redis;
+using Tgs.VipLevelService.Core.Protos;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.Repositories;
@@ -36,8 +37,14 @@ internal class PlayerVipLevelBirthdayFormCacheRepository(
 	public ValueTask RejectAsync(Guid id, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 		=> repository.RejectAsync(id, remark, updatedUserId, updatedUsername, cancellationToken);
 
+	public IAsyncEnumerable<PlayerVipLevelBirthdayFormQueryInfo> QueryAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelBirthdayFormState> states, int offset = 0, int limit = 20, CancellationToken cancellationToken = default)
+		=> repository.QueryAsync(brandId: brandId, updatedOnStart: updatedOnStart, updatedOnEnd: updatedOnEnd, playerCode: playerCode, username: username, states: states, offset: offset, limit: limit, cancellationToken: cancellationToken);
+
+	public ValueTask<int> QueryCountAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelBirthdayFormState> states, CancellationToken cancellationToken = default)
+		=> repository.QueryCountAsync(brandId: brandId, updatedOnStart: updatedOnStart, updatedOnEnd: updatedOnEnd, playerCode: playerCode, username: username, states: states, cancellationToken: cancellationToken);
+
 	private static string GetKey(string playerCode, DateOnly birthday)
-		=> string.Concat(typeof(PlayerVipLevelBirthdayFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelBirthdayFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", birthday.Year);
+				=> string.Concat(typeof(PlayerVipLevelBirthdayFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelBirthdayFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", birthday.Year);
 
 	private async ValueTask<bool> SetAsync(string playerCode, DateOnly birthday)
 		=> await database.StringSetAsync(

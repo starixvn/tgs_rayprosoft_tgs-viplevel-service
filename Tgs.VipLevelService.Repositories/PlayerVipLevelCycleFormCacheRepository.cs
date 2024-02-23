@@ -37,8 +37,14 @@ internal class PlayerVipLevelCycleFormCacheRepository(
 	public ValueTask RejectAsync(Guid id, string remark, Guid updatedUserId, string updatedUsername, CancellationToken cancellationToken = default)
 		=> repository.RejectAsync(id, remark, updatedUserId, updatedUsername, cancellationToken);
 
+	public IAsyncEnumerable<PlayerVipLevelCycleFormQueryInfo> QueryAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelCycleFormState> states, int offset = 0, int limit = 20, CancellationToken cancellationToken = default)
+		=> repository.QueryAsync(brandId: brandId, updatedOnStart: updatedOnStart, updatedOnEnd: updatedOnEnd, playerCode: playerCode, username: username, states: states, offset: offset, limit: limit, cancellationToken: cancellationToken);
+
+	public ValueTask<int> QueryCountAsync(Guid brandId, DateTimeOffset updatedOnStart, DateTimeOffset updatedOnEnd, string playerCode, string username, IEnumerable<PlayerVipLevelCycleFormState> states, CancellationToken cancellationToken = default)
+		=> repository.QueryCountAsync(brandId: brandId, updatedOnStart: updatedOnStart, updatedOnEnd: updatedOnEnd, playerCode: playerCode, username: username, states: states, cancellationToken: cancellationToken);
+
 	private static string GetKey(string playerCode, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn)
-		=> string.Concat(typeof(PlayerVipLevelCycleFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCycleFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", cycleType.ToString(), ":", cycleOn);
+				=> string.Concat(typeof(PlayerVipLevelCycleFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelCycleFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", cycleType.ToString(), ":", cycleOn);
 
 	private async ValueTask<bool> SetAsync(string playerCode, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn)
 		=> await database.StringSetAsync(

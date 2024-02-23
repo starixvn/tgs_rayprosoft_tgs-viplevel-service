@@ -13,7 +13,8 @@ data:
       "VipLevelConnectionStrings": {
         "CashServiceClientBaseUrl": "http://cashservice-api",
         "PlayerBucketClientBaseUrl": "http://tgs-playerbucket-service",
-        "CalculateClientBaseUrl": "http://tgs-calculate-api"
+        "PaymentServiceClientBaseUrl": "http://payment-api",
+        "GameWagersClientBaseUrl": "http://game-gamewagers"
       }
     }
   otel-collector-config.yaml: |

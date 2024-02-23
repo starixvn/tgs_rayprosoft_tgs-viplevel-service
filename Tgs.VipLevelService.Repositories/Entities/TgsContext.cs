@@ -26,14 +26,6 @@ public partial class TgsContext : DbContext
 
     public virtual DbSet<PlayerVipLevelCycleForm> PlayerVipLevelCycleForms { get; set; }
 
-    public virtual DbSet<PlayerVipLevelExp> PlayerVipLevelExps { get; set; }
-
-    public virtual DbSet<PlayerVipLevelExpDepositRecord> PlayerVipLevelExpDepositRecords { get; set; }
-
-    public virtual DbSet<PlayerVipLevelExpForm> PlayerVipLevelExpForms { get; set; }
-
-    public virtual DbSet<PlayerVipLevelExpTurnoverRecord> PlayerVipLevelExpTurnoverRecords { get; set; }
-
     public virtual DbSet<PlayerVipLevelLog> PlayerVipLevelLogs { get; set; }
 
     public virtual DbSet<PlayerVipLevelUpgradeForm> PlayerVipLevelUpgradeForms { get; set; }
@@ -59,10 +51,6 @@ public partial class TgsContext : DbContext
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelBirthdayFormConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelCycleFormConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpDepositRecordConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpFormConfiguration());
-        modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelExpTurnoverRecordConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelLogConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.PlayerVipLevelUpgradeFormConfiguration());
         modelBuilder.ApplyConfiguration(new Configurations.ResellerConfiguration());

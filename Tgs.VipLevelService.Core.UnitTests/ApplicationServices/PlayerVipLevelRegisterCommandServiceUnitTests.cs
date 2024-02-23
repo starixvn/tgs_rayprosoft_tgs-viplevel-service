@@ -14,7 +14,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 		var fakeVipLevelRepository = Substitute.For<IVipLevelRepository>();
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
-		var fakePlayerVipLevelExpCreateService = Substitute.For<ICommandService<PlayerVipLevelExpCreateCommand>>();
 		var fakePlayerVipLevelRegisterLogPublishService = Substitute.For<ICommandService<PlayerVipLevelRegisterLogPublishCommand>>();
 
 		var command = new PlayerVipLevelRegisterCommand(
@@ -78,7 +77,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 			fakeVipLevelRepository,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
-			fakePlayerVipLevelExpCreateService,
 			fakePlayerVipLevelRegisterLogPublishService);
 
 		await service.ExecuteAsync(command);
@@ -90,13 +88,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
 			autoState: Arg.Is(PlayerVipLevelAutoState.Enable),
-			cancellationToken: Arg.Any<CancellationToken>());
-
-		_ = fakePlayerVipLevelExpCreateService
-			.Received(1)
-			.ExecuteAsync(
-			command: Arg.Is(new PlayerVipLevelExpCreateCommand(
-				PlayerCode: playerInfo.PlayerCode)),
 			cancellationToken: Arg.Any<CancellationToken>());
 
 		var publishCommand = new PlayerVipLevelRegisterLogPublishCommand(
@@ -117,7 +108,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 		var fakeVipLevelRepository = Substitute.For<IVipLevelRepository>();
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
-		var fakePlayerVipLevelExpCreateService = Substitute.For<ICommandService<PlayerVipLevelExpCreateCommand>>();
 		var fakePlayerVipLevelRegisterLogPublishService = Substitute.For<ICommandService<PlayerVipLevelRegisterLogPublishCommand>>();
 
 		var command = new PlayerVipLevelRegisterCommand(
@@ -181,7 +171,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 			fakeVipLevelRepository,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
-			fakePlayerVipLevelExpCreateService,
 			fakePlayerVipLevelRegisterLogPublishService);
 
 		await service.ExecuteAsync(command);
@@ -193,13 +182,6 @@ public class PlayerVipLevelRegisterCommandServiceUnitTests
 			vipLevelId: Arg.Is(vipLevelInfo.Id),
 			vipLevel: Arg.Is(vipLevelInfo.Level),
 			autoState: Arg.Is(PlayerVipLevelAutoState.Enable),
-			cancellationToken: Arg.Any<CancellationToken>());
-
-		_ = fakePlayerVipLevelExpCreateService
-			.Received(1)
-			.ExecuteAsync(
-			command: Arg.Is(new PlayerVipLevelExpCreateCommand(
-				PlayerCode: playerInfo.PlayerCode)),
 			cancellationToken: Arg.Any<CancellationToken>());
 
 		var publishCommand = new PlayerVipLevelRegisterLogPublishCommand(

@@ -1,10 +1,6 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Net.Mime;
-using System.Text;
+﻿using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Web;
 using Json.Patch;
 using Tgs.VipLevelService.Common;
 using Tgs.VipLevelService.Common.ViewModels;
@@ -167,29 +163,5 @@ internal partial class VipLevelServiceClient : IVipLevelServiceClient
 		   .Do(response => response.EnsureSuccessStatusCode())
 		   .FirstAsync(cancellationToken: cancellationToken)
 		   .ConfigureAwait(false);
-	}
-
-	public async ValueTask<PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>> PlayerVipLevelLogQueryAsync(string playerCode, DateTimeOffset startOn, DateTimeOffset endOn, int page, int rowCount, CancellationToken cancellationToken = default)
-	{
-		var path = new Uri(_httpClient.BaseAddress!, $"player/{playerCode}/viplevel/log");
-		var builder = new UriBuilder(path);
-		var query = HttpUtility.ParseQueryString(builder.Query);
-		query["startOn"] = startOn.ToString("u");
-		query["endOn"] = endOn.ToString("u");
-		query["page"] = page.ToString();
-		query["rowCount"] = rowCount.ToString();
-		builder.Query = query.ToString();
-		string url = builder.ToString();
-
-		return await _httpClient.GetAsync(url, cancellationToken)
-			.ToAsyncEnumerable()
-			.Do(response => response.EnsureSuccessStatusCode())
-			.Where(response => response.StatusCode == System.Net.HttpStatusCode.OK)
-			.SelectMany(response => response.Content
-				.ReadFromJsonAsync<PagingResponseViewModel<PlayerVipLevelLogInfoViewModel>>(_SerializerOptions, cancellationToken)
-				.ToAsyncEnumerable())
-			.FirstOrDefaultAsync(cancellationToken: cancellationToken)
-			.ConfigureAwait(false)
-			?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 	}
 }
