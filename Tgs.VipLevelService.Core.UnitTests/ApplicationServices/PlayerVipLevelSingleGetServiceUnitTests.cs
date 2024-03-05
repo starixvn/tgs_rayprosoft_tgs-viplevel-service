@@ -50,15 +50,17 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(playerVipLevelInfo);
 
 		var paymentOverview = new PaymentOverview(
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
-			0.0m,
-			0.0m);
+			FirstDepositAmount: 0.0m,
+			FirstDepositHandlingFee: 0.0m,
+			FirstDepositOn: DateTime.UtcNow,
+			FirstWithdrawAmount: 0.0m,
+			FirstWithdrawHandlingFee: 0.0m,
+			FirstWithdrawOn: DateTime.UtcNow,
+			RecordedBy: new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+			TotalDepositAmount: 0.0m,
+			TotalDepositCount: 0,
+			TotalWithdrawAmount: 0.0m,
+			TotalWithdrawCount: 0);
 		_ = fakePaymentServiceClient.GetPlayerPaymentOverviewAsync(
 			Arg.Is(query.PlayerCode),
 			Arg.Any<CancellationToken>())
@@ -213,15 +215,17 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(playerVipLevelInfo);
 
 		var paymentOverview = new PaymentOverview(
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
-			0.0m,
-			0.0m);
+			FirstDepositAmount: 0.0m,
+			FirstDepositHandlingFee: 0.0m,
+			FirstDepositOn: DateTime.UtcNow,
+			FirstWithdrawAmount: 0.0m,
+			FirstWithdrawHandlingFee: 0.0m,
+			FirstWithdrawOn: DateTime.UtcNow,
+			RecordedBy: new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+			TotalDepositAmount: 0.0m,
+			TotalDepositCount: 0,
+			TotalWithdrawAmount: 0.0m,
+			TotalWithdrawCount: 0);
 		_ = fakePaymentServiceClient.GetPlayerPaymentOverviewAsync(
 			Arg.Is(query.PlayerCode),
 			Arg.Any<CancellationToken>())
@@ -363,15 +367,17 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(playerVipLevelInfo);
 
 		var paymentOverview = new PaymentOverview(
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
-			0.0m,
-			0.0m);
+			FirstDepositAmount: 0.0m,
+			FirstDepositHandlingFee: 0.0m,
+			FirstDepositOn: DateTime.UtcNow,
+			FirstWithdrawAmount: 0.0m,
+			FirstWithdrawHandlingFee: 0.0m,
+			FirstWithdrawOn: DateTime.UtcNow,
+			RecordedBy: new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+			TotalDepositAmount: 0.0m,
+			TotalDepositCount: 0,
+			TotalWithdrawAmount: 0.0m,
+			TotalWithdrawCount: 0);
 		_ = fakePaymentServiceClient.GetPlayerPaymentOverviewAsync(
 			Arg.Is(query.PlayerCode),
 			Arg.Any<CancellationToken>())
@@ -500,15 +506,17 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(playerVipLevelInfo);
 
 		var paymentOverview = new PaymentOverview(
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			0.0m,
-			0.0m,
-			DateTime.UtcNow,
-			new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
-			0.0m,
-			0.0m);
+			FirstDepositAmount: 0.0m,
+			FirstDepositHandlingFee: 0.0m,
+			FirstDepositOn: DateTime.UtcNow,
+			FirstWithdrawAmount: 0.0m,
+			FirstWithdrawHandlingFee: 0.0m,
+			FirstWithdrawOn: DateTime.UtcNow,
+			RecordedBy: new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day),
+			TotalDepositAmount: 0.0m,
+			TotalDepositCount: 0,
+			TotalWithdrawAmount: 0.0m,
+			TotalWithdrawCount: 0);
 		_ = fakePaymentServiceClient.GetPlayerPaymentOverviewAsync(
 			Arg.Is(query.PlayerCode),
 			Arg.Any<CancellationToken>())
