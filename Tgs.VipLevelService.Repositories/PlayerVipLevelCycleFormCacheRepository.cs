@@ -15,10 +15,11 @@ internal class PlayerVipLevelCycleFormCacheRepository(
 
 	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn, DateOnly fromOn, DateOnly toOn, bool autoState, decimal amount, PlayerVipLevelCycleFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
+		await SetAsync(playerCode, cycleType, cycleOn).ConfigureAwait(false);
+
 		await repository.CreateAsync(
 			id, brandId, playerCode, vipLevel, cycleType, cycleOn, fromOn, toOn, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
-		await SetAsync(playerCode, cycleType, cycleOn).ConfigureAwait(false);
 	}
 
 	public async ValueTask<bool> ExistAsync(string playerCode, PlayerVipLevelCycleFormCycleType cycleType, DateOnly cycleOn, CancellationToken cancellationToken = default)
@@ -56,6 +57,7 @@ internal class PlayerVipLevelCycleFormCacheRepository(
 				CycleOn = cycleOn,
 				LogOn = DateTimeOffset.UtcNow
 			}),
-			expiry: expiry)
+			expiry: expiry,
+			when: When.NotExists)
 		.ConfigureAwait(false);
 }

@@ -15,10 +15,11 @@ internal class PlayerVipLevelBirthdayFormCacheRepository(
 
 	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, DateOnly birthday, bool autoState, decimal amount, PlayerVipLevelBirthdaySnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
+		await SetAsync(playerCode, birthday).ConfigureAwait(false);
+
 		await repository.CreateAsync(
 			id, brandId, playerCode, vipLevel, birthday, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
-		await SetAsync(playerCode, birthday).ConfigureAwait(false);
 	}
 
 	public async ValueTask<bool> ExistAsync(string playerCode, DateOnly birthday, CancellationToken cancellationToken = default)
@@ -44,7 +45,7 @@ internal class PlayerVipLevelBirthdayFormCacheRepository(
 		=> repository.QueryCountAsync(brandId: brandId, updatedOnStart: updatedOnStart, updatedOnEnd: updatedOnEnd, playerCode: playerCode, username: username, states: states, cancellationToken: cancellationToken);
 
 	private static string GetKey(string playerCode, DateOnly birthday)
-				=> string.Concat(typeof(PlayerVipLevelBirthdayFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelBirthdayFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", birthday.Year);
+		=> string.Concat(typeof(PlayerVipLevelBirthdayFormCacheRepository).Namespace!.Replace(".", "-").ToLower(), ":", typeof(PlayerVipLevelBirthdayFormCacheRepository).Name!.ToLower(), ":", playerCode, ":", birthday.Year);
 
 	private async ValueTask<bool> SetAsync(string playerCode, DateOnly birthday)
 		=> await database.StringSetAsync(
@@ -55,6 +56,7 @@ internal class PlayerVipLevelBirthdayFormCacheRepository(
 				Birthday = birthday,
 				LogOn = DateTimeOffset.UtcNow
 			}),
-			expiry: expiry)
+			expiry: expiry,
+			when: When.NotExists)
 		.ConfigureAwait(false);
 }

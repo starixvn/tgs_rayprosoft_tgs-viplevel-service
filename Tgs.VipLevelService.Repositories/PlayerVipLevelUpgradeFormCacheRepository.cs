@@ -15,10 +15,12 @@ internal class PlayerVipLevelUpgradeFormCacheRepository(
 
 	public async ValueTask CreateAsync(Guid id, Guid brandId, string playerCode, int vipLevel, bool autoState, decimal amount, PlayerVipLevelUpgradeFormSnapshotVipLevelInfo snapshotVipLevel, Guid createdUserId, string createdUsername, CancellationToken cancellationToken = default)
 	{
+		await SetAsync(playerCode, vipLevel).ConfigureAwait(false);
+
 		await repository.CreateAsync(
 			id, brandId, playerCode, vipLevel, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
-		await SetAsync(playerCode, vipLevel).ConfigureAwait(false);
+		
 	}
 
 	public async ValueTask<bool> ExistAsync(string playerCode, int vipLevel, CancellationToken cancellationToken = default)
@@ -55,6 +57,7 @@ internal class PlayerVipLevelUpgradeFormCacheRepository(
 				VipLevel = vipLevel,
 				LogOn = DateTimeOffset.UtcNow
 			}),
-			expiry: expiry)
+			expiry: expiry,
+			when: When.NotExists)
 		.ConfigureAwait(false);
 }
