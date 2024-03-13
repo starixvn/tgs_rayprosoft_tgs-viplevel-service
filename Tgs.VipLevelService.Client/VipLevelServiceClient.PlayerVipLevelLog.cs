@@ -1,5 +1,4 @@
-﻿using Grpc.Core;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Web;
 
 namespace Tgs.VipLevelService.Clients;
