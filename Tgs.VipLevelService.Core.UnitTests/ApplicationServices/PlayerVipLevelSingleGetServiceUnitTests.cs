@@ -156,8 +156,8 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 		Assert.Equal(playerVipLevelInfo.AutoState, actual.AutoState);
 		Assert.Equal(paymentOverview.TotalDepositAmount, actual.AccumDeposit);
 		Assert.Equal(gameWagerStatPlayerAccumInfo.Turnover, actual.AccumTurnover);
-		Assert.Equal(currentLevel.LevelUpAccumulateBetAmount, actual.LevelUpAccumulateBetAmount);
-		Assert.Equal(currentLevel.LevelUpAccumulateDeposit, actual.LevelUpAccumulateDeposit);
+		Assert.Equal(nextLevel.LevelUpAccumulateBetAmount, actual.LevelUpAccumulateBetAmount);
+		Assert.Equal(nextLevel.LevelUpAccumulateDeposit, actual.LevelUpAccumulateDeposit);
 		Assert.False(actual.FullLevel);
 		Assert.Equal(nextLevel.Id, actual.NextVipLevelId);
 		Assert.Equal(nextLevel.Level, actual.NextVipLevel);
@@ -321,8 +321,8 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 		Assert.Equal(playerVipLevelInfo.AutoState, actual.AutoState);
 		Assert.Equal(paymentOverview.TotalDepositAmount, actual.AccumDeposit);
 		Assert.Equal(gameWagerStatPlayerAccumInfo.Turnover, actual.AccumTurnover);
-		Assert.Equal(currentLevel.LevelUpAccumulateBetAmount, actual.LevelUpAccumulateBetAmount);
-		Assert.Equal(currentLevel.LevelUpAccumulateDeposit, actual.LevelUpAccumulateDeposit);
+		Assert.Equal(nextLevel.LevelUpAccumulateBetAmount, actual.LevelUpAccumulateBetAmount);
+		Assert.Equal(nextLevel.LevelUpAccumulateDeposit, actual.LevelUpAccumulateDeposit);
 		Assert.False(actual.FullLevel);
 		Assert.Equal(nextLevel.Id, actual.NextVipLevelId);
 		Assert.Equal(nextLevel.Level, actual.NextVipLevel);
