@@ -53,11 +53,15 @@ internal class PlayerVipLevelSingleGetService(
 
 		var nextVipLevelId = playerVipLevelInfo.VipLevelId;
 		var nextVipLevel = playerVipLevelInfo.VipLevel;
+		var nextLevelUpAccumulateBetAmount = currentLevel.LevelUpAccumulateBetAmount;
+		var nextLevelUpAccumulateDeposit = currentLevel.LevelUpAccumulateDeposit;
 		var fullLevel = true;
 		if (nextLevel is not null)
 		{
 			nextVipLevelId = nextLevel.Id;
 			nextVipLevel = nextLevel.Level;
+			nextLevelUpAccumulateBetAmount = nextLevel.LevelUpAccumulateBetAmount;
+			nextLevelUpAccumulateDeposit = nextLevel.LevelUpAccumulateDeposit;
 			fullLevel = false;
 		}
 
@@ -75,8 +79,8 @@ internal class PlayerVipLevelSingleGetService(
 			AutoState: playerVipLevelInfo.AutoState,
 			AccumDeposit: payment.TotalDepositAmount,
 			AccumTurnover: playerAccumInfo.Turnover,
-			LevelUpAccumulateBetAmount: currentLevel.LevelUpAccumulateBetAmount,
-			LevelUpAccumulateDeposit: currentLevel.LevelUpAccumulateDeposit,
+			LevelUpAccumulateBetAmount: nextLevelUpAccumulateBetAmount,
+			LevelUpAccumulateDeposit: nextLevelUpAccumulateDeposit,
 			FullLevel: fullLevel,
 			NextVipLevelId: nextVipLevelId,
 			NextVipLevel: nextVipLevel);
