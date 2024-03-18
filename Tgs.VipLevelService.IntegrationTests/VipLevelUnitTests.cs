@@ -96,9 +96,9 @@ public class VipLevelUnitTests
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
+			var fakeQueryService = Substitute.For<IGetService<VipLevelSingleByLevelQuery, VipLevelInfo?>>();
 
-			var query = new VipLevelByLevelQuery(
+			var query = new VipLevelSingleByLevelQuery(
 				BrandId: brandId,
 				Level: level);
 			var vipLevelInfo = new VipLevelInfo(
@@ -146,9 +146,9 @@ public class VipLevelUnitTests
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeQueryService = Substitute.For<IGetService<VipLevelByLevelQuery, VipLevelInfo?>>();
+			var fakeQueryService = Substitute.For<IGetService<VipLevelSingleByLevelQuery, VipLevelInfo?>>();
 
-			var query = new VipLevelByLevelQuery(
+			var query = new VipLevelSingleByLevelQuery(
 				BrandId: brandId,
 				Level: level);
 			_ = fakeQueryService.GetAsync(
@@ -175,9 +175,9 @@ public class VipLevelUnitTests
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
+			var fakeQueryService = Substitute.For<IGetService<VipLevelSingleByIdQuery, VipLevelInfo?>>();
 
-			var query = new VipLevelByIdQuery(
+			var query = new VipLevelSingleByIdQuery(
 				Id: id);
 			var vipLevelInfo = new VipLevelInfo(
 				Id: id,
@@ -221,9 +221,9 @@ public class VipLevelUnitTests
 
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
-			var fakeQueryService = Substitute.For<IGetService<VipLevelByIdQuery, VipLevelInfo?>>();
+			var fakeQueryService = Substitute.For<IGetService<VipLevelSingleByIdQuery, VipLevelInfo?>>();
 
-			var query = new VipLevelByIdQuery(
+			var query = new VipLevelSingleByIdQuery(
 				Id: id);
 			_ = fakeQueryService.GetAsync(
 				query: Arg.Is(query),

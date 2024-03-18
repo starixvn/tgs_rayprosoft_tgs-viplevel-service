@@ -115,8 +115,7 @@ public class PlayerVipLevelCycleFormUnitTests
 		var web = new VipLevelApplicationTest(builder => _ = builder.ConfigureServices(services =>
 		{
 			var fakePlayerService = Substitute.For<IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult>>();
-			var fakeSnapshotService = Substitute.For<IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid>>();
-			var fakeSnapshotQueryService = Substitute.For<IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo>>();
+			var fakeVipLevelSingleService = Substitute.For<IGetService<VipLevelSingleByLevelQuery, VipLevelInfo?>>();
 			var fakeFormService = Substitute.For<IGetService<PlayerVipLevelCycleFormCreateCommand, Guid>>();
 
 			var playerVipLevel = new PlayerVipLevelSingleResult(
@@ -143,38 +142,30 @@ public class PlayerVipLevelCycleFormUnitTests
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(playerVipLevel);
 
-			var snapshotId = Guid.NewGuid();
-			_ = fakeSnapshotService.GetAsync(
-				query: Arg.Is(new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevel.BrandId)),
+			var vipLevelInfo = new VipLevelInfo(
+				Id: playerVipLevel.VipLevelId,
+				Level: playerVipLevel.VipLevel,
+				BrandId: playerVipLevel.BrandId,
+				LevelUpAccumulateBetAmount: 0,
+				LevelUpAccumulateDeposit: 0,
+				LevelKeepAccumulateBetAmount: 0,
+				LevelKeepAccumulateDeposit: 0,
+				LevelKeepCondition: true,
+				BirthBenefit: 99.0m,
+				PromotionBenefit: 100.0m,
+				QuarterlyBenefit: 100.0m,
+				LiveDealerRebate: 0.0m,
+				SlotRebate: 0.0m,
+				LotteryRebate: 0.0m,
+				CardGameRebate: 0.0m,
+				SportsRebate: 0.0m,
+				VirtualSportsRebate: 0.0m,
+				WithdrawTransactionsPerDay: -1,
+				WithdrawTotalAmountPerDay: -1);
+			_ = fakeVipLevelSingleService.GetAsync(
+				query: Arg.Is(new VipLevelSingleByLevelQuery(playerVipLevel.BrandId, playerVipLevel.VipLevel)),
 				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(snapshotId);
-
-			var vipLevelInfos = new VipLevelInfo[]{
-				new (
-					Id: playerVipLevel.VipLevelId,
-					Level: playerVipLevel.VipLevel,
-					BrandId: playerVipLevel.BrandId,
-					LevelUpAccumulateBetAmount: 0,
-					LevelUpAccumulateDeposit: 0,
-					LevelKeepAccumulateBetAmount: 0,
-					LevelKeepAccumulateDeposit: 0,
-					LevelKeepCondition: true,
-					BirthBenefit: 99.0m,
-					PromotionBenefit: 100.0m,
-					QuarterlyBenefit: 100.0m,
-					LiveDealerRebate: 0.0m,
-					SlotRebate: 0.0m,
-					LotteryRebate: 0.0m,
-					CardGameRebate: 0.0m,
-					SportsRebate: 0.0m,
-					VirtualSportsRebate: 0.0m,
-					WithdrawTransactionsPerDay: -1,
-					WithdrawTotalAmountPerDay: -1)
-			};
-			_ = fakeSnapshotQueryService.QueryAsync(
-				query: Arg.Is(new VipLevelSnapshotQueryVipLevelQuery(snapshotId)),
-				cancellationToken: Arg.Any<CancellationToken>())
-			.Returns(vipLevelInfos.ToAsyncEnumerable());
+			.Returns(vipLevelInfo);
 
 			_ = fakeFormService.GetAsync(
 				query: new PlayerVipLevelCycleFormCreateCommand(
@@ -185,16 +176,15 @@ public class PlayerVipLevelCycleFormUnitTests
 					CycleOn: cycleOn,
 					FromOn: fromOn,
 					ToOn: toOn,
-					Amount: vipLevelInfos.FirstOrDefault()!.QuarterlyBenefit,
+					Amount: vipLevelInfo!.QuarterlyBenefit,
 					OperatorUserId: operatorUserId,
 					OperatorUsername: operatorUsername,
-					VipLevelInfo: vipLevelInfos.FirstOrDefault()!),
+					VipLevelInfo: vipLevelInfo!),
 				cancellationToken: Arg.Any<CancellationToken>())
 			.Returns(id);
 
 			_ = services.AddTransient(_ => fakePlayerService);
-			_ = services.AddTransient(_ => fakeSnapshotService);
-			_ = services.AddTransient(_ => fakeSnapshotQueryService);
+			_ = services.AddTransient(_ => fakeVipLevelSingleService);
 			_ = services.AddTransient(_ => fakeFormService);
 		}));
 

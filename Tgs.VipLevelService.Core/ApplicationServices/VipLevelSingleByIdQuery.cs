@@ -1,3 +1,3 @@
 ﻿namespace Tgs.VipLevelService.ApplicationServices;
-public record VipLevelByIdQuery(
+public record VipLevelSingleByIdQuery(
 	Guid Id);

@@ -62,11 +62,11 @@ public class VipLevelController : ControllerBase
 	/// <returns></returns>
 	[HttpGet("{brandId:guid}/{level:int}", Name = "VipLevel_ByLevel_Query")]
 	public async ValueTask<VipLevelInfoViewModel?> VipLevelByLevelQueryAsync(
-		[FromServices] IGetService<VipLevelByLevelQuery, VipLevelInfo?> service,
+		[FromServices] IGetService<VipLevelSingleByLevelQuery, VipLevelInfo?> service,
 		Guid brandId,
 		int level)
 	{
-		var query = new VipLevelByLevelQuery(brandId, level);
+		var query = new VipLevelSingleByLevelQuery(brandId, level);
 
 		var vipLevelInfo = await service.GetAsync(
 			query,
@@ -105,10 +105,10 @@ public class VipLevelController : ControllerBase
 	/// <returns></returns>
 	[HttpGet("{id:guid}/levl-id", Name = "VipLevel_ById_Query")]
 	public async ValueTask<VipLevelInfoViewModel?> VipLevelByIdQueryAsync(
-		[FromServices] IGetService<VipLevelByIdQuery, VipLevelInfo?> service,
+		[FromServices] IGetService<VipLevelSingleByIdQuery, VipLevelInfo?> service,
 		Guid id)
 	{
-		var query = new VipLevelByIdQuery(id);
+		var query = new VipLevelSingleByIdQuery(id);
 
 		var vipLevelInfo = await service.GetAsync(
 			query,

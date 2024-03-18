@@ -1,4 +1,4 @@
 ﻿namespace Tgs.VipLevelService.ApplicationServices;
-public record VipLevelByLevelQuery(
+public record VipLevelSingleByLevelQuery(
 	Guid BrandId,
 	int Level);

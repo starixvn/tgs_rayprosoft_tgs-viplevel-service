@@ -6,6 +6,8 @@ public record PlayerVipLevelUpgradeFormCreateCommand(
 	Guid BrandId,
 	string PlayerCode,
 	int VipLevel,
+	decimal AccumDeposit,
+	decimal AccumTurnover,
 	decimal Amount,
 	Guid OperatorUserId,
 	string OperatorUsername,

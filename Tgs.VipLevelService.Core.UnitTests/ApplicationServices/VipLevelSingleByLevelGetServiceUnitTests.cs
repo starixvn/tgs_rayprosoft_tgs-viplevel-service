@@ -3,24 +3,26 @@ using Tgs.VipLevelService.ApplicationServices;
 
 namespace Tgs.VipLevelService.Core.UnitTests.ApplicationServices;
 
-public class VipLevelByIdGetServiceUnitTests
+public class VipLevelSingleByLevelGetServiceUnitTests
 {
 	[Fact]
 	public async Task Normal_Process()
 	{
 		var fakeVipLevelRepository = Substitute.For<IVipLevelRepository>();
 
-		var sut = new VipLevelByIdGetService(fakeVipLevelRepository);
+		var sut = new VipLevelSingleByLevelGetService(fakeVipLevelRepository);
 
-		var query = new VipLevelByIdQuery(
-			Id: Guid.NewGuid());
+		var query = new VipLevelSingleByLevelQuery(
+			BrandId: Guid.NewGuid(),
+			Level: 1);
 
 		_ = await sut.GetAsync(query);
 
 		_ = fakeVipLevelRepository
 			.Received(1)
 			.GetAsync(
-			id: Arg.Is(query.Id),
+			brandId: Arg.Is(query.BrandId),
+			level: Arg.Is(query.Level),
 			cancellationToken: Arg.Any<CancellationToken>());
 	}
 }

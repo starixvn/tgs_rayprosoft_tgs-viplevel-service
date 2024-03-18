@@ -1,4 +1,5 @@
 ﻿using NSubstitute;
+using NSubstitute.Core;
 using Tgs.SerialNumberGenerator;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Core.Protos;
@@ -21,6 +22,8 @@ public class PlayerVipLevelUpgradeFormCreateGetServiceUnitTest
 			BrandId: Guid.NewGuid(),
 			PlayerCode: "4ucmqplxb029",
 			1,
+			100m,
+			123m,
 			99,
 			Guid.NewGuid(),
 			"admin.enabled",
@@ -70,6 +73,10 @@ public class PlayerVipLevelUpgradeFormCreateGetServiceUnitTest
 				VipLevelId: command.VipLevelInfo.Id,
 				VipLevel: command.VipLevelInfo.Level,
 				BrandId: command.VipLevelInfo.BrandId,
+				AccumDeposit: command.AccumDeposit,
+				AccumTurnover: command.AccumTurnover,
+				LevelUpAccumulateBetAmount: command.VipLevelInfo.LevelUpAccumulateBetAmount,
+				LevelUpAccumulateDeposit: command.VipLevelInfo.LevelUpAccumulateDeposit,
 				PromotionBenefit: command.VipLevelInfo.PromotionBenefit)),
 			createdUserId: Arg.Is(command.OperatorUserId),
 			createdUsername: Arg.Is(command.OperatorUsername),

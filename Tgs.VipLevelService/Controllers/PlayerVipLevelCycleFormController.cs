@@ -14,8 +14,7 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 	[HttpPost(Name = "PlayerVipLevelCycle_Form_Create")]
 	public async ValueTask<Guid> CreateAsync(
 		[FromServices] IGetService<PlayerVipLevelSingleQuery, PlayerVipLevelSingleResult> playerService,
-		[FromServices] IGetService<VipLevelSnapshotCurrentSnapshotIdQuery, Guid> snapshotService,
-		[FromServices] IQueryService<VipLevelSnapshotQueryVipLevelQuery, VipLevelInfo> snapshotQueryService,
+		[FromServices] IGetService<VipLevelSingleByLevelQuery, VipLevelInfo?> vipLevelSingleService,
 		[FromServices] IGetService<PlayerVipLevelCycleFormCreateCommand, Guid> formService,
 		[FromHeader(Name = "OperatorUserId")] Guid operatorUserId,
 		[FromHeader(Name = "OperatorUsername")] string operatorUsername,
@@ -25,17 +24,11 @@ public class PlayerVipLevelCycleFormController : ControllerBase
 			query: new PlayerVipLevelSingleQuery(source.PlayerCode),
 			cancellationToken: HttpContext.RequestAborted)
 			.ConfigureAwait(false);
-		var snapshotId = await snapshotService.GetAsync(
-			query: new VipLevelSnapshotCurrentSnapshotIdQuery(playerVipLevel.BrandId),
+		var vipLevelInfo = await vipLevelSingleService.GetAsync(
+			query: new VipLevelSingleByLevelQuery(playerVipLevel.BrandId, playerVipLevel.VipLevel),
 			cancellationToken: HttpContext.RequestAborted)
-			.ConfigureAwait(false);
-		var vipLevelInfos = await snapshotQueryService.QueryAsync(
-			query: new VipLevelSnapshotQueryVipLevelQuery(snapshotId),
-			cancellationToken: HttpContext.RequestAborted)
-			.ToArrayAsync()
 			.ConfigureAwait(false)
-			?? Enumerable.Empty<VipLevelInfo>();
-		var vipLevelInfo = vipLevelInfos.Single(predicate: vl => vl.Level == playerVipLevel.VipLevel);
+			?? throw new ArgumentNullException(playerVipLevel.VipLevel.ToString());
 
 		return await formService.GetAsync(
 			query: new PlayerVipLevelCycleFormCreateCommand(
