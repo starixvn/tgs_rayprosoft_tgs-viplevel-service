@@ -21,6 +21,8 @@ namespace Tgs.VipLevelService.Entities.Configurations
 
             entity.HasIndex(e => new { e.PlayerCode, e.VipLevel }, "ix_player_vip_level_u_f_player_code_vip_level");
 
+            entity.HasIndex(e => new { e.PlayerCode, e.VipLevel, e.RepeatTimes }, "uni_player_vip_level_u_f_player_code_vip_level").IsUnique();
+
             entity.Property(e => e.Id)
             .ValueGeneratedNever()
             .HasComment("識別碼")
@@ -60,6 +62,10 @@ namespace Tgs.VipLevelService.Entities.Configurations
             .HasDefaultValueSql("''::text")
             .HasComment("備註")
             .HasColumnName("remark");
+            entity.Property(e => e.RepeatTimes)
+            .HasDefaultValue(0)
+            .HasComment("重複次數")
+            .HasColumnName("repeat_times");
             entity.Property(e => e.SnapshotVipLevel)
             .HasDefaultValueSql("'{}'::jsonb")
             .HasComment("Snapshot Vip Level")

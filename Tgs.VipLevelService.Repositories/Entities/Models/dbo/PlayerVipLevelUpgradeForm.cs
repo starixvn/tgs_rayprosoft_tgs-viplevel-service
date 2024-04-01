@@ -86,4 +86,9 @@ public partial class PlayerVipLevelUpgradeForm
     /// 自動狀態(True:自動;False:手動)
     /// </summary>
     public bool AutoState { get; set; }
+
+    /// <summary>
+    /// 重複次數
+    /// </summary>
+    public int RepeatTimes { get; set; }
 }

@@ -19,7 +19,7 @@ namespace Tgs.VipLevelService.Entities.Configurations
 
             entity.HasIndex(e => e.CreatedOn, "ix_player_vip_level_b_f_created_on");
 
-            entity.HasIndex(e => new { e.PlayerCode, e.Birthday }, "ix_player_vip_level_b_f_player_code_birthday");
+            entity.HasIndex(e => new { e.PlayerCode, e.Birthday }, "uni_player_vip_level_b_f_player_code_birthday").IsUnique();
 
             entity.Property(e => e.Id)
             .ValueGeneratedNever()

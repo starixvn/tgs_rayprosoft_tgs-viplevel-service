@@ -19,7 +19,7 @@ namespace Tgs.VipLevelService.Entities.Configurations
 
             entity.HasIndex(e => e.CreatedOn, "ix_player_vip_level_cycle_f_created_on");
 
-            entity.HasIndex(e => new { e.PlayerCode, e.CycleType, e.CycleOn }, "ix_player_vip_level_cycle_f_player_code_cycle");
+            entity.HasIndex(e => new { e.PlayerCode, e.CycleType, e.CycleOn }, "uni_player_vip_level_cycle_f_player_code_cycle").IsUnique();
 
             entity.Property(e => e.Id)
             .ValueGeneratedNever()
