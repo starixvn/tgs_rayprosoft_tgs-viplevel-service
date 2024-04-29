@@ -37,7 +37,7 @@ internal class PlayerVipLevelSingleGetService(
 			playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
-		logger.LogInformation("LogOn:{logOn} Message:The total deposit amount of this {playerCode} is {paymentOverview}",
+		logger.LogInformation("LogOn:{logOn} Message:This {playerCode} payment overview informationis.({paymentOverview})",
 			DateTime.Now.ToString("u"),
 			playerInfo.PlayerCode,
 			JsonSerializer.Serialize(payment));
