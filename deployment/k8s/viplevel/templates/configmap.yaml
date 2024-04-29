@@ -9,7 +9,7 @@ data:
         "LogLevel": {
           "Default": "Warning",
           "Tgs.VipLevelService.Messages": "Information",
-          "Tgs.VipLevelService.ApplicationServices.PlayerVipLevelSingleGetService": "Information"
+          "Tgs.VipLevelService.ApplicationServices": "Information"
         }
       },
       "VipLevelConnectionStrings": {
