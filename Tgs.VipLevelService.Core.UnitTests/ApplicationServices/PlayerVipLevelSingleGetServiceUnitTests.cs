@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using NSubstitute;
 using Tgs.GameWagers.Client;
 using Tgs.GameWagers.Common;
 using Tgs.Payment.Clients;
@@ -14,6 +15,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 	[Fact]
 	public async Task Normal_Process()
 	{
+		var fakeLog = NullLogger<PlayerVipLevelSingleGetService>.Instance;
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePaymentServiceClient = Substitute.For<IPaymentServiceClient>();
@@ -133,6 +135,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(nextLevel);
 
 		var sut = new PlayerVipLevelSingleGetService(
+			fakeLog,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
 			fakeVipLevelRepository,
@@ -173,6 +176,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 	[Fact]
 	public async Task Player_Vip_Level_Fixes()
 	{
+		var fakeLog = NullLogger<PlayerVipLevelSingleGetService>.Instance;
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePaymentServiceClient = Substitute.For<IPaymentServiceClient>();
@@ -298,6 +302,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns(nextLevel);
 
 		var sut = new PlayerVipLevelSingleGetService(
+			fakeLog,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
 			fakeVipLevelRepository,
@@ -331,6 +336,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 	[Fact]
 	public async Task Player_VipLevel_Full_Level()
 	{
+		var fakeLog = NullLogger<PlayerVipLevelSingleGetService>.Instance;
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePaymentServiceClient = Substitute.For<IPaymentServiceClient>();
@@ -430,6 +436,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns((VipLevelInfo?)null);
 
 		var sut = new PlayerVipLevelSingleGetService(
+			fakeLog,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
 			fakeVipLevelRepository,
@@ -470,6 +477,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 	[Fact]
 	public async Task This_brand_VIP_level_does_not_exist()
 	{
+		var fakeLog = NullLogger<PlayerVipLevelSingleGetService>.Instance;
 		var fakePlayerRepository = Substitute.For<IPlayerRepository>();
 		var fakePlayerVipLevelRepository = Substitute.For<IPlayerVipLevelRepository>();
 		var fakePaymentServiceClient = Substitute.For<IPaymentServiceClient>();
@@ -543,6 +551,7 @@ public class PlayerVipLevelSingleGetServiceUnitTests
 			.Returns((VipLevelInfo?)null);
 
 		var sut = new PlayerVipLevelSingleGetService(
+			fakeLog,
 			fakePlayerRepository,
 			fakePlayerVipLevelRepository,
 			fakeVipLevelRepository,

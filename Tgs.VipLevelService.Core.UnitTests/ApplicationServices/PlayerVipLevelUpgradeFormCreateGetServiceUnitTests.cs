@@ -1,5 +1,4 @@
 ﻿using NSubstitute;
-using NSubstitute.Core;
 using Tgs.SerialNumberGenerator;
 using Tgs.VipLevelService.ApplicationServices;
 using Tgs.VipLevelService.Core.Protos;

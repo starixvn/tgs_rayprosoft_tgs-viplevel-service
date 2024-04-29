@@ -4,6 +4,7 @@ using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
+
 internal class VipLevelSnapshotCreateCommandService(
 	ISerialNumberGenerator serialNumberGenerator,
 	IVipLevelRepository vipLevelRepository,

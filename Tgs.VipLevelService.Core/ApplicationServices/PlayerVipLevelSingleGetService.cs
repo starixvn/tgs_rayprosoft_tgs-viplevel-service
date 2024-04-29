@@ -1,4 +1,5 @@
-﻿using Tgs.GameWagers.Client;
+﻿using Microsoft.Extensions.Logging;
+using Tgs.GameWagers.Client;
 using Tgs.Payment.Clients;
 using Tgs.ServiceUtility;
 using Tgs.VipLevelService.Models;
@@ -6,6 +7,7 @@ using Tgs.VipLevelService.Models;
 namespace Tgs.VipLevelService.ApplicationServices;
 
 internal class PlayerVipLevelSingleGetService(
+	ILogger<PlayerVipLevelSingleGetService> logger,
 	IPlayerRepository playerRepository,
 	IPlayerVipLevelRepository playerVipLevelRepository,
 	IVipLevelRepository vipLevelRepository,
@@ -34,6 +36,10 @@ internal class PlayerVipLevelSingleGetService(
 			playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
+		logger.LogInformation("LogOn:{logOn} Message:The total deposit amount of this {playerCode} is {totalDepositAmount}",
+			DateTime.Now.ToString("u"),
+			playerInfo.PlayerCode,
+			payment.TotalDepositAmount);
 
 		var playerAccumInfo = await gameWagersClient.GameWagerStatGetPlayerAccumAsync(
 			playerInfo.PlayerCode,

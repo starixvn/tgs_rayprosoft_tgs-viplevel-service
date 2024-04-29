@@ -6,10 +6,8 @@ using Tgs.VipLevelService.Models;
 
 namespace Tgs.VipLevelService.ApplicationServices;
 
-internal class PlayerVipLevelLogQueryService(IPlayerVipLevelLogRepository repository)
-	: IQueryService<PlayerVipLevelLogQuery, PlayerVipLevelLogResult>,
-	IGetService<PlayerVipLevelLogCountQuery, int>
-
+internal class PlayerVipLevelLogQueryService(
+	IPlayerVipLevelLogRepository repository) : IQueryService<PlayerVipLevelLogQuery, PlayerVipLevelLogResult>, IGetService<PlayerVipLevelLogCountQuery, int>
 {
 	public ValueTask<int> GetAsync(PlayerVipLevelLogCountQuery query, CancellationToken cancellationToken = default)
 		=> repository.QueryCountAsync(

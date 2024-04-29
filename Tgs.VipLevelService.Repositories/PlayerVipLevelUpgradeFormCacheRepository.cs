@@ -20,7 +20,6 @@ internal class PlayerVipLevelUpgradeFormCacheRepository(
 		await repository.CreateAsync(
 			id, brandId, playerCode, vipLevel, autoState, amount, snapshotVipLevel, createdUserId, createdUsername, cancellationToken)
 			.ConfigureAwait(false);
-		
 	}
 
 	public async ValueTask<bool> ExistAsync(string playerCode, int vipLevel, CancellationToken cancellationToken = default)

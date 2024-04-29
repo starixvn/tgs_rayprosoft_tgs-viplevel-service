@@ -2,6 +2,7 @@
 using System.Web;
 
 namespace Tgs.VipLevelService.Clients;
+
 internal partial class VipLevelServiceClient
 {
 	public IAsyncEnumerable<Common.ViewModels.PlayerVipLevelLogQueryViewModel> PlayerVipLevelLogQueryAsync(string playerCode, DateTimeOffset startOn, DateTimeOffset endOn, int page, int rowCount, CancellationToken cancellationToken = default)
@@ -29,6 +30,7 @@ internal partial class VipLevelServiceClient
 			.ToEnumerable()
 			.ToAsyncEnumerable();
 	}
+
 	public async ValueTask<int> PlayerVipLevelLogQueryCountAsync(string playerCode, DateTimeOffset startOn, DateTimeOffset endOn, CancellationToken cancellationToken = default)
 	{
 		var path = new Uri(_httpClient.BaseAddress!, $"player-log/{playerCode}/count");
