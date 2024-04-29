@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Tgs.GameWagers.Client;
 using Tgs.Payment.Clients;
 using Tgs.ServiceUtility;
@@ -36,10 +37,10 @@ internal class PlayerVipLevelSingleGetService(
 			playerInfo.PlayerCode,
 			cancellationToken: cancellationToken)
 			.ConfigureAwait(false);
-		logger.LogInformation("LogOn:{logOn} Message:The total deposit amount of this {playerCode} is {totalDepositAmount}",
+		logger.LogInformation("LogOn:{logOn} Message:The total deposit amount of this {playerCode} is {paymentOverview}",
 			DateTime.Now.ToString("u"),
 			playerInfo.PlayerCode,
-			payment.TotalDepositAmount);
+			JsonSerializer.Serialize(payment));
 
 		var playerAccumInfo = await gameWagersClient.GameWagerStatGetPlayerAccumAsync(
 			playerInfo.PlayerCode,
