@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NATS.Client.Core;
 using OpenTelemetry.Metrics;
