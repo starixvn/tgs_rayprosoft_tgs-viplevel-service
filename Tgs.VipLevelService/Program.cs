@@ -147,5 +147,6 @@ _ = app.MapControllers();
 _ = app.MapSwagger();
 
 app.UseHealthChecks("/health");
+app.UseHealthChecks("/");
 
 app.Run();
