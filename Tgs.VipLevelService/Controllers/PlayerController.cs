@@ -43,6 +43,20 @@ public class PlayerController : ControllerBase
 			NextVipLevel: playerVipLevelInfo.NextVipLevel);
 	}
 
+	[HttpGet("{playerCode}/viplevelinfo", Name = "PlayerVipLevelInfo_Get") ]
+	public async ValueTask<int> PlayerVipLevelInfoGetAsync(
+		[FromServices] IGetService<PlayerVipLevelFixesQuery, PlayerVipLevelInfo> service,
+		string playerCode)
+	{
+		var playerVipLevelInfo = await service.GetAsync(
+			query: new PlayerVipLevelFixesQuery(
+				PlayerCode: playerCode),
+			cancellationToken: HttpContext.RequestAborted)
+			.ConfigureAwait(true);
+
+		return playerVipLevelInfo.VipLevel;
+	}
+
 	[HttpPost("{playerCode}/viplevel/register", Name = "PlayerVipLevel_Register")]
 	public ValueTask PlayerVipLevelRegisterAsync(
 		[FromServices] ICommandService<PlayerVipLevelRegisterCommand> service,

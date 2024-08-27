@@ -103,6 +103,16 @@ internal partial class VipLevelServiceClient : IVipLevelServiceClient
 		.ConfigureAwait(false)
 		?? throw new NullReferenceException($"This player's VIP Level does not exist.{playerCode}");
 
+	public async ValueTask<int> PlayerVipLevelInfoGetAsync(string playerCode, CancellationToken cancellationToken = default)
+	{
+		var response = await _httpClient.GetAsync($"/player/{playerCode}/viplevelinfo", cancellationToken).ConfigureAwait(false);
+		_ = response.EnsureSuccessStatusCode();
+
+		return await response.Content.ReadFromJsonAsync<int>(
+			_SerializerOptions,
+			cancellationToken).ConfigureAwait(false);
+	}
+
 	public async ValueTask PlayerVipLevelRegisterAsync(string playerCode, int? vipLevel, PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default)
 	{
 		var source = new PlayerVipLevelRegisterViewModel

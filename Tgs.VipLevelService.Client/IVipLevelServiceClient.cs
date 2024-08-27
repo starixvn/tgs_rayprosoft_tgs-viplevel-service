@@ -14,6 +14,8 @@ public interface IVipLevelServiceClient
 
 	ValueTask<Common.ViewModels.PlayerVipLevelInfoViewModel> PlayerVipLevelGetAsync(string playerCode, CancellationToken cancellationToken = default);
 
+	ValueTask<int> PlayerVipLevelInfoGetAsync(string playerCode, CancellationToken cancellationToken = default);
+
 	ValueTask PlayerVipLevelRegisterAsync(string playerCode, int? vipLevel, Common.PlayerVipLevelAutoState autoState, Guid? vipLevelId = null, CancellationToken cancellationToken = default);
 
 	ValueTask PlayerVipLevelManualAsync(string playerCode, int? vipLevel, Common.PlayerVipLevelAutoState autoState, Guid modifierUserId, string modifierUsername, string remark, Guid? vipLevelId = null, CancellationToken cancellationToken = default);
