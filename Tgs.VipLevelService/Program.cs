@@ -87,6 +87,7 @@ builder.Services.AddVipLevelServices(
 	});
 ;
 
+var natPrefix = builder.Configuration.GetValue<string>("NatPrefix");
 builder.Services
 	.AddKeyedSingleton("Nats", (sp, _) => new NatsConnection(NatsOpts.Default with
 	{
@@ -96,13 +97,13 @@ builder.Services
 	.AddMessageQueue()
 	.AddNatsMessageQueue(config => config
 	.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
-	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogRegister, typeof(PlayerVipLevelLogRegisterMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogSystem, typeof(PlayerVipLevelLogSystemMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelLogManualMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelLogManual, typeof(PlayerVipLevelLogManualMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelBirthdayFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelBirthdayFormAuto, typeof(PlayerVipLevelBirthdayFormAutoMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelCycleFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto, typeof(PlayerVipLevelCycleFormAutoMessageHandler).FullName!)
-	.AddHandler<PlayerVipLevelUpgradeFormAutoMessageHandler>(VipLevelServiceNatsConsts.PlayerVipLevelUpgradeFormAuto, typeof(PlayerVipLevelUpgradeFormAutoMessageHandler).FullName!)
-	.AddHandler<VipLevelSnapshotMessageHandler>(VipLevelServiceNatsConsts.VipLevelSnapshotCreate, typeof(VipLevelSnapshotMessageHandler).FullName!))
+	.AddHandler<PlayerVipLevelLogRegisterMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelLogRegister, typeof(PlayerVipLevelLogRegisterMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelLogSystemMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelLogSystem, typeof(PlayerVipLevelLogSystemMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelLogManualMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelLogManual, typeof(PlayerVipLevelLogManualMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelBirthdayFormAutoMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelBirthdayFormAuto, typeof(PlayerVipLevelBirthdayFormAutoMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelCycleFormAutoMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelCycleFormAuto, typeof(PlayerVipLevelCycleFormAutoMessageHandler).FullName!)
+	.AddHandler<PlayerVipLevelUpgradeFormAutoMessageHandler>(natPrefix + VipLevelServiceNatsConsts.PlayerVipLevelUpgradeFormAuto, typeof(PlayerVipLevelUpgradeFormAutoMessageHandler).FullName!)
+	.AddHandler<VipLevelSnapshotMessageHandler>(natPrefix + VipLevelServiceNatsConsts.VipLevelSnapshotCreate, typeof(VipLevelSnapshotMessageHandler).FullName!))
 	.AddNatsGlobPatternExchange("*");
 
 builder.Services
